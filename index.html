@@ -116,6 +116,21 @@ section{padding:100px 0;}
 .section-sub{font-size:17.5px;color:var(--text-secondary);line-height:1.7;max-width:620px;}
 .section-header{margin-bottom:60px;}
 
+/* SPOTLIGHT (web + SEO) */
+.spotlight-section{background:var(--bg-surface);}
+.spot-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;align-items:center;}
+.spot-points{display:flex;flex-direction:column;gap:16px;}
+.spot-point{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px 26px;display:flex;gap:18px;align-items:flex-start;transition:var(--t);}
+.spot-point:hover{border-color:var(--border-glow);transform:translateX(6px);}
+.spot-point-icon{width:46px;height:46px;flex-shrink:0;border-radius:var(--r-md);background:rgba(255,107,53,.1);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.spot-point:nth-child(2) .spot-point-icon{background:rgba(6,214,160,.1);}
+.spot-point:nth-child(3) .spot-point-icon{background:rgba(255,209,102,.1);}
+.spot-point h4{font-size:16.5px;font-weight:700;margin-bottom:5px;font-family:'Space Grotesk';}
+.spot-point p{font-size:13.5px;color:var(--text-secondary);line-height:1.6;}
+.spot-text p{font-size:16px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;}
+.spot-text p strong{color:var(--text-primary);}
+@media(max-width:768px){.spot-grid{grid-template-columns:1fr;gap:36px;}}
+
 /* SERVICES BENTO */
 .svc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;}
 .svc-card{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;transition:var(--t);position:relative;overflow:hidden;grid-column:span 2;}
@@ -199,6 +214,9 @@ section{padding:100px 0;}
 .cta-title{font-size:clamp(30px,4vw,46px);font-weight:700;letter-spacing:-.03em;margin-bottom:16px;font-family:'Space Grotesk';}
 .cta-sub{font-size:16.5px;color:var(--text-secondary);line-height:1.7;margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto;}
 .cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.cta-actions{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;}
+.cta-lead{font-size:18px;font-weight:600;color:var(--text-secondary);font-family:'Space Grotesk';}
+@media(max-width:480px){.cta-actions{flex-direction:column;gap:14px;}}
 
 /* FOOTER */
 footer{border-top:1px solid var(--border);padding:44px 0;}
@@ -257,7 +275,7 @@ footer{border-top:1px solid var(--border);padding:44px 0;}
       <li><a href="#process">Process</a></li>
       <li><a href="#about">About</a></li>
     </ul>
-    <a href="mailto:jag@jaggyai.com" class="nav-cta">Start a Project</a>
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jag@jaggyai.com&su=I'd%20like%20to%20start%20a%20project" target="_blank" rel="noopener" class="nav-cta">Start a Project</a>
   </div>
 </nav>
 
@@ -272,12 +290,12 @@ footer{border-top:1px solid var(--border);padding:44px 0;}
           <div class="hero-dot"></div>
           <span>Victoria, BC · Available for new projects</span>
         </div>
-        <h1>Websites that turn<br><span class="gradient-text">clicks into customers.</span></h1>
+        <h1>Full-stack digital,<br><span class="gradient-text">powered by AI.</span></h1>
         <p class="hero-desc">
-          I design and build <strong>conversion-focused websites, brands, and growth systems</strong> for businesses that want to win online. Web design, SEO, graphic design, and AI automation — from a builder who's shipped <strong>1,400+ sites</strong> and grown a <strong>55K+ audience.</strong>
+          I design websites, build brands, rank businesses on Google, grow audiences, and automate marketing with AI — <strong>everything your business needs to win online,</strong> from one builder who's shipped <strong>1,400+ sites</strong> and grown a <strong>55K+ audience.</strong>
         </p>
         <div class="hero-actions">
-          <a href="mailto:jag@jaggyai.com" class="btn-primary"><span>🚀</span> Start a Project</a>
+          <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jag@jaggyai.com&su=I'd%20like%20to%20start%20a%20project" target="_blank" rel="noopener" class="btn-primary"><span>🚀</span> Start a Project</a>
           <a href="#work" class="btn-secondary"><span>👀</span> See My Work</a>
         </div>
         <div class="hero-trust">
@@ -319,6 +337,34 @@ footer{border-top:1px solid var(--border);padding:44px 0;}
     </div>
   </div>
 </div>
+
+<!-- SPOTLIGHT: WEB + SEO -->
+<section class="spotlight-section">
+  <div class="container">
+    <div class="spot-grid">
+      <div class="spot-text reveal">
+        <div class="section-label">Websites &amp; SEO</div>
+        <h2 class="section-title">Websites that turn<br><span class="gradient-text">clicks into customers.</span></h2>
+        <p>A beautiful website means nothing if it doesn't bring in business. I build sites <strong>engineered to convert</strong> — fast load times, clear calls-to-action, and mobile-first layouts that turn visitors into leads.</p>
+        <p>Then I back it with <strong>SEO that gets you found</strong>: on-page optimization, local search, Google Business setup, and content built to climb the rankings. I've structured 1,400+ websites for search and grown content properties that pull organic traffic on autopilot.</p>
+      </div>
+      <div class="spot-points reveal rd1">
+        <div class="spot-point">
+          <div class="spot-point-icon">⚡</div>
+          <div><h4>Conversion-Focused Design</h4><p>Every page built around one goal — turning your visitors into paying customers, not just looking pretty.</p></div>
+        </div>
+        <div class="spot-point">
+          <div class="spot-point-icon">🔍</div>
+          <div><h4>SEO Built Into Every Site</h4><p>Clean structure, fast speeds, local search optimization, and keyword strategy so Google actually ranks you.</p></div>
+        </div>
+        <div class="spot-point">
+          <div class="spot-point-icon">📈</div>
+          <div><h4>Organic Traffic That Compounds</h4><p>Content and search systems that keep bringing in leads month after month — long after launch day.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- SERVICES -->
 <section id="services">
@@ -510,9 +556,9 @@ footer{border-top:1px solid var(--border);padding:44px 0;}
       <span class="cta-emoji">🚀</span>
       <h2 class="cta-title">Let's build something<br>that actually works.</h2>
       <p class="cta-sub">Whether you need a brand-new website, a redesign, SEO that ranks, or automation that runs your marketing for you — let's talk. First consultation is free.</p>
-      <div class="cta-buttons">
-        <a href="mailto:jag@jaggyai.com" class="btn-primary"><span>✉️</span> jag@jaggyai.com</a>
-        <a href="#work" class="btn-secondary"><span>👀</span> See the Work</a>
+      <div class="cta-actions">
+        <span class="cta-lead">See how it works —</span>
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=jag@jaggyai.com&su=I'd%20like%20to%20start%20a%20project&body=Hi%20Jag%2C%0A%0AI'm%20interested%20in%20working%20with%20you.%20Here's%20a%20bit%20about%20my%20business%3A%0A%0A" target="_blank" rel="noopener" class="btn-primary"><span>✉️</span> email jag@jaggyai.com</a>
       </div>
     </div>
   </div>
