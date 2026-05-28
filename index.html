@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jag Mangat — Web Design, Branding, SEO &amp; AI Automation | Victoria, BC</title>
+<meta name="description" content="I build conversion-focused websites, brands, and growth systems for local businesses across BC. Web design, SEO, graphic design, and AI automation from a builder who's shipped 1,400+ sites and grown a 55K+ audience." />
+<meta name="author" content="Jag Mangat" />
+<meta property="og:title" content="Jag Mangat — Web Design, Branding, SEO & AI Automation" />
+<meta property="og:description" content="Conversion-focused websites, branding, SEO, and AI automation for businesses that want to win online." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg-base:#080808; --bg-surface:#0f0f10; --bg-card:#151517; --bg-card-hover:#1c1c1f;
+  --border:rgba(255,255,255,0.08); --border-glow:rgba(255,107,53,0.4);
+  --primary:#FF6B35; --primary-light:#FF8C5A; --gold:#FFD166; --teal:#06D6A0; --purple:#9B5DE5;
+  --text-primary:#F7F7F8; --text-secondary:#A2A2AA; --text-muted:#5a5a62; --white:#fff;
+  --grad-hero:linear-gradient(135deg,#FF6B35 0%,#FF8C5A 42%,#FFD166 100%);
+  --grad-teal:linear-gradient(135deg,#06D6A0,#0891b2);
+  --grad-purple:linear-gradient(135deg,#9B5DE5,#FF6B35);
+  --grad-card:linear-gradient(160deg,#151517,#0f0f10);
+  --shadow-glow:0 0 48px rgba(255,107,53,0.28);
+  --shadow-card:0 8px 40px rgba(0,0,0,0.55);
+  --r-sm:8px; --r-md:14px; --r-lg:22px; --r-xl:30px;
+  --t:all .35s cubic-bezier(.4,0,.2,1); --tf:all .15s ease;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg-base);color:var(--text-primary);line-height:1.6;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+img,video{max-width:100%;display:block;}
+ul{list-style:none;}
+h1,h2,h3,.font-display{font-family:'Space Grotesk','Inter',sans-serif;}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+@keyframes glow-pulse{0%,100%{opacity:.6;}50%{opacity:1;}}
+@keyframes shimmer{0%{background-position:-200% center;}100%{background-position:200% center;}}
+@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes meshmove{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-30px) scale(1.1);}66%{transform:translate(-30px,20px) scale(.95);}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+
+.container{max-width:1200px;margin:0 auto;padding:0 24px;}
+.gradient-text{background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.shimmer-text{background:linear-gradient(90deg,var(--primary) 0%,var(--gold) 50%,var(--primary) 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite;}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.04em;}
+.tag-orange{background:rgba(255,107,53,.14);color:var(--primary);border:1px solid rgba(255,107,53,.3);}
+.tag-gold{background:rgba(255,209,102,.12);color:var(--gold);border:1px solid rgba(255,209,102,.25);}
+.tag-teal{background:rgba(6,214,160,.12);color:var(--teal);border:1px solid rgba(6,214,160,.25);}
+.tag-purple{background:rgba(155,93,229,.12);color:var(--purple);border:1px solid rgba(155,93,229,.25);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:rgba(8,8,8,.82);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:var(--t);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-size:20px;font-weight:700;letter-spacing:-.02em;font-family:'Space Grotesk';}
+.nav-logo span{color:var(--primary);}
+.nav-links{display:flex;align-items:center;gap:30px;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text-secondary);transition:var(--tf);}
+.nav-links a:hover{color:var(--text-primary);}
+.nav-cta{padding:9px 22px;background:var(--primary);color:#fff;border-radius:var(--r-md);font-size:14px;font-weight:600;transition:var(--t);}
+.nav-cta:hover{background:var(--primary-light);transform:translateY(-1px);box-shadow:var(--shadow-glow);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 64px;position:relative;overflow:hidden;}
+.hero-mesh{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.hero-mesh::before,.hero-mesh::after{content:'';position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;}
+.hero-mesh::before{width:600px;height:600px;background:radial-gradient(circle,rgba(255,107,53,.35),transparent 70%);top:-150px;left:-100px;animation:meshmove 18s ease-in-out infinite;}
+.hero-mesh::after{width:500px;height:500px;background:radial-gradient(circle,rgba(155,93,229,.22),transparent 70%);bottom:-120px;right:-60px;animation:meshmove 22s ease-in-out infinite reverse;}
+.hero-grid{display:grid;grid-template-columns:1fr 400px;gap:60px;align-items:center;position:relative;z-index:1;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:24px;padding:7px 16px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.02);}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:glow-pulse 2s ease-in-out infinite;box-shadow:0 0 8px var(--teal);}
+.hero-eyebrow span{font-size:12.5px;font-weight:600;color:var(--text-secondary);letter-spacing:.04em;}
+.hero h1{font-size:clamp(42px,6vw,76px);font-weight:700;line-height:1.02;letter-spacing:-.035em;margin-bottom:22px;}
+.hero-desc{font-size:18px;color:var(--text-secondary);line-height:1.7;margin-bottom:36px;max-width:520px;}
+.hero-desc strong{color:var(--text-primary);font-weight:600;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:36px;}
+.btn-primary{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;background:var(--grad-hero);color:#fff;border-radius:var(--r-md);font-size:15px;font-weight:700;transition:var(--t);box-shadow:0 6px 24px rgba(255,107,53,.35);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(255,107,53,.5);}
+.btn-secondary{display:inline-flex;align-items:center;gap:9px;padding:15px 30px;background:transparent;color:var(--text-primary);border:1px solid var(--border);border-radius:var(--r-md);font-size:15px;font-weight:600;transition:var(--t);}
+.btn-secondary:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px);}
+.hero-trust{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-muted);}
+.hero-trust .dots{display:flex;}
+.hero-trust .dots span{width:26px;height:26px;border-radius:50%;border:2px solid var(--bg-base);margin-left:-8px;background:var(--grad-hero);}
+.hero-trust .dots span:nth-child(2){background:var(--grad-teal);}
+.hero-trust .dots span:nth-child(3){background:var(--grad-purple);}
+
+.hero-photo-frame{position:relative;width:340px;height:440px;margin:0 auto;}
+.hero-photo-frame::before{content:'';position:absolute;inset:-2px;border-radius:var(--r-xl);background:linear-gradient(135deg,var(--primary),transparent 50%,var(--gold));z-index:0;}
+.hero-photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:calc(var(--r-xl) - 2px);position:relative;z-index:1;}
+.hero-photo-ph{width:100%;height:100%;background:var(--bg-card);border-radius:calc(var(--r-xl) - 2px);position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--text-muted);font-size:14px;}
+.hero-badge{position:absolute;background:rgba(20,20,22,.95);border:1px solid var(--border);border-radius:var(--r-md);padding:11px 15px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-card);z-index:2;}
+.badge-top{top:-14px;right:-22px;}
+.badge-bottom{bottom:28px;left:-30px;}
+
+/* MARQUEE */
+.marquee{padding:28px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden;background:var(--bg-surface);}
+.marquee-track{display:flex;gap:48px;width:max-content;animation:marquee 28s linear infinite;}
+.marquee-item{display:flex;align-items:center;gap:48px;font-family:'Space Grotesk';font-size:22px;font-weight:600;color:var(--text-secondary);white-space:nowrap;}
+.marquee-item span{color:var(--text-muted);}
+.marquee-item b{color:var(--primary);font-weight:700;}
+
+/* STATS */
+.stats-bar{padding:56px 0;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center;}
+.stat-num{font-family:'Space Grotesk';font-size:clamp(36px,4.5vw,54px);font-weight:700;letter-spacing:-.03em;line-height:1;margin-bottom:8px;}
+.stat-label{font-size:13.5px;color:var(--text-secondary);font-weight:500;}
+
+/* SECTIONS */
+section{padding:100px 0;}
+.section-label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--primary);margin-bottom:16px;}
+.section-label::before{content:'';width:24px;height:2px;background:var(--primary);}
+.section-title{font-size:clamp(32px,4.2vw,52px);font-weight:700;letter-spacing:-.03em;line-height:1.08;margin-bottom:18px;}
+.section-sub{font-size:17.5px;color:var(--text-secondary);line-height:1.7;max-width:620px;}
+.section-header{margin-bottom:60px;}
+
+/* SERVICES BENTO */
+.svc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;}
+.svc-card{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;transition:var(--t);position:relative;overflow:hidden;grid-column:span 2;}
+.svc-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(255,107,53,.08),transparent 60%);opacity:0;transition:var(--t);}
+.svc-card:hover{border-color:var(--border-glow);transform:translateY(-5px);box-shadow:var(--shadow-card),0 0 36px rgba(255,107,53,.12);}
+.svc-card:hover::after{opacity:1;}
+.svc-card.feature{grid-column:span 3;}
+.svc-card.wide{grid-column:span 3;}
+.svc-icon{width:54px;height:54px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;background:rgba(255,107,53,.1);}
+.svc-card:nth-child(2) .svc-icon{background:rgba(6,214,160,.1);}
+.svc-card:nth-child(3) .svc-icon{background:rgba(155,93,229,.1);}
+.svc-card:nth-child(4) .svc-icon{background:rgba(255,209,102,.1);}
+.svc-card:nth-child(5) .svc-icon{background:rgba(6,214,160,.1);}
+.svc-card:nth-child(6) .svc-icon{background:rgba(155,93,229,.1);}
+.svc-name{font-size:21px;font-weight:700;margin-bottom:10px;letter-spacing:-.02em;font-family:'Space Grotesk';}
+.svc-desc{font-size:14.5px;color:var(--text-secondary);line-height:1.65;margin-bottom:18px;}
+.svc-list{display:flex;flex-wrap:wrap;gap:8px;}
+.svc-list span{font-size:12px;color:var(--text-muted);padding:4px 11px;border:1px solid var(--border);border-radius:999px;}
+
+/* WORK */
+.work-section{background:var(--bg-surface);}
+.work-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;}
+.work-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:var(--t);display:flex;flex-direction:column;}
+.work-card:hover{border-color:var(--border-glow);transform:translateY(-4px);box-shadow:var(--shadow-card);}
+.work-card.feature{grid-column:span 2;}
+.work-media{position:relative;aspect-ratio:16/9;overflow:hidden;background:var(--bg-surface);}
+.work-media video,.work-media img{width:100%;height:100%;object-fit:cover;}
+.work-media-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,rgba(255,107,53,.15),rgba(155,93,229,.12));}
+.work-body{padding:26px 28px;flex:1;display:flex;flex-direction:column;}
+.work-cat{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;}
+.work-name{font-size:20px;font-weight:700;margin-bottom:8px;font-family:'Space Grotesk';letter-spacing:-.02em;}
+.work-desc{font-size:14px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px;flex:1;}
+.work-meta{display:flex;gap:8px;flex-wrap:wrap;}
+.work-link{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13.5px;font-weight:600;color:var(--primary);transition:var(--tf);}
+.work-link:hover{gap:10px;}
+
+/* PROCESS */
+.proc-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;counter-reset:step;}
+.proc-card{background:var(--grad-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px 22px;position:relative;transition:var(--t);}
+.proc-card:hover{border-color:var(--border-glow);transform:translateY(-4px);}
+.proc-num{font-family:'Space Grotesk';font-size:14px;font-weight:700;color:var(--primary);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.proc-num::before{counter-increment:step;content:'0' counter(step);font-size:34px;line-height:1;background:var(--grad-hero);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.proc-name{font-size:17px;font-weight:700;margin-bottom:8px;font-family:'Space Grotesk';}
+.proc-desc{font-size:13.5px;color:var(--text-secondary);line-height:1.6;}
+
+/* ABOUT */
+.about-section{}
+.about-grid{display:grid;grid-template-columns:380px 1fr;gap:64px;align-items:center;}
+.about-photo{position:relative;border-radius:var(--r-xl);overflow:hidden;aspect-ratio:3/4;}
+.about-photo::before{content:'';position:absolute;inset:-2px;background:linear-gradient(135deg,var(--purple),transparent 50%,var(--primary));border-radius:calc(var(--r-xl)+2px);z-index:-1;}
+.about-photo img{width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:var(--r-xl);}
+.about-photo-ph{width:100%;height:100%;background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-size:56px;border-radius:var(--r-xl);}
+.about-text p{font-size:16px;color:var(--text-secondary);line-height:1.8;margin-bottom:16px;}
+.about-text p strong{color:var(--text-primary);}
+.about-pills{display:flex;flex-wrap:wrap;gap:9px;margin-top:26px;}
+.pill{padding:8px 16px;background:var(--bg-surface);border:1px solid var(--border);border-radius:999px;font-size:13px;font-weight:600;color:var(--text-secondary);transition:var(--t);}
+.pill:hover{border-color:var(--primary);color:var(--primary);}
+
+/* WHY */
+.why-section{background:var(--bg-surface);}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+.why-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px;transition:var(--t);}
+.why-card:hover{border-color:var(--border-glow);transform:translateY(-4px);}
+.why-icon{font-size:30px;margin-bottom:16px;}
+.why-name{font-size:16.5px;font-weight:700;margin-bottom:8px;font-family:'Space Grotesk';}
+.why-desc{font-size:13.5px;color:var(--text-secondary);line-height:1.6;}
+
+/* TESTIMONIAL */
+.quote-section{text-align:center;}
+.quote-big{font-family:'Space Grotesk';font-size:clamp(24px,3.2vw,38px);font-weight:600;line-height:1.35;letter-spacing:-.02em;max-width:900px;margin:0 auto 28px;}
+.quote-big .gradient-text{font-weight:700;}
+.quote-author{font-size:15px;color:var(--text-secondary);font-weight:600;}
+.quote-author span{color:var(--text-muted);font-weight:400;}
+
+/* CTA */
+.cta-section{padding:100px 0;}
+.cta-inner{position:relative;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-xl);padding:72px 48px;text-align:center;max-width:760px;margin:0 auto;overflow:hidden;}
+.cta-inner::before{content:'';position:absolute;inset:-1px;border-radius:calc(var(--r-xl)+1px);background:linear-gradient(135deg,rgba(255,107,53,.4),transparent 50%,rgba(255,209,102,.2));z-index:-1;}
+.cta-inner::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(255,107,53,.15),transparent 70%);top:-150px;left:50%;transform:translateX(-50%);pointer-events:none;}
+.cta-emoji{font-size:46px;margin-bottom:22px;display:inline-block;animation:float 4s ease-in-out infinite;}
+.cta-title{font-size:clamp(30px,4vw,46px);font-weight:700;letter-spacing:-.03em;margin-bottom:16px;font-family:'Space Grotesk';}
+.cta-sub{font-size:16.5px;color:var(--text-secondary);line-height:1.7;margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto;}
+.cta-buttons{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:44px 0;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{font-size:18px;font-weight:700;font-family:'Space Grotesk';}
+.footer-logo span{color:var(--primary);}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:var(--text-muted);transition:var(--tf);}
+.footer-links a:hover{color:var(--text-primary);}
+.footer-copy{font-size:13px;color:var(--text-muted);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.08s;}.rd2{transition-delay:.16s;}.rd3{transition-delay:.24s;}.rd4{transition-delay:.32s;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr 320px;gap:40px;}
+  .svc-card,.svc-card.feature,.svc-card.wide{grid-column:span 3;}
+  .proc-grid{grid-template-columns:repeat(3,1fr);}
+  .why-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hero-grid{grid-template-columns:1fr;gap:48px;}
+  .hero-photo-wrap{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:28px;}
+  .svc-grid{grid-template-columns:1fr;}
+  .svc-card,.svc-card.feature,.svc-card.wide{grid-column:span 1;}
+  .work-grid{grid-template-columns:1fr;}
+  .work-card.feature{grid-column:span 1;}
+  .proc-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;gap:40px;}
+  .about-photo{max-width:320px;margin:0 auto;}
+  .why-grid{grid-template-columns:1fr;}
+  .cta-inner{padding:48px 24px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .hero-actions{flex-direction:column;}
+  .btn-primary,.btn-secondary{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <div class="nav-logo">JAG<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <a href="mailto:jag@jaggyai.com" class="nav-cta">Start a Project</a>
+  </div>
+</nav>
+
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-mesh" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <div class="hero-dot"></div>
+          <span>Victoria, BC · Available for new projects</span>
+        </div>
+        <h1>Websites that turn<br><span class="gradient-text">clicks into customers.</span></h1>
+        <p class="hero-desc">
+          I design and build <strong>conversion-focused websites, brands, and growth systems</strong> for businesses that want to win online. Web design, SEO, graphic design, and AI automation — from a builder who's shipped <strong>1,400+ sites</strong> and grown a <strong>55K+ audience.</strong>
+        </p>
+        <div class="hero-actions">
+          <a href="mailto:jag@jaggyai.com" class="btn-primary"><span>🚀</span> Start a Project</a>
+          <a href="#work" class="btn-secondary"><span>👀</span> See My Work</a>
+        </div>
+        <div class="hero-trust">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <span>Trusted by local businesses across British Columbia</span>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <div class="hero-photo-frame">
+          <img src="jag.jpg" alt="Jag Mangat — Web Designer & Digital Strategist" onerror="this.parentElement.innerHTML='<div class=\'hero-photo-ph\'><div style=\'font-size:48px\'>📸</div><span>jag.jpg</span></div>'" />
+          <div class="hero-badge badge-top"><span>⚡</span><span>1,400+ Sites Built</span></div>
+          <div class="hero-badge badge-bottom"><span>📈</span><span>55K+ Audience</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-item">
+      Web Design <span>✦</span> <b>SEO</b> <span>✦</span> Branding <span>✦</span> <b>Graphic Design</b> <span>✦</span> AI Automation <span>✦</span> <b>Social Growth</b> <span>✦</span> App Development <span>✦</span> <b>Content Systems</b> <span>✦</span>
+    </div>
+    <div class="marquee-item">
+      Web Design <span>✦</span> <b>SEO</b> <span>✦</span> Branding <span>✦</span> <b>Graphic Design</b> <span>✦</span> AI Automation <span>✦</span> <b>Social Growth</b> <span>✦</span> App Development <span>✦</span> <b>Content Systems</b> <span>✦</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="reveal"><div class="stat-num shimmer-text">1,400+</div><div class="stat-label">Websites Built</div></div>
+      <div class="reveal rd1"><div class="stat-num gradient-text">55K+</div><div class="stat-label">Audience Grown</div></div>
+      <div class="reveal rd2"><div class="stat-num gradient-text">8</div><div class="stat-label">Businesses Operated</div></div>
+      <div class="reveal rd3"><div class="stat-num gradient-text">100%</div><div class="stat-label">Mobile + SEO Ready</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">What I Do</div>
+      <h2 class="section-title">Everything your business needs<br>to win online.</h2>
+      <p class="section-sub">One partner for design, build, and growth. No agencies passing you between five people — you work directly with the person doing the work.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc-card feature reveal">
+        <div class="svc-icon">🌐</div>
+        <div class="svc-name">Web Design &amp; Development</div>
+        <div class="svc-desc">Custom, conversion-focused websites built mobile-first and SEO-ready. From local service businesses to full brands — fast, modern, and made to turn visitors into paying customers. I've shipped over 1,400 sites, so I know exactly what converts.</div>
+        <div class="svc-list"><span>Custom Design</span><span>Mobile-First</span><span>Lightning Fast</span><span>Conversion-Focused</span><span>CMS &amp; Hosting</span></div>
+      </div>
+      <div class="svc-card feature reveal rd1">
+        <div class="svc-icon">🔍</div>
+        <div class="svc-name">SEO &amp; Local Search</div>
+        <div class="svc-desc">Get found by the customers already searching for you. On-page SEO, local search optimization, Google Business setup, and technical fixes that climb the rankings and bring in organic leads — month after month.</div>
+        <div class="svc-list"><span>Local SEO</span><span>On-Page</span><span>Google Business</span><span>Keyword Strategy</span></div>
+      </div>
+      <div class="svc-card reveal rd2">
+        <div class="svc-icon">🎨</div>
+        <div class="svc-name">Graphic Design &amp; Branding</div>
+        <div class="svc-desc">Logos, brand identity, social graphics, and ad creative that make you look like the premium choice in your market.</div>
+        <div class="svc-list"><span>Logos</span><span>Brand Identity</span><span>Ad Creative</span></div>
+      </div>
+      <div class="svc-card reveal rd3">
+        <div class="svc-icon">🤖</div>
+        <div class="svc-name">AI Content &amp; Automation</div>
+        <div class="svc-desc">Automated content pipelines and AI systems that run your marketing while you sleep. I build the same automation that runs my own 8-business empire.</div>
+        <div class="svc-list"><span>AI Video</span><span>Auto-Posting</span><span>Make.com</span></div>
+      </div>
+      <div class="svc-card wide reveal">
+        <div class="svc-icon">📈</div>
+        <div class="svc-name">Social Media Growth</div>
+        <div class="svc-desc">I grew a YouTube channel to 55,000+ subscribers and run automated content across multiple platforms. I'll grow an audience that actually converts into customers — not just vanity follower counts.</div>
+        <div class="svc-list"><span>YouTube</span><span>Instagram</span><span>Content Strategy</span><span>Short-Form Video</span></div>
+      </div>
+      <div class="svc-card wide reveal rd1">
+        <div class="svc-icon">📱</div>
+        <div class="svc-name">Apps &amp; Digital Products</div>
+        <div class="svc-desc">iOS and Android apps, digital products, and custom tools. I've shipped apps to the App Store and Google Play — I can build yours too, from idea to launch.</div>
+        <div class="svc-list"><span>iOS / Android</span><span>Web Apps</span><span>Digital Products</span><span>Custom Tools</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work" class="work-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Selected Work</div>
+      <h2 class="section-title">Proof, not promises.</h2>
+      <p class="section-sub">I don't just talk about digital — I build and run it every single day. Here's a slice of what I've shipped.</p>
+    </div>
+    <div class="work-grid">
+
+      <div class="work-card feature reveal">
+        <div class="work-media">
+          <video src="showreel.mp4" autoplay muted loop playsinline preload="metadata"></video>
+        </div>
+        <div class="work-body">
+          <div class="work-cat">Web Design · At Scale</div>
+          <div class="work-name">1,400+ Business Websites — British Columbia</div>
+          <div class="work-desc">A province-wide web design project: I designed, built, and deployed over 1,400 fully personalized, mobile-responsive websites for local BC businesses across 15 trades — plumbers, contractors, electricians, landscapers, and more. Each one custom-branded, SEO-structured, and live on the web.</div>
+          <div class="work-meta"><span class="tag tag-orange">1,400+ Sites</span><span class="tag tag-teal">15 Industries</span><span class="tag tag-gold">Fully Responsive</span></div>
+        </div>
+      </div>
+
+      <div class="work-card reveal">
+        <div class="work-media"><div class="work-media-fallback">🏀</div></div>
+        <div class="work-body">
+          <div class="work-cat">Social Growth · Content</div>
+          <div class="work-name">Jaggy Sports — 55K+ Subscribers</div>
+          <div class="work-desc">NBA content brand grown to 55,000+ YouTube subscribers via a fully automated AI content pipeline — script, voice, avatar video, and publishing, all systematized.</div>
+          <a href="https://www.youtube.com/@jaggysports" target="_blank" rel="noopener" class="work-link">Visit channel →</a>
+        </div>
+      </div>
+
+      <div class="work-card reveal rd1">
+        <div class="work-media"><div class="work-media-fallback">📱</div></div>
+        <div class="work-body">
+          <div class="work-cat">App Development</div>
+          <div class="work-name">DealScope AI — iOS &amp; Android</div>
+          <div class="work-desc">An AI-powered deal-discovery app shipped to the App Store and Google Play. Built on a modern stack with a full backend and automated affiliate revenue.</div>
+          <span class="tag tag-purple" style="margin-top:auto;align-self:flex-start;">Live on App Stores</span>
+        </div>
+      </div>
+
+      <div class="work-card reveal">
+        <div class="work-media"><div class="work-media-fallback">🛍️</div></div>
+        <div class="work-body">
+          <div class="work-cat">Web + Automation</div>
+          <div class="work-name">nbashoponline.com</div>
+          <div class="work-desc">An affiliate content site that auto-publishes SEO articles end-to-end: RSS → AI research → AI copy → AI imagery → live post. Pure hands-off content engine.</div>
+          <a href="https://nbashoponline.com" target="_blank" rel="noopener" class="work-link">Visit site →</a>
+        </div>
+      </div>
+
+      <div class="work-card reveal rd1">
+        <div class="work-media"><div class="work-media-fallback">⚙️</div></div>
+        <div class="work-body">
+          <div class="work-cat">AI Automation</div>
+          <div class="work-name">Automated Content Systems</div>
+          <div class="work-desc">Multiple Instagram and blog accounts running on full autopilot — content created, designed, and posted by AI pipelines I architect and maintain. The same systems I'll build for your business.</div>
+          <span class="tag tag-teal" style="margin-top:auto;align-self:flex-start;">Make.com · AI</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Simple process.<br>Serious results.</h2>
+      <p class="section-sub">No drawn-out agency runaround. Direct, fast, and built to ship.</p>
+    </div>
+    <div class="proc-grid">
+      <div class="proc-card reveal"><div class="proc-num"></div><div class="proc-name">Discover</div><div class="proc-desc">We talk through your business, goals, and what makes you different. I learn what your customers actually need.</div></div>
+      <div class="proc-card reveal rd1"><div class="proc-num"></div><div class="proc-name">Design</div><div class="proc-desc">I craft a custom look that fits your brand and is built to convert — not just to look pretty.</div></div>
+      <div class="proc-card reveal rd2"><div class="proc-num"></div><div class="proc-name">Build</div><div class="proc-desc">Fast, mobile-first, SEO-ready development. Clean code, quick load times, zero bloat.</div></div>
+      <div class="proc-card reveal rd3"><div class="proc-num"></div><div class="proc-name">Launch</div><div class="proc-desc">We go live — tested across devices, optimized, and ready to start bringing in leads.</div></div>
+      <div class="proc-card reveal rd4"><div class="proc-num"></div><div class="proc-name">Grow</div><div class="proc-desc">SEO, content, and automation to keep the leads coming long after launch day.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-photo reveal">
+        <img src="jag.jpg" alt="Jag Mangat" onerror="this.outerHTML='<div class=\'about-photo-ph\'>👤</div>'" />
+      </div>
+      <div class="about-text reveal rd1">
+        <div class="section-label">About Me</div>
+        <h2 class="section-title">Hi, I'm Jag.</h2>
+        <p>I'm a <strong>PMP-certified IT Project Manager</strong> with the BC Public Service — and a relentless builder. By day I manage complex government technology projects. The rest of the time, I design websites, build apps, grow audiences, and run an automated portfolio of digital businesses.</p>
+        <p>That mix is my edge. Most web designers can make something look nice. <strong>I understand the whole machine</strong> — design, development, SEO, content, automation, and the project management to actually ship it on time. When I build your site, I'm bringing everything I use to grow my own businesses.</p>
+        <p><strong>Direct, fast, no fluff.</strong> You'll work with me — not a junior handoff — and you'll get work that's built to make you money, not just win design awards.</p>
+        <div class="about-pills">
+          <span class="pill">PMP Certified</span>
+          <span class="pill">1,400+ Sites Shipped</span>
+          <span class="pill">55K+ Audience Built</span>
+          <span class="pill">Victoria, BC</span>
+          <span class="pill">Web · SEO · Branding</span>
+          <span class="pill">AI &amp; Automation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Why Work With Me</div>
+      <h2 class="section-title">A builder, not a middleman.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal"><div class="why-icon">⚡</div><div class="why-name">Genuinely Fast</div><div class="why-desc">I ship in days, not months. AI-powered workflows mean you get premium work at startup speed.</div></div>
+      <div class="why-card reveal rd1"><div class="why-icon">🎯</div><div class="why-name">Built to Convert</div><div class="why-desc">Every decision is tied to one thing: turning your visitors into paying customers.</div></div>
+      <div class="why-card reveal rd2"><div class="why-icon">🤝</div><div class="why-name">Work Directly With Me</div><div class="why-desc">No account managers, no outsourcing. You talk to the person actually doing the work.</div></div>
+      <div class="why-card reveal rd3"><div class="why-icon">🧠</div><div class="why-name">Full-Stack Skillset</div><div class="why-desc">Design, dev, SEO, content, and automation under one roof. One partner for everything.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote-section">
+  <div class="container">
+    <p class="quote-big reveal">"Most businesses don't need five vendors. They need <span class="gradient-text">one person who can design it, build it, rank it, and grow it</span> — and actually get it done."</p>
+    <p class="quote-author reveal rd1">Jag Mangat <span>· Web Designer &amp; Digital Strategist</span></p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <span class="cta-emoji">🚀</span>
+      <h2 class="cta-title">Let's build something<br>that actually works.</h2>
+      <p class="cta-sub">Whether you need a brand-new website, a redesign, SEO that ranks, or automation that runs your marketing for you — let's talk. First consultation is free.</p>
+      <div class="cta-buttons">
+        <a href="mailto:jag@jaggyai.com" class="btn-primary"><span>✉️</span> jag@jaggyai.com</a>
+        <a href="#work" class="btn-secondary"><span>👀</span> See the Work</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-inner">
+    <div class="footer-logo">JAG<span>.</span></div>
+    <nav class="footer-links">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#about">About</a>
+      <a href="https://www.youtube.com/@jaggysports" target="_blank" rel="noopener">@jaggysports</a>
+      <a href="mailto:jag@jaggyai.com">Contact</a>
+    </nav>
+    <div class="footer-copy">© 2026 Jag Mangat · Victoria, BC</div>
+  </div>
+</footer>
+
+<script>
+  const obs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  const nav=document.querySelector('nav');
+  window.addEventListener('scroll',()=>{nav.style.boxShadow=window.scrollY>20?'0 4px 40px rgba(0,0,0,.45)':'none';},{passive:true});
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const t=document.querySelector(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
+</script>
+</body>
+</html>
