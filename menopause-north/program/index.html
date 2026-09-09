@@ -606,10 +606,10 @@ function sweep(){
   var h = window.innerHeight * 0.94;
   app.querySelectorAll('.rv:not(.in)').forEach(function(e){ if(e.getBoundingClientRect().top < h) e.classList.add('in'); });
 }
-var sweeping = false;
-function onScroll(){ if(sweeping) return; sweeping = true; requestAnimationFrame(function(){ sweeping = false; sweep(); }); }
-window.addEventListener('scroll', onScroll, {passive:true});
-window.addEventListener('resize', onScroll);
+window.addEventListener('scroll', sweep, {passive:true});
+window.addEventListener('resize', sweep);
+window.addEventListener('load', sweep);
+document.addEventListener('visibilitychange', sweep);
 function bindReveal(){
   sweep(); setTimeout(sweep, 150); setTimeout(sweep, 800);
   if('IntersectionObserver' in window){
