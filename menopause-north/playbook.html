@@ -1,0 +1,328 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>The Canadian Menopause Playbook — Curriculum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+:root{color-scheme:light}
+:root{
+  --ground:#F4F6F5; --surface:#FFFFFF; --surface-2:#E9EEEC;
+  --ink:#111B1D; --ink-2:#44565A; --ink-3:#71858A;
+  --rule:#CFDAD7; --rule-soft:#E1E8E6;
+  --brand:#0F4C4A; --brand-soft:#DBEAE6;
+  --gold:#9A6E0C; --gold-soft:#F3E9CF;
+  --alert:#8B2F26; --alert-soft:#F4DFDC;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0B1415; --surface:#131F20; --surface-2:#1A2829;
+    --ink:#E8EFED; --ink-2:#AFC0BD; --ink-3:#7F9491;
+    --rule:#2A3A3A; --rule-soft:#213030;
+    --brand:#5FC4B4; --brand-soft:#12332F;
+    --gold:#D9AC4D; --gold-soft:#2E2611;
+    --alert:#E39189; --alert-soft:#341C19;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0B1415; --surface:#131F20; --surface-2:#1A2829;
+  --ink:#E8EFED; --ink-2:#AFC0BD; --ink-3:#7F9491;
+  --rule:#2A3A3A; --rule-soft:#213030;
+  --brand:#5FC4B4; --brand-soft:#12332F;
+  --gold:#D9AC4D; --gold-soft:#2E2611;
+  --alert:#E39189; --alert-soft:#341C19;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:0;background:var(--ground);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:44px 26px 90px}
+h1,h2,h3,.ui{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif}
+p{margin:0 0 15px;max-width:68ch}
+a{color:var(--brand);text-underline-offset:2px}
+a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+img{max-width:100%}
+
+.eyebrow{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);margin:0 0 16px;display:flex;flex-wrap:wrap;gap:8px 16px}
+h1{font-weight:700;font-size:clamp(36px,6vw,58px);line-height:1.02;letter-spacing:-.025em;margin:0 0 16px;max-width:16ch;text-wrap:balance}
+.standfirst{font-size:20px;line-height:1.5;color:var(--ink-2);max-width:62ch;margin:0}
+.mast{border-bottom:2px solid var(--ink);padding-bottom:26px;margin-bottom:38px}
+
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin:0 0 44px}
+.spec{background:var(--surface);padding:16px 18px}
+.spec .k{font-family:"Bricolage Grotesque",sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:6px}
+.spec .v{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:19px;letter-spacing:-.01em}
+
+section{margin-bottom:56px}
+h2.sec{font-weight:700;font-size:29px;letter-spacing:-.02em;margin:0 0 4px;text-wrap:balance}
+.sec-note{font-family:"Bricolage Grotesque",sans-serif;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin:0 0 22px}
+
+.box{border:1px solid var(--rule);background:var(--surface);padding:22px 24px;margin:0 0 22px}
+.box.warn{background:var(--alert-soft);border-color:var(--alert)}
+.box.note{background:var(--gold-soft);border-color:var(--gold)}
+.box.good{background:var(--brand-soft);border-color:var(--brand)}
+.box .tag{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase;display:block;margin-bottom:10px;color:var(--brand)}
+.box.warn .tag{color:var(--alert)} .box.note .tag{color:var(--gold)}
+.box p:last-child{margin-bottom:0}
+.box ul{margin:0;padding-left:20px}
+.box li{margin-bottom:7px}
+.box li:last-child{margin-bottom:0}
+
+/* modules */
+.mods{display:flex;flex-direction:column;gap:0}
+.mod{border-top:1px solid var(--rule);padding:26px 0}
+.mod:last-child{border-bottom:1px solid var(--rule)}
+.mod-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:6px}
+.mod-num{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:12px;letter-spacing:.12em;color:var(--gold)}
+.mod h3{font-weight:700;font-size:22px;letter-spacing:-.02em;margin:0;flex:1;min-width:240px}
+.mod-time{font-family:"Bricolage Grotesque",sans-serif;font-size:12px;color:var(--ink-3);letter-spacing:.04em}
+.mod-goal{color:var(--ink-2);margin:0 0 16px;font-size:16px;max-width:70ch}
+.lessons{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--rule-soft);border:1px solid var(--rule-soft)}
+.lessons li{background:var(--surface);padding:12px 15px;font-size:15px;display:flex;gap:10px;align-items:baseline}
+.lessons li b{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:11px;color:var(--ink-3);letter-spacing:.06em;flex-shrink:0}
+.asset{margin-top:14px;font-size:14px;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.asset .lab{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.badge{display:inline-block;font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:10px;letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;background:var(--brand-soft);color:var(--brand);white-space:nowrap}
+.badge.ca{background:var(--gold-soft);color:var(--gold)}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--rule);background:var(--surface);margin-bottom:20px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+thead th{font-family:"Bricolage Grotesque",sans-serif;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);font-weight:600;background:var(--surface-2);border-bottom:1px solid var(--rule)}
+tbody tr:last-child td{border-bottom:none}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.yes{color:var(--brand);font-weight:600} .no{color:var(--alert);font-weight:600}
+
+/* build plan */
+.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:16px;padding:18px 0;border-top:1px solid var(--rule)}
+.steps li:last-child{border-bottom:1px solid var(--rule)}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:13px;color:var(--brand);padding-top:4px}
+.steps h3{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:17px;margin:0 0 4px;letter-spacing:-.01em}
+.steps p{font-size:15px;color:var(--ink-2);margin:0;max-width:66ch}
+
+.backlink{font-family:"Bricolage Grotesque",sans-serif;font-size:14px;font-weight:600;text-decoration:none;display:inline-block;margin-bottom:28px}
+
+@media(max-width:600px){.wrap{padding:30px 17px 70px}.steps li{grid-template-columns:32px 1fr;gap:12px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<a class="backlink" href="./">← Menopause North site</a>
+
+<header class="mast">
+  <p class="eyebrow"><span>Menopause North</span><span>Flagship product</span><span>Self-paced · CAD $147</span></p>
+  <h1>The Canadian Menopause Playbook</h1>
+  <p class="standfirst">A seven-module self-paced course that teaches Canadian women what menopause actually is, how to get taken seriously by their doctor, what their province will and won’t pay for, and how to protect their strength through it. Built to be taught by Carol from lived experience — not from a clinical chair.</p>
+</header>
+
+<div class="specs">
+  <div class="spec"><span class="k">Modules</span><span class="v">7</span></div>
+  <div class="spec"><span class="k">Lessons</span><span class="v">36</span></div>
+  <div class="spec"><span class="k">Video runtime</span><span class="v">4h 20m</span></div>
+  <div class="spec"><span class="k">Downloads</span><span class="v">9</span></div>
+  <div class="spec"><span class="k">Price</span><span class="v">$147</span></div>
+</div>
+
+<section>
+  <h2 class="sec">Read this before you write a single lesson</h2>
+  <p class="sec-note">The constraint that shapes everything</p>
+
+  <div class="box warn">
+    <span class="tag">The credential problem, and the way through it</span>
+    <p>Carol has lived experience and no certification yet. That rules out one kind of course and opens up a better one.</p>
+    <p><strong>Off the table:</strong> personalised meal plans, macro prescriptions, individual exercise programming, anything that reads as diagnosis or treatment. In BC, “dietitian” is a protected title regulated by the CHCPBC, and coaching without a credential must never present as clinical care.</p>
+    <p><strong>On the table, and far more valuable:</strong> education, navigation, and advocacy. Nobody in Canada is teaching women how the Canadian system actually works — how to prepare for the appointment, what PharmaCare now covers, what to do when a doctor dismisses them, how to claim it through benefits. That course requires no clinical licence, and no US competitor can make it.</p>
+  </div>
+
+  <div class="box good">
+    <span class="tag">Reframe the product</span>
+    <p>This is not a menopause fitness course. It is <strong>a navigation course for the Canadian menopause system</strong>, with a strength and nutrition education module inside it. That framing is honest about Carol’s credentials, legally clean, uncontested in this market, and — because 72% of Canadian women who sought medical advice found it unhelpful — it solves the problem they actually have.</p>
+  </div>
+
+  <p>Two rules run through every lesson. First, Carol speaks as <em>a woman who went through this</em>, never as a practitioner: “here’s what I did,” “here’s what I wish I’d known,” “here’s the question I should have asked.” Second, every module ends with the same line, on screen and in the workbook: <strong>this is education, not medical advice — take it to your doctor.</strong> That line is not a legal fig leaf. It is the product’s actual promise: walk in prepared.</p>
+</section>
+
+<section>
+  <h2 class="sec">Curriculum</h2>
+  <p class="sec-note">7 modules · 36 lessons · 4h 20m</p>
+
+  <div class="mods">
+
+    <div class="mod">
+      <div class="mod-head"><span class="mod-num">MODULE 01</span><h3>What Is Actually Happening To You</h3><span class="mod-time">6 lessons · 38 min</span></div>
+      <p class="mod-goal">Ends the “am I going crazy?” phase. Most women arrive knowing three symptoms and experiencing seven. Naming the thing is the first relief the course delivers, and it is what earns the next four hours of attention.</p>
+      <ul class="lessons">
+        <li><b>1.1</b> Perimenopause, menopause, postmenopause — the actual definitions</li>
+        <li><b>1.2</b> The timeline: why this lasts 7–10 years, not 7–10 months</li>
+        <li><b>1.3</b> The 30+ symptom list, and the ones nobody warned you about</li>
+        <li><b>1.4</b> Estrogen, progesterone, testosterone — a plain-English explainer</li>
+        <li><b>1.5</b> Why it hit your sleep, your mood, and your midsection all at once</li>
+        <li><b>1.6</b> Carol’s story: the two years I thought it was just stress</li>
+      </ul>
+      <p class="asset"><span class="lab">Download</span> The Symptom Inventory — a 30-item checklist she scores today and re-scores at day 90.</p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-head"><span class="mod-num">MODULE 02</span><h3>Getting Taken Seriously By Your Doctor</h3><span class="mod-time">6 lessons · 41 min</span> <span class="badge ca">Canada-only</span></div>
+      <p class="mod-goal">The highest-value module in the course and the one that will get quoted back to you in testimonials. Fewer than a quarter of Canadian women had a physician raise menopause with them; 41% went looking themselves and 72% of those came away unsatisfied. This module fixes the appointment.</p>
+      <ul class="lessons">
+        <li><b>2.1</b> Why the average appointment fails — and it isn’t your doctor being lazy</li>
+        <li><b>2.2</b> The 8-minute problem: how to structure a short appointment</li>
+        <li><b>2.3</b> Tracking symptoms so they read as data, not complaints</li>
+        <li><b>2.4</b> The exact words to open with (and the ones that get you dismissed)</li>
+        <li><b>2.5</b> What to ask for, in order — and what tests actually tell you</li>
+        <li><b>2.6</b> When you’re dismissed: second opinions, menopause clinics, virtual care</li>
+      </ul>
+      <p class="asset"><span class="lab">Downloads</span> The Appointment Script (one page, printable) · 14-Day Symptom Tracker · “What to ask for” card</p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-head"><span class="mod-num">MODULE 03</span><h3>Your Canadian Coverage Map</h3><span class="mod-time">5 lessons · 32 min</span> <span class="badge ca">Nobody else has this</span></div>
+      <p class="mod-goal">The module that makes the course unmistakably Canadian and un-clonable by any US competitor. It is also the module that will drive organic traffic on its own, because women are searching for exactly this and finding American answers.</p>
+      <ul class="lessons">
+        <li><b>3.1</b> BC and Manitoba: hormone therapy at $0, and what that actually means</li>
+        <li><b>3.2</b> What Plan NP covers, what it doesn’t, and how to ask for it</li>
+        <li><b>3.3</b> Province by province: where the gaps are</li>
+        <li><b>3.4</b> Extended health, HSAs and Wellness Spending Accounts — what you can claim</li>
+        <li><b>3.5</b> The out-of-pocket reality: what to budget for</li>
+      </ul>
+      <p class="asset"><span class="lab">Download</span> The Coverage Cheat Sheet — one page per province, updated twice a year. <em>This document is the single best free lead magnet in the business; give an abridged version away.</em></p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-head"><span class="mod-num">MODULE 04</span><h3>Why “Eat Less, Move More” Stopped Working</h3><span class="mod-time">6 lessons · 47 min</span></div>
+      <p class="mod-goal">The emotional core. Every woman in the audience has been told for two years that she isn’t trying hard enough. This module tells her why the advice was wrong for her body — carefully, as education about how bodies change, never as a prescription for hers.</p>
+      <ul class="lessons">
+        <li><b>4.1</b> What changes in midlife: muscle, insulin sensitivity, where fat is stored</li>
+        <li><b>4.2</b> Why cutting calories harder backfires after 45</li>
+        <li><b>4.3</b> Protein: what the research says about needs in midlife</li>
+        <li><b>4.4</b> Fibre, blood sugar and the afternoon crash</li>
+        <li><b>4.5</b> Alcohol, caffeine and sleep — the honest conversation</li>
+        <li><b>4.6</b> Building a plate, not following a plan</li>
+      </ul>
+      <div class="box warn" style="margin-top:16px">
+        <span class="tag">Compliance guardrail</span>
+        <p>No calorie targets, no macro splits, no meal plans, no supplement recommendations by name and dose. Teach <em>principles and published general guidance</em>, cite the source on screen, and route anything individual to a physician or Registered Dietitian. Carol’s own numbers can be shown as her story, clearly labelled as hers.</p>
+      </div>
+      <p class="asset"><span class="lab">Download</span> The Plate Guide — a visual framework, not a meal plan · Grocery list of high-protein staples available at Canadian supermarkets</p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-head"><span class="mod-num">MODULE 05</span><h3>Strength Is The Treatment</h3><span class="mod-time">5 lessons · 44 min</span></div>
+      <p class="mod-goal">The behaviour change with the most evidence behind it and the least uptake. Frame lifting as medicine for bone density, muscle mass and glucose control — not as a way to look different — because that framing survives the first month, and aesthetics don’t.</p>
+      <ul class="lessons">
+        <li><b>5.1</b> Bone density, sarcopenia, and the 10-year window</li>
+        <li><b>5.2</b> Why 3 sets of 12 with pink dumbbells isn’t doing it</li>
+        <li><b>5.3</b> The six movements that cover everything</li>
+        <li><b>5.4</b> Starting at zero: a 12-week beginner progression</li>
+        <li><b>5.5</b> Joints, pelvic floor, and when to stop and see someone</li>
+      </ul>
+      <div class="box warn" style="margin-top:16px">
+        <span class="tag">Compliance guardrail</span>
+        <p>Ship this as a <strong>general education template</strong> with an explicit medical-clearance gate before lesson 5.4, not as individualised programming. Demonstrations are of standard movement patterns with published form cues. Add a screening questionnaire (PAR-Q+ is the Canadian standard) as a required download before the progression unlocks. When Carol certifies, this module upgrades to real programming and becomes the basis of the paid coaching tier.</p>
+      </div>
+      <p class="asset"><span class="lab">Downloads</span> PAR-Q+ screening form · 12-Week Strength Template (printable) · Home vs gym equipment list</p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-head"><span class="mod-num">MODULE 06</span><h3>Sleep, Mood, And The Things Nobody Mentions</h3><span class="mod-time">5 lessons · 36 min</span></div>
+      <p class="mod-goal">The symptoms women don’t raise because they don’t know they’re connected — 58% didn’t know migraines, anxiety, depression or memory problems were on the list. Naming them is the module’s whole job.</p>
+      <ul class="lessons">
+        <li><b>6.1</b> Night sweats, broken sleep, and the 3 a.m. wake-up</li>
+        <li><b>6.2</b> Brain fog: what it is and how long it lasts</li>
+        <li><b>6.3</b> Anxiety, rage, and the mood shift nobody warned you about</li>
+        <li><b>6.4</b> Joint pain, skin, hair, and the small indignities</li>
+        <li><b>6.5</b> Intimacy and relationships — the conversation to have</li>
+      </ul>
+      <p class="asset"><span class="lab">Download</span> Sleep Reset Checklist · Conversation starters for a partner</p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-head"><span class="mod-num">MODULE 07</span><h3>Menopause At Work — And Your Next 90 Days</h3><span class="mod-time">3 lessons · 22 min</span> <span class="badge ca">Canada-only</span></div>
+      <p class="mod-goal">Closes the course on agency rather than symptoms, and quietly seeds the B2B business: every student is an employee, and some of them are managers who will forward your workplace lesson to HR.</p>
+      <ul class="lessons">
+        <li><b>7.1</b> The $3.5B problem: what menopause costs Canadian workplaces</li>
+        <li><b>7.2</b> Asking for what you need at work without disclosing more than you want to</li>
+        <li><b>7.3</b> Your 90-day plan: the four things to start this week</li>
+      </ul>
+      <p class="asset"><span class="lab">Downloads</span> The 90-Day Plan (fillable) · One-page menopause brief to forward to your employer</p>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">What ships in the box</h2>
+  <p class="sec-note">Nine downloads — these are what get screenshotted and shared</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Asset</th><th>Module</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Coverage Cheat Sheet</strong></td><td class="n">03</td><td>The only Canadian document of its kind. Abridge it as the free lead magnet.</td></tr>
+        <tr><td><strong>The Appointment Script</strong></td><td class="n">02</td><td>One page she prints and takes to the doctor. Highest testimonial value in the course.</td></tr>
+        <tr><td><strong>Symptom Inventory</strong></td><td class="n">01</td><td>Scored day 1 and day 90 — this is how you generate before/after proof without photos.</td></tr>
+        <tr><td><strong>14-Day Symptom Tracker</strong></td><td class="n">02</td><td>Turns her experience into data the physician can act on.</td></tr>
+        <tr><td><strong>12-Week Strength Template</strong></td><td class="n">05</td><td>General template, gated behind PAR-Q+ screening.</td></tr>
+        <tr><td><strong>PAR-Q+ Screening Form</strong></td><td class="n">05</td><td>Canadian standard. Required, not optional — this is your liability gate.</td></tr>
+        <tr><td><strong>The Plate Guide</strong></td><td class="n">04</td><td>Visual framework. Deliberately not a meal plan.</td></tr>
+        <tr><td><strong>90-Day Plan</strong></td><td class="n">07</td><td>Fillable. Doubles as the upsell surface for coaching later.</td></tr>
+        <tr><td><strong>Employer Brief</strong></td><td class="n">07</td><td>Students forward it to HR. Free B2B lead generation.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">Pricing and the ladder above it</h2>
+  <p class="sec-note">Where $147 sits, and what it feeds</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Product</th><th>Price CAD</th><th>Needs a cert?</th><th>When</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Coverage Cheat Sheet (abridged)</strong><br><span style="color:var(--ink-3);font-size:14px">Free — email capture</span></td><td class="n">$0</td><td class="yes">No</td><td>Launch</td></tr>
+        <tr><td><strong>The Canadian Menopause Playbook</strong><br><span style="color:var(--ink-3);font-size:14px">Self-paced, 7 modules</span></td><td class="n">$147</td><td class="yes">No</td><td>Launch</td></tr>
+        <tr><td><strong>Playbook + Live Q&amp;A pass</strong><br><span style="color:var(--ink-3);font-size:14px">Monthly group call with Carol, 12 months</span></td><td class="n">$247</td><td class="yes">No</td><td>Launch</td></tr>
+        <tr><td><strong>8-week group cohort</strong><br><span style="color:var(--ink-3);font-size:14px">Live weekly, accountability, community</span></td><td class="n">$597</td><td class="no">Yes</td><td>After cert</td></tr>
+        <tr><td><strong>Corporate lunch-and-learn</strong><br><span style="color:var(--ink-3);font-size:14px">60–90 min, sold to HR</span></td><td class="n">$1,500–3,500</td><td class="yes">No</td><td>Month 4+</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box note">
+    <span class="tag">Why $147 and not $47</span>
+    <p>$47 signals a PDF. $147 signals a program, and this audience is not price-shopping — they have spent more than that on supplements that did nothing. $147 also leaves room for a $97 launch price to the founding cohort, which is the offer that gets you your first fifty testimonials.</p>
+    <p>The <strong>$247 tier is the one to push.</strong> It costs Carol one call a month, roughly doubles revenue per buyer, and — critically — it is a live relationship with paying customers, which is how you find out what the coaching product should be before you build it.</p>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec">Build order</h2>
+  <p class="sec-note">Ship in six weeks, not six months</p>
+
+  <ol class="steps">
+    <li><h3>Write the Coverage Cheat Sheet first</h3><p>It’s research, not filming. It’s the free lead magnet, the SEO engine, and the proof that this brand is Canadian. It also gives Carol something to promote before a single lesson exists.</p></li>
+    <li><h3>Film Modules 02 and 03 next</h3><p>The appointment script and the coverage map. These are the two modules no competitor has, they need no credential, and they are the ones that will show up in testimonials. If you only ever ship these two, you still have a product.</p></li>
+    <li><h3>Record Carol’s story as Module 01</h3><p>Film it in one sitting, unscripted, with a written outline. Her credibility is the lived experience — over-produced kills it. Phone on a tripod, window light, one take per lesson.</p></li>
+    <li><h3>Build the workbook before Modules 04–07</h3><p>Writing the downloads forces the remaining lessons to have a point. A module that doesn’t produce a worksheet is usually a module that doesn’t need to exist.</p></li>
+    <li><h3>Film 04, 05, 06, 07 in two days</h3><p>Batch it. Same outfit changes, same setup. Module 05 gets the PAR-Q+ gate built into the platform, not just mentioned on screen.</p></li>
+    <li><h3>Run a founding cohort at $97</h3><p>Fifty seats, closed after a week, in exchange for a testimonial and a completed Symptom Inventory at day 90. That’s $4,850 and — more valuable — fifty pieces of proof and a list of exactly which lessons confused people.</p></li>
+    <li><h3>Then Carol starts the certification</h3><p>Girls Gone Strong’s Menopause Coaching Specialist runs about USD $1,500, 18 modules, no prerequisites, CanFitPro-recognised CEUs, typically 2–4 months. Start it once the course is earning, not before — and let the course pay for it.</p></li>
+  </ol>
+</section>
+
+<section>
+  <h2 class="sec">The disclaimer, written properly</h2>
+  <p class="sec-note">Put this on the sales page, in the platform, and at the end of every module</p>
+  <div class="box">
+    <p style="font-size:16px"><em>Menopause North provides education, not medical care. Carol is not a physician, nurse practitioner, or Registered Dietitian, and nothing in this course is a diagnosis, treatment plan, or personalised nutrition or exercise prescription. It is a guide to understanding menopause and to working effectively with your own healthcare providers in Canada. Always consult your physician before making changes to medication, nutrition, or physical activity — particularly if you have an existing health condition. Coverage information reflects publicly available provincial program details at the date shown and can change; confirm current coverage with your provincial program or pharmacist.</em></p>
+  </div>
+  <p>Get liability insurance before the first sale regardless — it is inexpensive for an education product and non-negotiable once Module 05 exists. And put the date of last review on the Coverage Cheat Sheet in the footer; it’s the difference between a trusted reference and a stale PDF.</p>
+</section>
+
+</div>
+
+</body></html>
