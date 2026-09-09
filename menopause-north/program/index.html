@@ -612,6 +612,8 @@ window.addEventListener('load', sweep);
 document.addEventListener('visibilitychange', sweep);
 /* enable the animation only once a frame has actually rendered; sweep in the same frame so in-view content never flashes */
 requestAnimationFrame(function(){ document.documentElement.classList.add('anim'); sweep(); });
+/* timer fallback: cheap, and means reveal never depends on scroll events firing */
+setInterval(function(){ if(app.querySelector('.rv:not(.in)')) sweep(); }, 250);
 function bindReveal(){
   sweep(); setTimeout(sweep, 150); setTimeout(sweep, 800);
   if('IntersectionObserver' in window){
