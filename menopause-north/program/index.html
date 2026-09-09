@@ -146,8 +146,7 @@ section.tight{padding:64px 0}
 .vid{position:relative;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;background:#0b1415;color:#fff}
 .vid iframe,.vid video{position:absolute;inset:0;width:100%;height:100%;border:0}
 .vid .ph{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:40px;background:radial-gradient(120% 100% at 100% 0%,rgba(95,196,180,.28),transparent 60%),linear-gradient(180deg,#132628,#0b1415)}
-.vid .ph .play{width:76px;height:76px;border-radius:50%;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);backdrop-filter:blur(8px)}
-.vid .ph .play svg{width:28px;height:28px;margin-left:4px}
+.vid .ph .soon{position:absolute;top:24px;left:24px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);border-radius:980px;padding:7px 14px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#fff}
 .vid .ph h3{font-size:clamp(20px,2.6vw,30px)}
 .vid .ph p{margin:8px 0 0;color:#a1a1a6;font-size:15px;max-width:52ch}
 .chapters{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--line-2);border-radius:var(--radius-s);overflow:hidden}
@@ -308,6 +307,7 @@ footer a{color:var(--ink-2)}
   body{background:#fff}
   section{padding:0}
   .printable{display:block!important}
+  .rv{opacity:1;transform:none}
 }
 body.printing *:not(.printable):not(.printable *):not(#app):not(main):not(section):not(.wrap):not(.card):not(.tool){visibility:hidden}
 body.printing .printable,body.printing .printable *{visibility:visible}
@@ -595,17 +595,27 @@ function route(){
   else if(h==='/progress'){ renderProgress(); }
   else { renderHome(); }
   updateNav();
+  var t = anchor ? document.getElementById(anchor) : null;
+  if(t){ var y=t.getBoundingClientRect().top+window.scrollY-104; window.scrollTo({top:y,behavior:'auto'}); } else { window.scrollTo(0,0); }
   bindReveal();
-  if(anchor){ var t=document.getElementById(anchor); if(t){ setTimeout(function(){ var y=t.getBoundingClientRect().top+window.scrollY-104; window.scrollTo({top:y,behavior:'auto'}); },0); return; } }
-  window.scrollTo(0,0);
 }
 window.addEventListener('hashchange', route);
 
+/* Reveal-on-scroll: a position sweep (not observer-only) so nothing can stay hidden */
+function sweep(){
+  var h = window.innerHeight * 0.94;
+  app.querySelectorAll('.rv:not(.in)').forEach(function(e){ if(e.getBoundingClientRect().top < h) e.classList.add('in'); });
+}
+var sweeping = false;
+function onScroll(){ if(sweeping) return; sweeping = true; requestAnimationFrame(function(){ sweeping = false; sweep(); }); }
+window.addEventListener('scroll', onScroll, {passive:true});
+window.addEventListener('resize', onScroll);
 function bindReveal(){
-  var els = app.querySelectorAll('.rv');
-  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in'); }); return; }
-  var io = new IntersectionObserver(function(en){ en.forEach(function(x){ if(x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } }); },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
-  els.forEach(function(e){ io.observe(e); });
+  sweep(); setTimeout(sweep, 150); setTimeout(sweep, 800);
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(){ sweep(); }, {threshold:0, rootMargin:'0px 0px -6% 0px'});
+    app.querySelectorAll('.rv').forEach(function(e){ io.observe(e); });
+  }
 }
 
 /* =========================================================
@@ -719,8 +729,8 @@ function refreshStatus(m){
 function videoBlock(m){
   if(m.yt){ return '<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/'+esc(m.yt)+'?rel=0" title="'+esc(m.title)+'" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>'; }
   if(m.mp4){ return '<div class="vid"><video controls preload="metadata" '+(m.poster?'poster="'+esc(m.poster)+'"':'')+'><source src="'+esc(m.mp4)+'" type="video/mp4"></video></div>'; }
-  return '<div class="vid"><div class="ph"><div class="play"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg></div><h3>Lesson '+pad(m.n)+' · '+m.runtime+'</h3><p>Carol’s lesson for this module is being filmed. The chapter outline below is what it covers — the readings and the tool are ready now.</p></div></div>'
-       +'<p class="note">To attach the finished video: set <code>yt</code> (a YouTube ID) or <code>mp4</code> (a hosted file) on module '+m.n+' in the data block at the top of this page.</p>';
+  return '<div class="vid"><div class="ph"><span class="soon">Video coming soon</span><h3>Lesson '+pad(m.n)+' · '+m.runtime+'</h3><p>This lesson hasn’t been filmed yet. The chapter outline below is what it will cover — the readings, the tool and the quiz are ready now.</p></div></div>'
+       +'<p class="note">To attach the finished video, add its YouTube ID (<code>yt</code>) or a hosted MP4 link (<code>mp4</code>) to module '+m.n+' in the data block at the top of this page — the player is already wired.</p>';
 }
 
 /* =========================================================
