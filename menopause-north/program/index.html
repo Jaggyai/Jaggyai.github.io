@@ -296,9 +296,9 @@ footer{background:var(--bg-2);padding:44px 0 40px;color:var(--ink-3);font-size:1
 footer p{max-width:none;margin-bottom:10px}
 footer a{color:var(--ink-2)}
 
-/* reveal */
-.rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.65,.3,1),transform .7s cubic-bezier(.2,.65,.3,1)}
-.rv.in{opacity:1;transform:none}
+/* reveal — content is visible by default; the hidden state only applies once the browser proves it can animate (html.anim) */
+html.anim .rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.65,.3,1),transform .7s cubic-bezier(.2,.65,.3,1)}
+html.anim .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}.tile{transition:none}.flip .inner{transition:none}}
 
 /* print */
@@ -610,6 +610,8 @@ window.addEventListener('scroll', sweep, {passive:true});
 window.addEventListener('resize', sweep);
 window.addEventListener('load', sweep);
 document.addEventListener('visibilitychange', sweep);
+/* enable the animation only once a frame has actually rendered; sweep in the same frame so in-view content never flashes */
+requestAnimationFrame(function(){ document.documentElement.classList.add('anim'); sweep(); });
 function bindReveal(){
   sweep(); setTimeout(sweep, 150); setTimeout(sweep, 800);
   if('IntersectionObserver' in window){
