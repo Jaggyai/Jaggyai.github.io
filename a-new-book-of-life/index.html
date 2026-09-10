@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A New Book of Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --plum:#2E1420;
+    --plum-soft:#432033;
+    --berry:#8E2C55;
+    --berry-deep:#701F42;
+    --blush:#F4DCD3;
+    --gold:#B98A2E;
+    --gold-soft:#D9B872;
+    --ivory:#FBF5EF;
+    --cream-line:#E8D9CE;
+    --ink:#2A2028;
+    --ink-soft:#6b5a62;
+    --max:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Work Sans',sans-serif;
+    color:var(--ink);
+    background:var(--ivory);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-size:12.5px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-weight:600;
+    color:var(--gold);
+  }
+  .eyebrow.on-dark{color:var(--gold-soft);}
+
+  /* ---------- Book Spine (signature element) ---------- */
+  .spine{
+    position:fixed;
+    top:0;left:0;bottom:0;
+    width:14px;
+    background:linear-gradient(180deg,var(--berry) 0%, var(--plum) 55%, var(--berry) 100%);
+    z-index:500;
+    box-shadow: 2px 0 12px rgba(46,20,32,0.25);
+  }
+  .spine::after{
+    content:'';
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0 2px, transparent 2px 34px);
+  }
+  .spine-tick{
+    position:absolute;
+    left:0; width:14px; height:2px;
+    background:var(--gold-soft);
+    opacity:0.85;
+  }
+  body{padding-left:14px;}
+  @media (max-width:720px){
+    .spine{width:8px;}
+    body{padding-left:8px;}
+    .spine-tick{width:8px;}
+  }
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:100;
+    background:rgba(251,245,239,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--cream-line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:72px;
+  }
+  .brand{font-family:'Fraunces',serif; font-weight:600; font-size:19px; color:var(--plum);}
+  .brand em{font-style:italic; color:var(--berry);}
+  .navlinks{display:flex; gap:34px; font-size:14.5px; font-weight:500;}
+  .navlinks a{color:var(--ink-soft); transition:color .2s; margin-right:34px;}
+  .navlinks a:last-child{margin-right:0;}
+  .navlinks a:hover{color:var(--berry);}
+  .nav-cta{
+    background:var(--berry); color:var(--ivory)!important;
+    padding:10px 20px; border-radius:2px; font-size:13.5px; font-weight:600;
+    letter-spacing:0.03em;
+  }
+  .navlinks{ }
+  .menu-btn{display:none; background:none; border:none; cursor:pointer;}
+  @media (max-width:860px){
+    .navlinks{position:fixed; top:72px; left:0; right:0; background:var(--ivory);
+      flex-direction:column; padding:20px 32px; gap:18px; border-bottom:1px solid var(--cream-line);
+      transform:translateY(-130%); transition:transform .3s ease; }
+    .navlinks.open{transform:translateY(0);}
+    .menu-btn{display:block;}
+  }
+
+  /* ---------- Chapter marker (used on every section) ---------- */
+  .chapter-mark{
+    display:flex; align-items:center; gap:16px; margin-bottom:22px;
+  }
+  .chapter-num{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:500;
+    font-size:15px; color:var(--gold);
+    border:1px solid var(--gold-soft); border-radius:50%;
+    width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+  .chapter-mark .eyebrow{margin:0;}
+
+  /* ---------- Hero / Cover ---------- */
+  .cover{
+    position:relative;
+    min-height:720px;
+    display:flex; align-items:center;
+    background:radial-gradient(ellipse at 78% 18%, var(--plum-soft) 0%, var(--plum) 55%, var(--plum) 100%);
+    color:var(--ivory);
+    overflow:hidden;
+  }
+  .cover::before{
+    content:'';
+    position:absolute; right:-160px; top:-160px; width:520px; height:520px; border-radius:50%;
+    background:radial-gradient(circle, rgba(185,138,46,0.28) 0%, transparent 70%);
+  }
+  .cover::after{
+    content:'';
+    position:absolute; left:-120px; bottom:-160px; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle, rgba(142,44,85,0.35) 0%, transparent 70%);
+  }
+  .cover-inner{position:relative; z-index:2; padding:120px 0 90px;}
+  .cover .eyebrow{margin-bottom:22px;}
+  .cover h1{
+    font-size:clamp(40px,6.6vw,84px);
+    line-height:1.02;
+    color:var(--ivory);
+    max-width:16ch;
+  }
+  .cover h1 .accent{ color:var(--gold-soft); font-style:italic; font-weight:500;}
+  .cover-sub{
+    font-size:18px; line-height:1.6; color:#E9D9DF; max-width:46ch; margin-top:26px;
+  }
+  .cover-byline{
+    margin-top:38px; font-family:'Fraunces',serif; font-style:italic; font-size:16px; color:var(--gold-soft);
+  }
+  .btn-row{display:flex; gap:18px; margin-top:44px; flex-wrap:wrap;}
+  .btn-row .btn{margin-right:18px; margin-bottom:12px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:15px 28px; border-radius:2px; font-weight:600; font-size:14.5px; letter-spacing:0.03em;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-primary{background:var(--gold); color:var(--plum);}
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(185,138,46,0.35);}
+  .btn-ghost{border:1px solid rgba(251,245,239,0.4); color:var(--ivory);}
+  .btn-ghost:hover{border-color:var(--ivory); transform:translateY(-2px);}
+
+  /* ---------- Foreword / Manifesto ---------- */
+  .foreword{padding:120px 0; background:var(--ivory);}
+  .foreword blockquote{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:500;
+    font-size:clamp(24px,3.2vw,36px);
+    line-height:1.45; color:var(--plum); margin:0; max-width:900px;
+  }
+  .foreword blockquote span{color:var(--berry);}
+  .foreword-vals{
+    display:flex; flex-wrap:wrap; gap:14px; margin-top:44px;
+  }
+  .foreword-vals .val-chip{margin-right:14px; margin-bottom:14px;}
+  .val-chip{
+    border:1px solid var(--cream-line); background:#fff;
+    padding:10px 18px; border-radius:999px; font-size:13.5px; font-weight:500; color:var(--ink-soft);
+  }
+  .val-chip strong{color:var(--berry); font-weight:600;}
+
+  /* ---------- Section shared ---------- */
+  section{padding:110px 0;}
+  .section-head{max-width:720px; margin-bottom:56px;}
+  .section-head h2{font-size:clamp(28px,3.6vw,44px); line-height:1.12; color:var(--plum);}
+  .section-head p{font-size:16.5px; line-height:1.7; color:var(--ink-soft); margin-top:18px;}
+  .band-blush{background:var(--blush);}
+  .band-plum{background:var(--plum); color:var(--ivory);}
+  .band-plum .section-head h2{color:var(--ivory);}
+  .band-plum .section-head p{color:#E4CFD8;}
+
+  /* ---------- The Book ---------- */
+  .book-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:center;}
+  .book-cover-art{
+    aspect-ratio:3/4.3; border-radius:4px; position:relative;
+    background:linear-gradient(155deg, var(--berry) 0%, var(--plum) 100%);
+    box-shadow:0 30px 60px -20px rgba(46,20,32,0.4);
+    display:flex; flex-direction:column; justify-content:space-between;
+    padding:38px 32px;
+  }
+  .book-cover-art .spine-line{position:absolute; left:16px; top:0; bottom:0; width:2px; background:rgba(255,255,255,0.18);}
+  .book-cover-art .bc-top{font-size:12px; letter-spacing:0.24em; text-transform:uppercase; color:var(--gold-soft);}
+  .book-cover-art .bc-title{font-family:'Fraunces',serif; font-weight:700; font-size:34px; color:var(--ivory); line-height:1.12; margin-top:14px;}
+  .book-cover-art .bc-tagline{font-family:'Fraunces',serif; font-style:italic; font-size:15px; color:#EBD6DE; margin-top:16px;}
+  .book-cover-art .bc-by{font-size:12.5px; color:var(--gold-soft); letter-spacing:0.08em;}
+  .taglines{list-style:none; margin:0; padding:0;}
+  .taglines li{
+    padding:18px 0; border-top:1px solid var(--cream-line);
+    font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--plum); line-height:1.5;
+  }
+  .taglines li:last-child{border-bottom:1px solid var(--cream-line);}
+
+  /* ---------- Program: chapters ---------- */
+  .chapters{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--cream-line); border:1px solid var(--cream-line);}
+  .chapter-card{background:var(--ivory); padding:34px 30px; min-height:220px;}
+  .chapter-card .cnum{font-family:'Fraunces',serif; font-style:italic; font-weight:500; font-size:34px; color:var(--gold);}
+  .chapter-card h3{font-size:19px; margin-top:14px; color:var(--plum);}
+  .chapter-card p{font-size:14px; line-height:1.6; color:var(--ink-soft); margin-top:10px;}
+  .program-meta{display:flex; gap:50px; margin-top:50px; flex-wrap:wrap;}
+  .program-meta .meta-item{margin-right:50px;}
+  .program-meta .meta-item:last-child{margin-right:0;}
+  .meta-item .num{font-family:'Fraunces',serif; font-weight:700; font-size:30px; color:var(--berry);}
+  .meta-item .lab{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+
+  /* ---------- Full Circle / Community ---------- */
+  .circle-wrap{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:start;}
+  .circle-list{list-style:none; margin:0; padding:0;}
+  .circle-list li{display:flex; gap:18px; padding:22px 0; border-top:1px solid rgba(251,245,239,0.15);}
+  .circle-list li:last-child{border-bottom:1px solid rgba(251,245,239,0.15);}
+  .circle-list .dot{
+    width:34px; height:34px; border-radius:50%; background:var(--gold); color:var(--plum);
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; flex:none;
+  }
+  .circle-list h4{font-size:17px; color:var(--ivory); margin:0 0 6px;}
+  .circle-list p{font-size:14.5px; color:#E4CFD8; margin:0; line-height:1.6;}
+  .manifesto-box{
+    border:1px solid rgba(217,184,114,0.4); padding:44px; border-radius:4px;
+  }
+  .manifesto-box p{
+    font-family:'Fraunces',serif; font-style:italic; font-size:22px; line-height:1.55; color:var(--gold-soft); margin:0;
+  }
+
+  /* ---------- About the Author ---------- */
+  .author-grid{display:grid; grid-template-columns:0.6fr 1.4fr; gap:70px; align-items:start;}
+  .author-mark{
+    aspect-ratio:1/1.1; border-radius:4px;
+    background:linear-gradient(160deg, var(--blush) 0%, #fff 100%);
+    border:1px solid var(--cream-line);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .author-mark .initial{font-family:'Fraunces',serif; font-weight:700; font-size:110px; color:var(--berry); opacity:0.85;}
+  .author-copy h3{font-size:14px; letter-spacing:0.03em; margin-bottom:6px;}
+  .author-copy p{font-size:16px; line-height:1.75; color:var(--ink-soft); margin:0 0 18px;}
+  .author-copy .name-edit{color:var(--berry); font-weight:600; border-bottom:1px dashed var(--berry);}
+  .stat-row{display:flex; gap:44px; margin-top:34px; flex-wrap:wrap;}
+  .stat-row > div{margin-right:44px;}
+  .stat-row > div:last-child{margin-right:0;}
+  .stat-row .num{font-family:'Fraunces',serif; font-weight:700; font-size:26px; color:var(--plum);}
+  .stat-row .lab{font-size:12.5px; color:var(--ink-soft); margin-top:4px; max-width:16ch;}
+
+  /* ---------- Join / Waitlist ---------- */
+  .join{
+    background:linear-gradient(155deg, var(--berry-deep) 0%, var(--plum) 100%);
+    color:var(--ivory); position:relative; overflow:hidden;
+  }
+  .join::before{
+    content:'';position:absolute; right:-140px; bottom:-160px; width:460px; height:460px; border-radius:50%;
+    background:radial-gradient(circle, rgba(185,138,46,0.22) 0%, transparent 70%);
+  }
+  .join-inner{position:relative; z-index:2; text-align:center; max-width:640px; margin:0 auto;}
+  .join h2{font-size:clamp(30px,4vw,46px); color:var(--ivory); line-height:1.15;}
+  .join p{font-size:16.5px; color:#E4CFD8; margin-top:18px; line-height:1.7;}
+  .join-form{
+    display:flex; gap:12px; margin-top:38px; max-width:460px; margin-left:auto; margin-right:auto; flex-wrap:wrap; justify-content:center;
+  }
+  .join-form input{
+    flex:1; min-width:220px; padding:15px 18px; border-radius:2px; border:1px solid rgba(251,245,239,0.35);
+    background:rgba(251,245,239,0.06); color:var(--ivory); font-family:'Work Sans',sans-serif; font-size:14.5px;
+  }
+  .join-form input::placeholder{color:#c9b6c0;}
+  .join-note{font-size:12.5px; color:#c9b6c0; margin-top:16px;}
+
+  footer{padding:44px 0; background:var(--plum-soft); color:#cbb6c0; text-align:center; font-size:13px;}
+  footer .brand{color:var(--ivory);}
+
+  @media (max-width:900px){
+    .book-grid, .circle-wrap, .author-grid{grid-template-columns:1fr;}
+    .chapters{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:600px){
+    .chapters{grid-template-columns:1fr;}
+    section{padding:80px 0;}
+    .wrap{padding:0 22px;}
+  }
+  [data-reveal]{opacity:1;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<div class="spine" id="spine"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">A New Book <em>of Life</em></div>
+    <div class="navlinks" id="navlinks">
+      <a href="#book">The Book</a>
+      <a href="#program">The Program</a>
+      <a href="#circle">The Movement</a>
+      <a href="#author">About</a>
+      <a href="#join" class="nav-cta">Join the Waitlist</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#2E1420" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</nav>
+
+<header class="cover">
+  <div class="wrap cover-inner">
+    <div class="eyebrow on-dark">A Community &amp; A Memoir</div>
+    <h1>Let&rsquo;s write<br>a <span class="accent">new</span> book<br>of life.</h1>
+    <p class="cover-sub">For every woman standing at the edge of her next chapter &mdash; after divorce, through menopause, mid career change, or facing an empty nest &mdash; wondering if she&rsquo;s still capable of more. She is.</p>
+    <div class="cover-byline">A memoir &amp; 6-month reinvention program by <span class="name-edit-inline">[Your Name]</span>, Reinvention Strategist</div>
+    <div class="btn-row">
+      <a href="#join" class="btn btn-primary">Join the Founding Circle</a>
+      <a href="#book" class="btn btn-ghost">Read the Story</a>
+    </div>
+  </div>
+</header>
+
+<section class="foreword" id="foreword">
+  <div class="wrap" data-reveal>
+    <div class="chapter-mark"><span class="chapter-num">I</span><span class="eyebrow">Foreword</span></div>
+    <blockquote>You don&rsquo;t need a happy ending to start a new chapter. <span>You just need to pick up the pen.</span></blockquote>
+    <div class="foreword-vals">
+      <div class="val-chip">You are <strong>enough.</strong></div>
+      <div class="val-chip">You are <strong>love.</strong></div>
+      <div class="val-chip">You are <strong>strong.</strong></div>
+      <div class="val-chip">You are <strong>unstoppable.</strong></div>
+    </div>
+  </div>
+</section>
+
+<section class="band-blush" id="book">
+  <div class="wrap" data-reveal>
+    <div class="chapter-mark"><span class="chapter-num">II</span><span class="eyebrow">The Book</span></div>
+    <div class="section-head">
+      <h2>A New Book of Life</h2>
+      <p>A memoir told in chapters &mdash; each one a different era of loss, collapse, and rebuilding. A hurricane that erased a business overnight. A divorce. A financial collapse. And every time, a woman who picked up the pen and kept writing anyway.</p>
+    </div>
+    <div class="book-grid">
+      <div class="book-cover-art">
+        <div class="spine-line"></div>
+        <div>
+          <div class="bc-top">A Memoir</div>
+          <div class="bc-title">A New<br>Book of<br>Life</div>
+        </div>
+        <div>
+          <div class="bc-tagline">&ldquo;Proof that you can rebuild your life &mdash; no matter how many times it falls apart.&rdquo;</div>
+          <div class="bc-by" style="margin-top:18px;">[YOUR NAME]</div>
+        </div>
+      </div>
+      <ul class="taglines">
+        <li>For every woman who lost her way and is ready to find herself again.</li>
+        <li>Proof that you can rebuild your life &mdash; no matter how many times it falls apart.</li>
+        <li>A memoir of loss, reinvention, and the woman who kept rising anyway.</li>
+        <li>She lost everything, more than once. Here&rsquo;s how she wrote herself a new life every time.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="program">
+  <div class="wrap" data-reveal>
+    <div class="chapter-mark"><span class="chapter-num">III</span><span class="eyebrow">The Program</span></div>
+    <div class="section-head">
+      <h2>Let&rsquo;s Write A New Book of Life</h2>
+      <p>A 6-month, live community program &mdash; not a self-paced course. Six chapters, one a month, each one mapped to the real arc of reinvention. Every woman begins with her own intake: what she wants the next five years to look like, and what &ldquo;unstoppable&rdquo; means for her.</p>
+    </div>
+    <div class="chapters">
+      <div class="chapter-card"><div class="cnum">01</div><h3>The Collapse</h3><p>Naming what fell apart &mdash; and finally acknowledging it fully.</p></div>
+      <div class="chapter-card"><div class="cnum">02</div><h3>The Reckoning</h3><p>Confronting the excuses &mdash; &ldquo;no money,&rdquo; &ldquo;no time,&rdquo; &ldquo;too late&rdquo; &mdash; until belief shifts.</p></div>
+      <div class="chapter-card"><div class="cnum">03</div><h3>The Vision</h3><p>Getting radically clear on what life looks like five years from now.</p></div>
+      <div class="chapter-card"><div class="cnum">04</div><h3>The Blueprint</h3><p>Reverse-engineering that vision into concrete, sequential steps.</p></div>
+      <div class="chapter-card"><div class="cnum">05</div><h3>The Leap</h3><p>Taking the first real action &mdash; launching, deciding, starting.</p></div>
+      <div class="chapter-card"><div class="cnum">06</div><h3>Unstoppable</h3><p>Locking in accountability so momentum outlasts the program.</p></div>
+    </div>
+    <div class="program-meta">
+      <div class="meta-item"><div class="num">6</div><div class="lab">months, live &amp; guided</div></div>
+      <div class="meta-item"><div class="num">1:1</div><div class="lab">intake, defining her own goal</div></div>
+      <div class="meta-item"><div class="num">&infin;</div><div class="lab">ongoing membership after, cancel anytime</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="band-plum" id="circle">
+  <div class="wrap" data-reveal>
+    <div class="chapter-mark"><span class="chapter-num" style="border-color:var(--gold-soft); color:var(--gold-soft);">IV</span><span class="eyebrow on-dark">The Movement</span></div>
+    <div class="section-head">
+      <h2>Full Circle</h2>
+      <p>You didn&rsquo;t just rewrite your book of life. Now you help someone else start theirs. This is how a program becomes a movement &mdash; one woman holding another woman&rsquo;s hand, again and again.</p>
+    </div>
+    <div class="circle-wrap">
+      <ul class="circle-list">
+        <li><span class="dot">1</span><div><h4>Invite the Next Chapter</h4><p>Every graduate is challenged to bring in one woman facing her own crossroads.</p></div></li>
+        <li><span class="dot">2</span><div><h4>Welcomed at Lower Cost</h4><p>The woman she invites joins at a reduced rate, or free for a set period.</p></div></li>
+        <li><span class="dot">3</span><div><h4>Become a Guide</h4><p>Graduates can step into a mentor role in the community &mdash; or, if it&rsquo;s the right fit, into the business itself.</p></div></li>
+      </ul>
+      <div class="manifesto-box">
+        <p>We come full circle, one woman holding another woman&rsquo;s hand &mdash; knowing we are enough, we are love, we are strong, we are unstoppable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="author">
+  <div class="wrap" data-reveal>
+    <div class="chapter-mark"><span class="chapter-num">V</span><span class="eyebrow">About the Author</span></div>
+    <div class="author-grid">
+      <div class="author-mark"><span class="initial">Y</span></div>
+      <div class="author-copy">
+        <h1 style="font-size:30px; color:var(--plum); margin-bottom:16px;"><span class="name-edit">[Your Name]</span></h1>
+        <p><strong>Reinvention Strategist &amp; Founder, A New Book of Life.</strong></p>
+        <p>She spent twenty years as a fashion designer and entrepreneur &mdash; building a boutique, then losing it overnight to a hurricane, then rebuilding it again from nothing in a new country. She has since rebuilt her life from the ground up more than once: through divorce, through a financial collapse, and every time, she found her way back stronger.</p>
+        <p>For the past six years, she has worked as a high-ticket sales closer and mentor, known for building trust fast and helping people get clear on what&rsquo;s truly right for them. Along the way, she has quietly coached and mentored dozens of people &mdash; helping one client grow from a modest income to seven figures over two years &mdash; using the same reverse-goal framework at the heart of this program.</p>
+        <p>Now she is bringing every chapter of that story into one place: a memoir, a program, and a movement, built for every woman who is ready to write a new book of life.</p>
+        <div class="stat-row">
+          <div><div class="num">20+</div><div class="lab">years building &amp; rebuilding businesses</div></div>
+          <div><div class="num">6</div><div class="lab">years as a high-ticket sales strategist</div></div>
+          <div><div class="num">3x</div><div class="lab">rebuilt life fully from scratch</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="join" id="join">
+  <div class="wrap join-inner" data-reveal>
+    <div class="eyebrow on-dark" style="justify-content:center; display:flex;">Founding Circle &mdash; First 50</div>
+    <h2 style="margin-top:16px;">Your next chapter starts with one page.</h2>
+    <p>Join the waitlist to be first in line when founding member spots open for the 6-month program &mdash; plus early news on the book.</p>
+    <form class="join-form" onsubmit="return false;">
+      <input type="text" placeholder="First name" aria-label="First name">
+      <input type="email" placeholder="Email address" aria-label="Email address">
+      <button type="submit" class="btn btn-primary">Notify Me</button>
+    </form>
+    <div class="join-note">No spam &mdash; just an invitation when founding spots open.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" style="margin-bottom:6px;">A New Book of Life</div>
+    &copy; <span id="yr"></span> &middot; A memoir, a program, a movement.
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  const menuBtn = document.getElementById('menuBtn');
+  const navlinks = document.getElementById('navlinks');
+  menuBtn.addEventListener('click', () => navlinks.classList.toggle('open'));
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
+
+  // spine ticks aligned to chapter markers
+  const spine = document.getElementById('spine');
+  const marks = document.querySelectorAll('.chapter-mark');
+  function placeTicks(){
+    document.querySelectorAll('.spine-tick').forEach(t => t.remove());
+    marks.forEach(m => {
+      const rect = m.getBoundingClientRect();
+      const tick = document.createElement('div');
+      tick.className = 'spine-tick';
+      tick.style.top = (window.scrollY + rect.top + rect.height/2) + 'px';
+      spine.appendChild(tick);
+    });
+  }
+  window.addEventListener('load', placeTicks);
+  window.addEventListener('resize', placeTicks);
+
+</script>
+
+</body>
+</html>
