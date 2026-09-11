@@ -247,16 +247,24 @@
   }
 
   /* ---------- About the Author ---------- */
-  .author-grid{display:grid; grid-template-columns:0.6fr 1.4fr; gap:70px; align-items:start;}
+  .author-grid{display:grid; grid-template-columns:0.86fr 1.14fr; gap:70px; align-items:start;}
+  .author-photo-wrap{position:relative; max-width:360px;}
+  .author-photo-wrap::before{
+    content:''; position:absolute; top:-22px; left:-22px; right:22px; bottom:22px;
+    background:linear-gradient(160deg, var(--gold-soft) 0%, var(--blush) 100%);
+    border-radius:4px; z-index:0;
+  }
   .author-mark{
-    aspect-ratio:1/1.1; border-radius:4px;
+    aspect-ratio:3/5; border-radius:4px; position:relative; z-index:1;
     background:linear-gradient(160deg, var(--blush) 0%, #fff 100%);
     border:1px solid var(--cream-line);
+    box-shadow:0 34px 64px -26px rgba(46,20,32,0.45);
     display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
   }
   .author-mark .initial{font-family:'Fraunces',serif; font-weight:700; font-size:110px; color:var(--berry); opacity:0.85;}
-  .author-mark{overflow:hidden;}
-  .author-mark img{width:100%; height:100%; object-fit:cover; object-position:top center; display:block; border-radius:4px;}
+  .author-mark img{width:100%; height:100%; object-fit:cover; object-position:50% 12%; display:block; border-radius:4px;}
+  @media (max-width:900px){ .author-photo-wrap{max-width:300px; margin:0 auto;} }
   .author-copy h3{font-size:14px; letter-spacing:0.03em; margin-bottom:6px;}
   .author-copy p{font-size:16px; line-height:1.75; color:var(--ink-soft); margin:0 0 18px;}
   .author-copy .name-edit{color:var(--berry); font-weight:600;}
@@ -429,7 +437,7 @@
   <div class="wrap" data-reveal>
     <div class="chapter-mark"><span class="chapter-num">V</span><span class="eyebrow">About the Author</span></div>
     <div class="author-grid">
-      <div class="author-mark"><img src="carol-danis.webp?v=2" alt="Carol Danis, Reinvention Strategist and founder of A New Book of Life" width="608" height="1080" loading="eager" decoding="async"></div>
+      <div class="author-photo-wrap"><div class="author-mark"><img src="carol-danis.jpg" alt="Carol Danis, Reinvention Strategist and founder of A New Book of Life" width="905" height="1568" loading="eager" decoding="async"></div></div>
       <div class="author-copy">
         <h1 style="font-size:30px; color:var(--plum); margin-bottom:16px;"><span class="name-edit">Carol Danis</span></h1>
         <p><strong>Reinvention Strategist &amp; Founder, A New Book of Life.</strong></p>
