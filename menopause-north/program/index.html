@@ -285,6 +285,12 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .ring .c b{font-size:44px;font-weight:600;letter-spacing:-.04em;line-height:1}
 .ring .c span{font-size:12px;color:var(--ink-3);margin-top:4px}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:12px}
+.tbl th,.tbl td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-2);vertical-align:top}
+.tbl th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.scale10{display:flex;gap:6px;flex-wrap:wrap}
+.scale10 button{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:600;color:var(--ink-3)}
+.scale10 button.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .cert{background:#fff;border:1px solid var(--line-2);border-radius:var(--radius);padding:56px 48px;text-align:center;margin-top:36px}
 .cert .e{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
 .cert h2{font-size:clamp(30px,4vw,44px);margin:14px 0 8px}
@@ -326,7 +332,7 @@ body.printing .printable{position:absolute;left:0;top:0;width:100%;padding:24px;
       <a href="#/">Overview</a>
       <a href="#/modules">Modules</a>
       <a href="#/progress">Progress</a>
-      <a class="pill" id="navprog" href="#/progress">0 / 10</a>
+      <a class="pill" id="navprog" href="#/progress">0 / 11</a>
     </nav>
   </div>
 </header>
@@ -346,7 +352,7 @@ body.printing .printable{position:absolute;left:0;top:0;width:100%;padding:24px;
    DATA
    ========================================================= */
 var MODULES = [
-{n:1,slug:'happening',k:'Foundations',title:'What Is Actually Happening To You',tag:'End the “am I going crazy?” phase. Name it, and the next nine modules make sense.',
+{n:1,slug:'happening',k:'Foundations',title:'What Is Actually Happening To You',tag:'End the “am I going crazy?” phase. Name it, and the next ten modules make sense.',
  runtime:'38 min',g:['#0F2B2C','#1f6f6b'],
  summary:'Most women arrive knowing three symptoms and living with seven. This module gives you the real definitions, the real timeline, and the full symptom list — including the ones nobody warned you about — in plain English.',
  take:[['The definitions','Perimenopause is the transition. Menopause is one day — 12 months after your last period. Postmenopause is everything after.'],['The timeline','This is years, not months. Symptoms commonly begin in the early-to-mid 40s and can run for a decade.'],['The list','There are 30+ recognised symptoms. Brain fog, joint pain, anxiety and heart palpitations are on it.']],
@@ -484,7 +490,21 @@ var MODULES = [
   {q:'Which of these is a reasonable workplace adjustment?',a:['A permanent pay increase','Access to temperature control, water, breaks and flexible start times','Working from home forever','Exemption from all meetings'],c:1,e:'Small, practical, low-cost changes are what most women need and what most employers can say yes to on the spot.'},
   {q:'The single highest-leverage action from this whole program is…',a:['Buying a supplement','Booking a dedicated appointment and bringing your symptom log','Reading more articles','Waiting until symptoms get worse'],c:1,e:'Everything else builds on that appointment. Module 02, in one sentence.'},
   {q:'How do you know the program worked?',a:['You feel vaguely better','You re-score the Symptom Inventory at day 90 and compare it with day 1','Your doctor tells you','You finish the videos'],c:1,e:'Day 1 vs day 90. That’s your before-and-after — no photos required.'}],
- tool:'plan90',assets:['The 90-Day Plan (fillable)','One-page menopause brief to forward to your employer']}
+ tool:'plan90',assets:['The 90-Day Plan (fillable)','One-page menopause brief to forward to your employer']},
+
+{n:11,slug:'inner-critic',k:'Mind',title:'Rewire the Inner Critic',tag:'Emotional eating, the habits that actually stick, and the diet-culture lies you can finally stop believing.',
+ runtime:'34 min',g:['#2E1420','#8E2C55'],
+ summary:'Most women in this program have been told for years that the problem is willpower. It isn’t. This module explains how habits actually form and change, why the 9 p.m. snack is a signal rather than a failure, and how to replace self-critique with the kind of self-talk that produces a different next choice. It is education about habits — not therapy. If eating has become something bigger than a habit, the module tells you where to get real help in Canada.',
+ take:[['Cue, routine, reward','Every habit runs on a loop. You don’t break a loop by trying harder — you keep the reward and swap the routine.'],['Hunger vs. signal','Tired, stressed, bored, lonely and a 3 a.m. wake-up all feel like hunger. Naming the real signal is the whole skill.'],['The inner coach','“You blew it” makes the next choice worse, not better. Self-compassion after a slip is a performance strategy, not a soft one.']],
+ lessons:[['Why willpower was never the problem','What decades of habit research actually show.'],['The habit loop','Cue → routine → reward, and where the swap happens.'],['Emotional eating, decoded','Stress, fatigue, boredom, and the night-time pull.'],['Unlearning the diet-culture lies','“Good” foods, “bad” foods, “starting Monday” — and what they cost you.'],['Rewiring the inner critic','From “I blew it” to “what did I need?” — the self-talk that changes behaviour.'],['When it’s more than a habit','Signs that eating has become disordered, and where to get help in Canada.']],
+ chapters:[['0:00','It was never willpower'],['5:10','The loop'],['11:30','What emotional eating is really about'],['18:00','The lies you were sold'],['24:30','The inner coach'],['30:00','When to get real help']],
+ quiz:[
+  {q:'A habit loop is…',a:['Cue → routine → reward','Diet → cheat → guilt','Wanting something and giving in','A type of exercise'],c:0,e:'Once you can name the cue and the reward, you can keep both and swap the routine. That’s the entire method.'},
+  {q:'You reach for the biscuits at 9 p.m. most nights. The most useful first question is…',a:['“Why am I so weak?”','“What did I actually need just now — rest, comfort, a break?”','“How many calories was that?”','“How do I make up for it tomorrow?”'],c:1,e:'The behaviour is information. Answer the real need and the loop weakens on its own; shame just resets it.'},
+  {q:'Labelling foods “good” and “bad” tends to…',a:['Make eating easier','Increase guilt and the all-or-nothing cycle that leads to overeating','Improve nutrition','Have no effect'],c:1,e:'The “I’ve blown it, may as well” effect is well documented. Neutral language is a tool, not a nicety.'},
+  {q:'Self-compassion after a slip is…',a:['Letting yourself off the hook','Linked with better follow-through, not worse','Weak','Only for other people'],c:1,e:'People who respond to a slip with kindness get back on track faster than people who punish themselves. That is a performance finding.'},
+  {q:'Eating that feels out of control, regular bingeing, or restricting to “make up” for it is…',a:['Normal — everyone does it','A sign to talk to your doctor or a specialist; NEDIC’s helpline is a confidential Canadian first call','Something to fix with more discipline','Just a habit'],c:1,e:'A habit module is not treatment. If this describes you, you deserve real support — and it exists.'}],
+ tool:'habits',assets:['The Trigger & Swap log (printable)','Inner-coach script card','Where to get help in Canada (NEDIC, provincial resources)']}
 ];
 
 var SYMPTOMS = [
@@ -542,6 +562,21 @@ var PARQ = [
 ];
 var MOVES = [['Squat','Sit back, chest up, knees track over toes. Start with a chair.'],['Hinge','Hips back, flat back, soft knees. Start with a light kettlebell or a broomstick.'],['Push','Wall push-up → incline → floor. Elbows at 45°, not flared.'],['Pull','Band row or seated row. Squeeze shoulder blades, don’t shrug.'],['Carry','Walk with a weight in one hand, stay tall. Farmer’s carry is the whole gym in one move.'],['Brace','Dead bug or plank. Ribs down, breathe. This is the pelvic floor’s best friend.']];
 
+var STRENGTH_SHEET='<div class="sheet printable" id="ssheet"><h3>The 12-week template</h3><div class="sm">Menopause North · Module 06 · a general education template — cleared by the PAR-Q+ first</div>'
++'<table class="tbl"><thead><tr><th>Phase</th><th>Weeks</th><th>Sets × reps</th><th>Load</th><th>Rest</th></tr></thead><tbody>'
++'<tr><td><b>Learn</b></td><td>1–4</td><td>2 × 8–10</td><td>Bodyweight or the lightest option. Every rep clean before anything else.</td><td>60 s</td></tr>'
++'<tr><td><b>Load</b></td><td>5–8</td><td>3 × 8–10</td><td>Add weight when every rep is clean with 2–3 still “in the tank.”</td><td>60–90 s</td></tr>'
++'<tr><td><b>Progress</b></td><td>9–12</td><td>3 × 6–10</td><td>Each week add a rep, a set, or a little weight — one of the three, not all three.</td><td>90 s</td></tr>'
++'</tbody></table>'
++'<p style="margin:14px 0 6px"><b>Every session, about 30 minutes:</b> a 5-minute warm-up (brisk walk, easy squats, arm circles) → the six movements in order: squat, hinge, push, pull, carry, brace → done. Three sessions a week with a day between.</p>'
++'<p style="margin:0 0 6px"><b>At home:</b> a chair, a wall, a broomstick, two water jugs; later a pair of dumbbells or one kettlebell and a band. <b>At the gym:</b> goblet squat, kettlebell deadlift, incline press, cable row, farmer’s carry, dead bug.</p>'
++'<p style="margin:0;color:var(--ink-3);font-size:13px">Stop for pain (not effort), dizziness, chest symptoms, or pelvic pressure or leaking — and see someone. General education, not individualised programming.</p></div>'
++'<div class="row noprint"><button class="btn sm" id="spr">Print the template</button></div>';
+
+var PROT=[['Egg',6],['Greek yogurt, ¾ cup',17],['Cottage cheese, ½ cup',12],['Milk or soy milk, 1 cup',8],['Chicken or turkey, 100 g',30],['Fish or salmon, 100 g',22],['Lean beef or pork, 100 g',26],['Tofu, 150 g',18],['Lentils or beans, 1 cup',17],['Edamame, 1 cup',17],['Cheese, 30 g',7],['Peanut butter, 2 tbsp',7],['Protein powder, 1 scoop',22],['Nuts, ¼ cup',6]];
+var SITUATIONS=[['Restaurant','Order the protein first, then the vegetables, then decide about the rest. Sauce on the side. Eat until satisfied, not until finished.'],['Travel or hotel','Pack Greek yogurt, jerky, nuts, fruit. Hotel gym or no gym: the six movements work with a chair and a suitcase.'],['Family dinner or potluck','Build the Food Guide plate from what’s there — half vegetables, a quarter protein. Bring the protein dish yourself.'],['The 3 p.m. crash','Not another coffee: protein plus fibre — yogurt and berries, hummus and vegetables, an apple and cheese. Then a five-minute walk.'],['The wine question','Not banned. Two things it reliably does after 45: fragments sleep in the second half of the night, and triggers night sweats for many. Choose the nights.'],['A bad-sleep week','Lower the bar, don’t drop it: one strength session, protein at breakfast, no caffeine after noon. Log it in Module 07.'],['The holidays','No “starting in January.” Keep two anchors — protein at breakfast and your strength sessions — and let the rest be a holiday.']];
+var MEALS=['Greek yogurt + berries + oats (breakfast, about 20 g protein)','Eggs on whole-grain toast with spinach (about 18 g)','Rotisserie chicken + bagged salad + microwave quinoa (about 35 g)','Canned salmon or tuna on rye with cucumber (about 25 g)','Lentil soup + a hard-boiled egg (about 20 g)','Tofu stir-fry with frozen vegetables and brown rice (about 22 g)','Cottage cheese + fruit + a handful of nuts (about 18 g)'];
+
 var SLEEP_CK = ['Same wake time every day, including weekends','No caffeine after noon','No alcohol within three hours of bed','Bedroom cool — around 18°C — with breathable bedding','Screens out of the bedroom, or at least the bed','A 20-minute wind-down that doesn’t involve your phone','Daylight within an hour of waking','Move your body during the day (Module 06 counts)','A notepad by the bed for the 3 a.m. thought loop','If awake more than 20 minutes: get up, dim light, come back when sleepy'];
 
 var FLASH = [
@@ -576,7 +611,7 @@ function lessonsDone(m){ var c=0; m.lessons.forEach(function(_,i){ if(S.lessons[
 function quizBest(m){ var q=S.quiz[m.n]; return q ? q.best : null; }
 function isDone(m){ return lessonsDone(m)===m.lessons.length && quizBest(m)!==null && quizBest(m)>=4; }
 function doneCount(){ return MODULES.filter(isDone).length; }
-function updateNav(){ var el=document.getElementById('navprog'); if(el) el.textContent = doneCount()+' / 10'; }
+function updateNav(){ var el=document.getElementById('navprog'); if(el) el.textContent = doneCount()+' / '+MODULES.length; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function pad(n){ return (n<10?'0':'')+n; }
 var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
@@ -591,6 +626,7 @@ function route(){
   var anchor = null;
   if(h.indexOf('#')>-1 && !m){ anchor = h.split('#')[1]; h = h.split('#')[0]; }
   if(m){ var mod = MODULES[parseInt(m[1],10)-1]; if(mod){ renderModule(mod); anchor = m[2]||null; } else { renderHome(); } }
+  else if(h==='/start'){ renderStart(); }
   else if(h==='/modules'){ renderModules(); }
   else if(h==='/progress'){ renderProgress(); }
   else { renderHome(); }
@@ -644,9 +680,9 @@ function renderHome(){
   +'<section class="hero center"><div class="wrap">'
   +'<span class="eyebrow">The Canadian Menopause Playbook</span>'
   +'<h1 class="h-xl">Menopause, explained<br>for Canadians.</h1>'
-  +'<p class="sub">Ten modules. Video lessons, interactive tools and short quizzes — built for the country you actually live in.</p>'
-  +'<div class="links">'+(nm?'<a class="lnk chev" href="#/module/'+nm.n+'">'+(started?'Continue with Module '+pad(nm.n):'Start Module 01')+'</a>':'<a class="lnk chev" href="#/progress">See your certificate</a>')+'<a class="lnk chev" href="#/modules">See all modules</a></div>'
-  +(started?'<div class="prog"><div class="bar"><i style="width:'+(dc*10)+'%"></i></div><span class="n">'+dc+' of 10 modules complete</span></div>':'')
+  +'<p class="sub">Eleven modules. Video lessons, interactive tools and short quizzes — built for the country you actually live in.</p>'
+  +'<div class="links">'+(nm?'<a class="lnk chev" href="#/module/'+nm.n+'">'+(started?'Continue with Module '+pad(nm.n):'Start Module 01')+'</a>':'<a class="lnk chev" href="#/progress">See your certificate</a>')+'<a class="lnk chev" href="#/modules">See all modules</a>'+((S.tools.start&&S.tools.start.done)?'':'<a class="lnk chev" href="#/start">Your starting line · 2 min</a>')+'</div>'
+  +(started?'<div class="prog"><div class="bar"><i style="width:'+Math.round(dc/MODULES.length*100)+'%"></i></div><span class="n">'+dc+' of '+MODULES.length+' modules complete</span></div>':'')
   +'</div></section>'
 
   +'<section class="dark center"><div class="wrap rv">'
@@ -657,14 +693,14 @@ function renderHome(){
   +'<div class="stat"><div class="n">$0</div><div class="l">what hormone therapy now costs in BC under the national pharmacare plan</div></div></div>'
   +'</div></section>'
 
-  +'<section class="grey"><div class="wide"><div class="center rv"><h2 class="h-l">Ten modules. One program.</h2><p class="sub">Each module is a video lesson, a set of short readings, one interactive tool you’ll actually use, and a five-question check.</p></div>'
+  +'<section class="grey"><div class="wide"><div class="center rv"><h2 class="h-l">Eleven modules. One program.</h2><p class="sub">Each module is a video lesson, a set of short readings, one interactive tool you’ll actually use, and a five-question check.</p></div>'
   +'<div class="tiles rv">'+MODULES.map(function(m,i){ return tile(m, i===0); }).join('')+'</div>'
   +'</div></section>'
 
   +'<section class="center"><div class="wrap"><div class="rv"><h2 class="h-l">How each module works</h2><p class="sub">Watch. Do. Check. Then take it to your doctor.</p></div>'
   +'<div class="three rv">'
   +'<div class="how"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><h3>Watch</h3><p>Carol teaches each module from lived experience — phone on a tripod, window light, one take. Chaptered so you can jump.</p></div>'
-  +'<div class="how"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h16M12 4v16"/></svg></div><h3>Do</h3><p>Every module has a tool: a symptom inventory, an appointment script builder, a province coverage lookup, a 12-week tracker, a 90-day plan.</p></div>'
+  +'<div class="how"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12h16M12 4v16"/></svg></div><h3>Do</h3><p>Every module has a tool: a symptom inventory, an appointment script builder, a province coverage lookup, a 12-week tracker, a trigger-and-swap log, a 90-day plan.</p></div>'
   +'<div class="how"><div class="ic">'+CHECK.replace('<svg','<svg width="22" height="22"')+'</div><h3>Check</h3><p>Five questions. Instant answers with the “why.” Score 4 or more and the module is complete — your progress saves in this browser.</p></div>'
   +'</div></div></section>'
 
@@ -678,7 +714,7 @@ function renderHome(){
 }
 
 function renderModules(){
-  app.innerHTML = '<main><section class="hero center" style="padding-bottom:40px"><div class="wrap"><span class="eyebrow">Curriculum</span><h1 class="h-l">All ten modules.</h1><p class="sub">Work through them in order the first time. After that, come back to the tools whenever you need them.</p></div></section>'
+  app.innerHTML = '<main><section class="hero center" style="padding-bottom:40px"><div class="wrap"><span class="eyebrow">Curriculum</span><h1 class="h-l">All eleven modules.</h1><p class="sub">Work through them in order the first time. After that, come back to the tools whenever you need them.</p></div></section>'
   +'<section class="grey" style="padding-top:40px"><div class="wide"><div class="tiles">'+MODULES.map(function(m){ return tile(m,false); }).join('')+'</div></div></section></main>';
 }
 
@@ -868,7 +904,18 @@ var TOOLS = {
  },
 
  plate:function(box){
-  var t=T('plate'); t.sel=t.sel||{};
+  var t=T('plate'); t.sel=t.sel||{}; t.pf=t.pf||{};
+  function proteinHTML(){
+    var kg=t.pu==='lb'?(parseFloat(t.pw)||0)*0.4536:(parseFloat(t.pw)||0); var tally=0; Object.keys(t.pf).forEach(function(i){ if(t.pf[i]) tally+=PROT[i][1]; });
+    return '<h3 style="font-size:22px;margin:36px 0 6px">Protein reality check</h3><p style="color:var(--ink-2);margin-bottom:12px">Published general ranges next to what you actually ate yesterday. Education — not a target set for you.</p>'
+    +'<div class="grid2"><div><span class="lbl">Your weight</span><div class="grid2" style="gap:10px"><input type="number" id="pw" value="'+esc(t.pw||'')+'" placeholder="e.g. 70"><div class="chips"><button class="chip'+(t.pu!=='lb'?' on':'')+'" data-u="kg">kg</button><button class="chip'+(t.pu==='lb'?' on':'')+'" data-u="lb">lb</button></div></div>'
+    +(kg?'<div class="out" style="margin-top:14px"><h3>For about '+Math.round(kg)+' kg</h3><ul><li><b>'+Math.round(kg*0.8)+' g a day</b> — Health Canada’s Dietary Reference Intake minimum for adults (0.8 g per kg)</li><li><b>'+Math.round(kg*1.0)+'–'+Math.round(kg*1.2)+' g a day</b> — the range expert groups such as PROT-AGE suggest for older adults (1.0–1.2 g per kg)</li><li><b>up to about '+Math.round(kg*1.6)+' g a day</b> — commonly cited in research for adults doing regular strength training (1.2–1.6 g per kg)</li></ul></div>':'<p class="note">Enter your weight to see the published ranges.</p>')+'</div>'
+    +'<div><span class="lbl">What you ate yesterday — tap everything that applies</span><div class="chips" id="pf">'+PROT.map(function(p,i){ return '<button class="chip'+(t.pf[i]?' on':'')+'" data-p="'+i+'">'+esc(p[0])+' · '+p[1]+' g</button>'; }).join('')+'</div>'
+    +'<div class="out" style="margin-top:14px"><h3>About '+tally+' g yesterday</h3><p style="margin:0;color:var(--ink-2)">'+(kg?(tally<kg*0.8?'Below the DRI minimum. Most midlife plates are — and breakfast is usually where it’s missing.':tally<kg*1.2?'In the everyday range. If you’re strength training, the research ranges run higher.':'In the training range. Spread it across the day rather than one big dinner.'):'Enter your weight to compare.')+'</p></div></div></div>'
+    +'<p class="note">Approximate typical values. Anyone with kidney disease or another medical condition should get their protein target from a Registered Dietitian or physician.</p>'
+    +'<h3 style="font-size:22px;margin:36px 0 6px">Real life, handled</h3><div class="takeaways" style="margin-top:14px">'+SITUATIONS.map(function(x){ return '<div class="tk"><b>'+esc(x[0])+'</b><p>'+esc(x[1])+'</p></div>'; }).join('')+'</div>'
+    +'<h3 style="font-size:22px;margin:36px 0 6px">Seven fast meals from one Canadian grocery run</h3><ul class="checklist">'+MEALS.map(function(x){ return '<li><span>'+esc(x)+'</span></li>'; }).join('')+'</ul>';
+  }
   function draw(){
     var counts={veg:0,grain:0,prot:0,extra:0}; Object.keys(t.sel).forEach(function(k){ if(t.sel[k]) counts[k.split('|')[0]]++; });
     var food=counts.veg+counts.grain+counts.prot;
@@ -882,9 +929,13 @@ var TOOLS = {
     +'<div class="plate"><div>'+svg+'<div style="font-size:12px;color:var(--ink-3);margin-top:8px;display:flex;gap:10px;flex-wrap:wrap"><span><i style="display:inline-block;width:10px;height:10px;background:#5FC4B4;border-radius:3px;margin-right:4px"></i>Veg & fruit '+Math.round(pv*100)+'%</span><span><i style="display:inline-block;width:10px;height:10px;background:#D9AC4D;border-radius:3px;margin-right:4px"></i>Grains '+Math.round(pg*100)+'%</span><span><i style="display:inline-block;width:10px;height:10px;background:#0F4C4A;border-radius:3px;margin-right:4px"></i>Protein '+Math.round(pp*100)+'%</span></div></div>'
     +'<div>'+Object.keys(PLATE).map(function(k){ return '<span class="lbl" style="margin-top:12px">'+PLATE[k].l+'</span><div class="chips">'+PLATE[k].items.map(function(it){ var id=k+'|'+it; return '<button class="chip'+(t.sel[id]?' on':'')+'" data-id="'+esc(id)+'">'+esc(it)+'</button>'; }).join('')+'</div>'; }).join('')+'</div></div>'
     +'<div class="out"><h3>Read on the plate</h3><ul>'+fb.map(function(f){return '<li>'+esc(f)+'</li>';}).join('')+'</ul><div class="row"><button class="btn sm ghost" id="clr">Clear plate</button></div></div>'
-    +'<p class="note">General guidance from Canada’s Food Guide, not a meal plan. For a plan that’s yours specifically, see a Registered Dietitian.</p>';
+    +'<p class="note">General guidance from Canada’s Food Guide, not a meal plan. For a plan that’s yours specifically, see a Registered Dietitian.</p>'
+    +proteinHTML();
     box.querySelectorAll('.chip[data-id]').forEach(function(b){ b.addEventListener('click',function(){ var id=b.getAttribute('data-id'); t.sel[id]=!t.sel[id]; save(); draw(); }); });
     document.getElementById('clr').addEventListener('click',function(){ t.sel={}; save(); draw(); });
+    document.getElementById('pw').addEventListener('input',function(e){ t.pw=e.target.value; save(); clearTimeout(t._d); t._d=setTimeout(draw,600); });
+    box.querySelectorAll('[data-u]').forEach(function(b){ b.addEventListener('click',function(){ t.pu=b.getAttribute('data-u'); save(); draw(); }); });
+    box.querySelectorAll('#pf .chip').forEach(function(b){ b.addEventListener('click',function(){ var i=b.getAttribute('data-p'); t.pf[i]=!t.pf[i]; save(); draw(); }); });
   }
   draw();
  },
@@ -900,9 +951,11 @@ var TOOLS = {
     +'<h3 style="font-size:22px;margin:32px 0 6px">The six movements</h3><div class="takeaways" style="margin-top:14px">'+MOVES.map(function(m){return '<div class="tk"><b>'+m[0]+'</b><p>'+esc(m[1])+'</p></div>';}).join('')+'</div>'
     +'<h3 style="font-size:22px;margin:32px 0 6px">12-week tracker</h3><p style="color:var(--ink-2);margin-bottom:14px">Three sessions a week. '+done+' of 36 done.</p>'
     +'<div class="wk">'+Array.from({length:12}).map(function(_,w){ return '<div class="w'+(clear?'':' lock')+'"><b>WEEK '+(w+1)+(w<4?' · learn':w<8?' · load':' · progress')+'</b><div class="s">'+[1,2,3].map(function(s){ var k=w+'-'+s; return '<button data-k="'+k+'" class="'+(t.w[k]?'on':'')+'">S'+s+'</button>'; }).join('')+'</div></div>'; }).join('')+'</div>'
-    +'<p class="note">Weeks 1–4: learn the movements with bodyweight or the lightest load. Weeks 5–8: add load once you can do every rep cleanly. Weeks 9–12: add a rep, a set, or a little weight each week. If it hurts — not works, hurts — stop and see someone.</p>';
+    +'<p class="note">Weeks 1–4: learn the movements with bodyweight or the lightest load. Weeks 5–8: add load once you can do every rep cleanly. Weeks 9–12: add a rep, a set, or a little weight each week. If it hurts — not works, hurts — stop and see someone.</p>'
+    +'<h3 style="font-size:22px;margin:32px 0 6px">What a week actually looks like</h3>'+STRENGTH_SHEET;
     box.querySelectorAll('.yn button').forEach(function(b){ b.addEventListener('click',function(){ t.parq[b.getAttribute('data-i')]=b.getAttribute('data-v')==='1'; save(); draw(); }); });
     box.querySelectorAll('.wk button').forEach(function(b){ b.addEventListener('click',function(){ var k=b.getAttribute('data-k'); t.w[k]=!t.w[k]; save(); draw(); }); });
+    var sp=document.getElementById('spr'); if(sp) sp.addEventListener('click',function(){ printEl(box.querySelector('#ssheet')); });
   }
   draw();
  },
@@ -996,6 +1049,35 @@ var TOOLS = {
     document.getElementById('cp').addEventListener('click',function(){ try{ navigator.clipboard.writeText(document.getElementById('brief').value); document.getElementById('cp').textContent='Copied'; }catch(e){} });
   }
   draw();
+ },
+ habits:function(box){
+  var t=T('habits'); t.log=t.log||[]; t.crit=t.crit||'';
+  var TRIG=['Tired','Stressed','Bored','Lonely','Celebrating','Woke at 3 a.m.','Actually hungry','Habit / autopilot'];
+  var NEED={'Tired':'rest — a ten-minute lie-down or an earlier night beats a snack that keeps you up','Stressed':'a release valve — a walk around the block, a shower, three slow breaths, or saying the thing out loud','Bored':'stimulation — a task with a finish line, a phone call, a change of room','Lonely':'connection — text one person before you open the cupboard','Celebrating':'to mark it — so do, but choose the thing you actually want and sit down to enjoy it','Woke at 3 a.m.':'sleep, not food — water, dim light, the notepad, and Module 07’s log','Actually hungry':'food — a plate with protein on it, eaten sitting down (Module 05)','Habit / autopilot':'a pattern break — change the cue: a different route, a different room, a different order'};
+  function coach(s){ s=(s||'').toLowerCase(); if(!s.trim()) return 'Type what the critic said, and read this instead.'; if(/willpower|weak|discipline|lazy/.test(s)) return 'Willpower was never the mechanism. You hit a cue — tired, stressed, 9 p.m. — and ran the routine. Name the cue, keep the reward, swap the routine. That is the whole job, and it doesn’t need you to be a different person.'; if(/blew|ruined|wasted|may as well|start(ing)? (again|monday|tomorrow)/.test(s)) return 'One choice is one choice. The “I’ve blown it, may as well” move is the only part of this that actually costs you. The next meal is a normal meal — not a punishment and not a fresh start.'; if(/fat|disgust|hate|ugly|body|gross/.test(s)) return 'Your body is doing exactly what a body in midlife does when it loses muscle and sleep. That is a physiology problem with a training-and-rest answer — not a verdict on you.'; if(/always|never|every time|can’t|cant|hopeless|useless/.test(s)) return '“Always” and “never” are the critic’s words, not the data. Look at the log: a handful of moments with a pattern. Patterns change. Pick one cue this week.'; return 'Okay — that happened. What did you actually need just then: rest, a break, comfort, food? Answer that, then choose the smallest next step. That is coaching. The rest was noise.'; }
+  function draw(){
+    var counts={}; t.log.forEach(function(e){ counts[e.tr]=(counts[e.tr]||0)+1; });
+    var top=Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; })[0];
+    box.innerHTML='<h2>Trigger &amp; swap</h2><p class="lead">Log the moments, not the calories. After about eight entries the pattern is usually obvious — and the swap writes itself.</p>'
+    +'<div class="grid2"><div><span class="lbl">What was going on just before?</span><div class="chips" id="trg">'+TRIG.map(function(x){ return '<button class="chip'+(t.tr===x?' on':'')+'" data-t="'+esc(x)+'">'+esc(x)+'</button>'; }).join('')+'</div>'
+    +'<span class="lbl" style="margin-top:14px">Time of day</span><div class="chips" id="tod">'+['Morning','Afternoon','Evening','Night'].map(function(x){ return '<button class="chip'+(t.tod===x?' on':'')+'" data-d="'+x+'">'+x+'</button>'; }).join('')+'</div></div>'
+    +'<div><span class="lbl">What did you reach for?</span><input type="text" id="hf" value="'+esc(t.f||'')+'" placeholder="e.g. the biscuits, a glass of wine, the kids’ leftovers">'
+    +'<span class="lbl" style="margin-top:14px">What did you actually need?</span><div class="info">'+(t.tr?'<b>'+esc(t.tr)+'</b> usually means you need '+esc(NEED[t.tr])+'.':'Pick a trigger and the likely need appears here.')+'</div>'
+    +'<div class="row"><button class="btn sm" id="hadd">Log it</button>'+(t.log.length?'<button class="btn sm ghost" id="hclr">Clear log</button>':'')+'</div></div></div>'
+    +(t.log.length?'<div class="out"><h3>'+t.log.length+' logged · top trigger: '+esc(top)+' ('+counts[top]+')</h3><p style="margin:0 0 10px;color:var(--ink-2)">'+(t.log.length>=8?'That is a pattern, not a character flaw. Your swap: when '+esc(top.toLowerCase())+', try '+esc(NEED[top])+' — before deciding, not instead of deciding. Do it for two weeks, then re-read this log.':'Keep going to eight entries. The pattern shows up faster than you would think.')+'</p><ul class="log">'+t.log.slice().reverse().slice(0,8).map(function(e){ return '<li><span style="color:var(--ink)">'+esc(e.tod||'')+' · '+esc(e.tr)+'</span><span>'+esc(e.f||'')+'</span></li>'; }).join('')+'</ul></div>':'')
+    +'<h3 style="font-size:22px;margin:36px 0 6px">The inner coach</h3><p style="color:var(--ink-2);margin-bottom:12px">Type what the critic said. Read what a coach would say instead. Same facts, different next choice.</p>'
+    +'<input type="text" id="hc" value="'+esc(t.crit)+'" placeholder="e.g. I blew it again, I have no willpower">'
+    +'<div class="sheet printable"><h3>What the coach says</h3><div class="sm">Menopause North · Module 11</div><div class="say" id="hsay">'+esc(coach(t.crit))+'</div><div class="sm" style="margin:12px 0 0">Not weakness. Information. What did you need — and what is the smallest next step?</div></div>'
+    +'<div class="warn" style="margin-top:22px"><b>If eating feels out of control</b> — regular bingeing, restricting to “make up” for it, or food taking over your thinking — that is beyond a habit tool. Talk to your doctor, and call NEDIC, the National Eating Disorder Information Centre, Canada’s confidential helpline: <b>1-866-633-4220</b> · nedic.ca.</div>'
+    +'<p class="note">Education about habits — not therapy, not a treatment plan.</p>';
+    box.querySelectorAll('#trg .chip').forEach(function(b){ b.addEventListener('click',function(){ t.tr=b.getAttribute('data-t'); save(); draw(); }); });
+    box.querySelectorAll('#tod .chip').forEach(function(b){ b.addEventListener('click',function(){ t.tod=b.getAttribute('data-d'); save(); draw(); }); });
+    document.getElementById('hf').addEventListener('input',function(e){ t.f=e.target.value; save(); });
+    document.getElementById('hadd').addEventListener('click',function(){ if(!t.tr) return; t.log.push({tr:t.tr,tod:t.tod||'',f:t.f||'',at:Date.now()}); t.f=''; save(); draw(); });
+    var hc=document.getElementById('hclr'); if(hc) hc.addEventListener('click',function(){ t.log=[]; save(); draw(); });
+    document.getElementById('hc').addEventListener('input',function(e){ t.crit=e.target.value; save(); document.getElementById('hsay').textContent=coach(t.crit); });
+  }
+  draw();
  }
 };
 
@@ -1009,19 +1091,84 @@ function printEl(el){
 }
 
 /* =========================================================
+   STARTING LINE + WEEKLY CHECK-IN
+   ========================================================= */
+function renderStart(){
+  var t=T('start'); t.sym=t.sym||[];
+  var STAGES=['Not sure yet','Early perimenopause','Perimenopause','Late peri / postmenopause'];
+  var DOC=['Haven’t raised it yet','Raised it, didn’t get far','Felt dismissed','Have a plan I’m happy with'];
+  var TOP=SYMPTOMS.slice(0,18).map(function(s){ return s[0]; });
+  app.innerHTML='<main><section class="hero center" style="padding-bottom:40px"><div class="wrap"><span class="eyebrow">Before Module 01</span><h1 class="h-l">Your starting line.</h1><p class="sub">Two minutes. Where you are, what you want in 90 days, and the numbers you’ll compare against. Nothing here leaves this browser.</p></div></section>'
+  +'<section class="grey" style="padding-top:40px"><div class="wrap"><div class="card" id="startcard"></div></div></section></main>';
+  var box=document.getElementById('startcard');
+  function chips(id,list,cur,multi){ return '<div class="chips" id="'+id+'">'+list.map(function(x){ var on=multi?cur.indexOf(x)>-1:cur===x; return '<button class="chip'+(on?' on':'')+'" data-v="'+esc(x)+'">'+esc(x)+'</button>'; }).join('')+'</div>'; }
+  function draw(){
+    var e10=''; for(var i=1;i<=10;i++){ e10+='<button data-e="'+i+'" class="'+(t.energy==i?'on':'')+'">'+i+'</button>'; }
+    box.innerHTML='<span class="eyebrow">Starting line</span><h2>Where are you today?</h2><p class="lead">Pick what fits. You can change any of it later from the Progress page.</p>'
+    +'<span class="lbl">Stage — your best guess</span>'+chips('st',STAGES,t.stage||'',false)
+    +'<span class="lbl" style="margin-top:18px">The three symptoms that affect your life most</span>'+chips('sy',TOP,t.sym,true)+'<p class="note">'+t.sym.length+' of 3 chosen. These lead your Module 02 appointment script.</p>'
+    +'<span class="lbl" style="margin-top:18px">Where you are with your doctor</span>'+chips('dc',DOC,t.doc||'',false)
+    +'<span class="lbl" style="margin-top:18px">In 90 days, “better” looks like…</span><input type="text" id="goal" value="'+esc(t.goal||'')+'" placeholder="e.g. sleeping through most nights, and a real plan from my doctor">'
+    +'<div class="grid2" style="margin-top:18px"><div><span class="lbl">Energy right now, 1–10</span><div class="scale10">'+e10+'</div></div><div><span class="lbl">Average sleep, hours a night</span><input type="number" id="sl" step="0.5" min="0" max="14" value="'+esc(t.sleep||'')+'" placeholder="e.g. 5.5"></div></div>'
+    +'<div class="grid2" style="margin-top:18px"><div><span class="lbl">Waist at the navel, cm — optional</span><input type="number" id="wa" min="40" max="200" value="'+esc(t.waist||'')+'" placeholder="Only if you want to track it"></div><div><span class="lbl">Your name (for the plan and certificate)</span><input type="text" id="nm" value="'+esc(S.name||'')+'" placeholder="Your name"></div></div>'
+    +'<div class="row" style="margin-top:26px"><button class="btn" id="go">'+(t.done?'Save changes':'Save my starting line')+'</button><a class="btn ghost" href="#/module/1">Skip for now</a></div>'
+    +'<p class="note">Nothing gets measured that you don’t choose to. Weight isn’t asked for — the Symptom Inventory, your energy and your sleep are the before-and-after this program uses.</p>';
+    box.querySelectorAll('#st .chip').forEach(function(b){ b.addEventListener('click',function(){ t.stage=b.getAttribute('data-v'); save(); draw(); }); });
+    box.querySelectorAll('#dc .chip').forEach(function(b){ b.addEventListener('click',function(){ t.doc=b.getAttribute('data-v'); save(); draw(); }); });
+    box.querySelectorAll('#sy .chip').forEach(function(b){ b.addEventListener('click',function(){ var v=b.getAttribute('data-v'); var x=t.sym.indexOf(v); if(x>-1) t.sym.splice(x,1); else if(t.sym.length<3) t.sym.push(v); save(); draw(); }); });
+    box.querySelectorAll('[data-e]').forEach(function(b){ b.addEventListener('click',function(){ t.energy=parseInt(b.getAttribute('data-e'),10); save(); draw(); }); });
+    document.getElementById('goal').addEventListener('input',function(e){ t.goal=e.target.value; save(); });
+    document.getElementById('sl').addEventListener('input',function(e){ t.sleep=e.target.value; save(); });
+    document.getElementById('wa').addEventListener('input',function(e){ t.waist=e.target.value; save(); });
+    document.getElementById('nm').addEventListener('input',function(e){ S.name=e.target.value; save(); });
+    document.getElementById('go').addEventListener('click',function(){ t.done=true; t.at=t.at||Date.now(); save(); location.hash='#/module/1'; });
+  }
+  draw();
+}
+
+function checkinHTML(){
+  var t=T('checkin'); t.w=t.w||{}; if(!t.cur) t.cur=1;
+  var weeks=[]; for(var i=1;i<=12;i++){ weeks.push(t.w[i]||{}); }
+  var logged=weeks.filter(function(w){ return w.e||w.s; });
+  var st=T('start');
+  var first=logged[0], last=logged[logged.length-1], lifts=0; weeks.forEach(function(w){ lifts+=(parseInt(w.l,10)||0); });
+  var summary= logged.length>=3 ? 'Energy '+(first.e||'—')+' → '+(last.e||'—')+', sleep '+(first.s||'—')+' → '+(last.s||'—')+' since your first logged week. '+lifts+' strength sessions in total. That trend is your result — compare it with the day-90 Symptom Inventory.' : 'Log week 1 today. The pattern is the point — not any single week.';
+  var w=t.w[t.cur]||{};
+  function scale(id,label,max,val){ var b=''; for(var i=1;i<=max;i++){ b+='<button data-f="'+id+'" data-v="'+i+'" class="'+(val==i?'on':'')+'">'+i+'</button>'; } return '<div class="w"><b>'+label+'</b><div class="s">'+b+'</div></div>'; }
+  return '<section class="grey" style="padding-top:40px;padding-bottom:0"><div class="wrap">'
+  +'<div class="card" style="margin-bottom:16px"><span class="eyebrow">Your starting line</span>'+(st.done?'<h2 style="font-size:26px">'+esc(st.goal||'Set on day 1')+'</h2><p style="color:var(--ink-2)">'+esc(st.stage||'Stage not set')+' · Leading symptoms: '+esc((st.sym||[]).join(', ')||'—')+' · Energy '+(st.energy||'—')+'/10 · Sleep '+(st.sleep||'—')+' h'+(st.waist?' · Waist '+esc(st.waist)+' cm':'')+'</p><a class="lnk chev" href="#/start">Edit</a>':'<h2 style="font-size:26px">Two minutes, before Module 01.</h2><p style="color:var(--ink-2)">Where you are today, what you want in 90 days, and the numbers you’ll compare against. Nothing gets measured that you don’t choose to.</p><a class="btn sm" href="#/start">Set your starting line</a>')+'</div>'
+  +'<div class="card"><span class="eyebrow">Weekly check-in</span><h2 style="font-size:26px">Twelve weeks. Two minutes each.</h2><p class="lead" style="font-size:17px;margin-bottom:18px">The same five questions every week. Patterns show up by week three; by week twelve you have a before-and-after nobody can argue with.</p>'
+  +'<div class="mini" aria-hidden="true">'+weeks.map(function(x){ return '<i class="'+(x.e?'':'z')+'" style="height:'+(x.e?x.e*20:8)+'%"></i>'; }).join('')+'</div><p class="note">Energy, weeks 1–12.</p>'
+  +'<div class="chips" id="ckweeks" style="margin-top:14px">'+weeks.map(function(x,i){ return '<button class="chip'+(i+1===t.cur?' on':'')+'" data-w="'+(i+1)+'">Week '+(i+1)+(x.e?' ✓':'')+'</button>'; }).join('')+'</div>'
+  +'<div class="wk" style="margin-top:14px;grid-template-columns:repeat(2,1fr)">'+scale('s','SLEEP THIS WEEK · 1 rough → 5 solid',5,w.s)+scale('e','ENERGY · 1 → 5',5,w.e)+scale('l','STRENGTH SESSIONS DONE',3,w.l)+scale('p','DAYS WITH PROTEIN AT MOST MEALS',7,w.p)+'</div>'
+  +'<span class="lbl" style="margin-top:14px">One win this week</span><input type="text" id="ckwin" value="'+esc(w.win||'')+'" placeholder="e.g. slept through twice, first session done, asked for the fan">'
+  +'<span class="lbl" style="margin-top:14px">One thing that was hard</span><input type="text" id="ckhard" value="'+esc(w.hard||'')+'" placeholder="Honest. This is for you.">'
+  +'<div class="out"><h3>'+logged.length+' of 12 weeks logged</h3><p style="margin:0;color:var(--ink-2)">'+summary+'</p></div></div></div></section>';
+}
+function bindCheckin(){
+  var t=T('checkin'); t.w=t.w||{}; if(!t.cur) t.cur=1;
+  app.querySelectorAll('#ckweeks .chip').forEach(function(b){ b.addEventListener('click',function(){ t.cur=parseInt(b.getAttribute('data-w'),10); save(); renderProgress(); }); });
+  app.querySelectorAll('.wk button[data-f]').forEach(function(b){ b.addEventListener('click',function(){ var w=t.w[t.cur]||(t.w[t.cur]={}); w[b.getAttribute('data-f')]=parseInt(b.getAttribute('data-v'),10); save(); renderProgress(); }); });
+  var wi=document.getElementById('ckwin'); if(wi) wi.addEventListener('input',function(e){ var w=t.w[t.cur]||(t.w[t.cur]={}); w.win=e.target.value; save(); });
+  var hd=document.getElementById('ckhard'); if(hd) hd.addEventListener('input',function(e){ var w=t.w[t.cur]||(t.w[t.cur]={}); w.hard=e.target.value; save(); });
+}
+
+/* =========================================================
    PROGRESS
    ========================================================= */
 function renderProgress(){
-  var dc=doneCount(), pct=dc*10, r=74, circ=2*Math.PI*r;
-  app.innerHTML='<main><section class="hero center" style="padding-bottom:40px"><div class="wrap"><span class="eyebrow">Progress</span><h1 class="h-l">'+(dc===10?'You finished.':dc?'Keep going.':'Start here.')+'</h1><p class="sub">'+(dc===10?'All ten modules complete. Your certificate is below — and your day-90 re-score is the real result.':'A module is complete when every reading is ticked and the quiz is passed with 4 or more.')+'</p>'
-  +'<div class="ring"><svg viewBox="0 0 170 170" width="170" height="170"><circle cx="85" cy="85" r="'+r+'" fill="none" stroke="#e8e8ed" stroke-width="10"/><circle cx="85" cy="85" r="'+r+'" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+(circ*(1-pct/100))+'" style="transition:stroke-dashoffset .8s ease"/></svg><div class="c"><b>'+pct+'%</b><span>'+dc+' of 10</span></div></div>'
+  var dc=doneCount(), pct=Math.round(dc/MODULES.length*100), r=74, circ=2*Math.PI*r;
+  app.innerHTML='<main><section class="hero center" style="padding-bottom:40px"><div class="wrap"><span class="eyebrow">Progress</span><h1 class="h-l">'+(dc===MODULES.length?'You finished.':dc?'Keep going.':'Start here.')+'</h1><p class="sub">'+(dc===MODULES.length?'All eleven modules complete. Your certificate is below — and your day-90 re-score is the real result.':'A module is complete when every reading is ticked and the quiz is passed with 4 or more.')+'</p>'
+  +'<div class="ring"><svg viewBox="0 0 170 170" width="170" height="170"><circle cx="85" cy="85" r="'+r+'" fill="none" stroke="#e8e8ed" stroke-width="10"/><circle cx="85" cy="85" r="'+r+'" fill="none" stroke="var(--accent)" stroke-width="10" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+(circ*(1-pct/100))+'" style="transition:stroke-dashoffset .8s ease"/></svg><div class="c"><b>'+pct+'%</b><span>'+dc+' of '+MODULES.length+'</span></div></div>'
   +'</div></section>'
+  +checkinHTML()
   +'<section class="grey" style="padding-top:40px"><div class="wrap"><div class="pgrid">'+MODULES.map(function(m){ var ld=lessonsDone(m), qb=quizBest(m), d=isDone(m); var p=Math.round((ld/m.lessons.length*70)+(qb!==null&&qb>=4?30:qb!==null?qb*4:0)); return '<a class="prow" href="#/module/'+m.n+'" style="color:inherit"><span class="n">'+pad(m.n)+'</span><div><h4>'+esc(m.title)+'</h4><div class="bar"><i style="width:'+p+'%'+(d?';background:var(--ok)':'')+'"></i></div></div><span class="st">'+(d?'✓ Complete':ld+'/'+m.lessons.length+' lessons'+(qb!==null?' · quiz '+qb+'/5':' · quiz —'))+'</span></a>'; }).join('')+'</div>'
-  +(dc===10?'<div class="cert printable"><div class="e">Certificate of completion</div><h2>The Canadian Menopause Playbook</h2><p>This certifies that</p><div class="who">'+(S.name?esc(S.name):'________________')+'</div><p>completed all ten modules of the Menopause North program — the readings, the tools and the checks — and is walking into the next appointment ready.</p><p style="font-size:13px;color:var(--ink-3);margin-top:22px">Menopause North · Education, not medical care · '+new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'})+'</p></div><div class="row noprint" style="justify-content:center"><input type="text" id="cname" placeholder="Your name for the certificate" value="'+esc(S.name||'')+'" style="max-width:320px"><button class="btn sm" id="cprint">Print certificate</button></div>':'')
+  +(dc===MODULES.length?'<div class="cert printable"><div class="e">Certificate of completion</div><h2>The Canadian Menopause Playbook</h2><p>This certifies that</p><div class="who">'+(S.name?esc(S.name):'________________')+'</div><p>completed all eleven modules of the Menopause North program — the readings, the tools and the checks — and is walking into the next appointment ready.</p><p style="font-size:13px;color:var(--ink-3);margin-top:22px">Menopause North · Education, not medical care · '+new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'})+'</p></div><div class="row noprint" style="justify-content:center"><input type="text" id="cname" placeholder="Your name for the certificate" value="'+esc(S.name||'')+'" style="max-width:320px"><button class="btn sm" id="cprint">Print certificate</button></div>':'')
   +'<div class="row noprint" style="justify-content:center;margin-top:36px"><button class="btn sm ghost" id="reset">Reset all progress</button></div>'
   +'</div></section></main>';
   var cn=document.getElementById('cname'); if(cn){ cn.addEventListener('input',function(e){ S.name=e.target.value; save(); var w=app.querySelector('.cert .who'); if(w) w.textContent=S.name||'________________'; }); document.getElementById('cprint').addEventListener('click',function(){ printEl(app.querySelector('.cert')); }); }
   document.getElementById('reset').addEventListener('click',function(){ if(confirm('Reset all progress, quiz scores and tool data in this browser?')){ S={lessons:{},quiz:{},tools:{},name:''}; save(); renderProgress(); } });
+  bindCheckin();
 }
 
 route();
