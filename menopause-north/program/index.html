@@ -155,6 +155,8 @@ section.tight{padding:64px 0}
 .note{margin-top:16px;font-size:13px;color:var(--ink-3)}
 
 /* lessons */
+.readimg{border-radius:var(--radius);overflow:hidden;margin-bottom:28px;aspect-ratio:4/3;max-height:420px}
+.readimg img{width:100%;height:100%;object-fit:cover;display:block}
 .lessons{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
 .lesson{display:grid;grid-template-columns:44px 1fr auto;gap:18px;align-items:center;padding:20px 14px;margin:0 -14px;border-bottom:1px solid var(--line-2);border-radius:12px;cursor:pointer;transition:background .12s}
 .lesson:hover{background:var(--bg-2)}
@@ -364,7 +366,7 @@ body.printing .printable{position:absolute;left:0;top:0;width:100%;padding:24px;
    DATA
    ========================================================= */
 var MODULES = [
-{n:1,slug:'happening',k:'Foundations',title:'What Is Actually Happening To You',tag:'End the “am I going crazy?” phase. Name it, and the next ten modules make sense.',
+{n:1,slug:'happening',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105024/menopause_north_reading_m01.png',k:'Foundations',title:'What Is Actually Happening To You',tag:'End the “am I going crazy?” phase. Name it, and the next ten modules make sense.',
  runtime:'38 min',g:['#0F2B2C','#1f6f6b'],
  summary:'Most women arrive knowing three symptoms and living with seven. This module gives you the real definitions, the real timeline, and the full symptom list — including the ones nobody warned you about — in plain English.',
  take:[['The definitions','Perimenopause is the transition. Menopause is one day — 12 months after your last period. Postmenopause is everything after.'],['The timeline','This is years, not months. Symptoms commonly begin in the early-to-mid 40s and can run for a decade.'],['The list','There are 30+ recognised symptoms. Brain fog, joint pain, anxiety and heart palpitations are on it.']],
@@ -378,7 +380,7 @@ var MODULES = [
   {q:'Hot flashes are most closely linked to changes in which hormone?',a:['Insulin','Estrogen','Cortisol','Melatonin'],c:1,e:'Fluctuating and falling estrogen affects the brain’s temperature regulation — that’s the hot flash.'}],
  tool:'inventory',assets:['The Symptom Inventory (30-item checklist, scored day 1 and day 90)']},
 
-{n:2,slug:'doctor',k:'Canada · Navigation',ca:true,title:'Getting Taken Seriously By Your Doctor',tag:'Eight minutes is enough — if you walk in with data and a script.',
+{n:2,slug:'doctor',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105025/menopause_north_reading_m02.png',k:'Canada · Navigation',ca:true,title:'Getting Taken Seriously By Your Doctor',tag:'Eight minutes is enough — if you walk in with data and a script.',
  runtime:'41 min',g:['#10393b','#0F4C4A'],
  summary:'Fewer than a quarter of Canadian women had a physician raise menopause with them. Of those who went looking, 72% came away unsatisfied. This module fixes the appointment: how to structure it, what to bring, the exact words to open with, and what to do when you’re dismissed.',
  take:[['Data beats description','A 14-day symptom log turns “I feel off” into something a clinician can act on in eight minutes.'],['Lead with three','The two or three symptoms that most affect your life, not all fourteen.'],['Dismissed is not the end','A second opinion, a menopause-focused clinic, or virtual care are all reasonable next steps.']],
@@ -392,7 +394,7 @@ var MODULES = [
   {q:'In an eight-minute appointment, how many symptoms should you lead with?',a:['All of them — be thorough','The two or three that most affect your daily life','Only the one you’re most embarrassed about','None — let the doctor ask'],c:1,e:'Lead with what matters most and hand over the log for the rest. Fourteen symptoms in eight minutes is how appointments go nowhere.'}],
  tool:'script',assets:['The Appointment Script (one page, printable)','14-Day Symptom Tracker','“What to ask for” card']},
 
-{n:3,slug:'coverage',k:'Canada · Coverage',ca:true,title:'Your Canadian Coverage Map',tag:'What your province pays for, what your benefits pay for, and what you’ll pay yourself.',
+{n:3,slug:'coverage',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105027/menopause_north_reading_m03.png',k:'Canada · Coverage',ca:true,title:'Your Canadian Coverage Map',tag:'What your province pays for, what your benefits pay for, and what you’ll pay yourself.',
  runtime:'32 min',g:['#3d2f05','#9A6E0C'],
  summary:'Coverage is not the same across Canada, and almost nobody explains the difference. Hormone therapy is now $0 in BC under the national pharmacare plan. Elsewhere it depends on your provincial formulary and your private plan. This module walks you through what to ask, province by province — and how to use your benefits.',
  take:[['BC: $0','As of March 1, 2026, menopausal hormone therapy is free under PharmaCare’s national pharmacare plan — no dispensing fee, no Special Authority.'],['Ask the pharmacist','Before you fill, ask them to check both your provincial plan and your private plan.'],['HSA vs WSA','A Health Spending Account covers eligible medical costs tax-free. A Wellness Spending Account covers what your employer defines — and it’s taxable.']],
@@ -406,7 +408,7 @@ var MODULES = [
   {q:'Before you fill a menopause prescription, the smart question for your pharmacist is…',a:['“Is this the cheapest brand?”','“Can you check both my provincial plan and my private plan for this?”','“Do I really need this?”','“Can I skip the dispensing fee?”'],c:1,e:'Pharmacists can run both plans. Sometimes a slightly different product or formulation is fully covered when the one prescribed isn’t.'}],
  tool:'coverage',assets:['The Coverage Cheat Sheet — one page per province, updated twice a year']},
 
-{n:4,slug:'hormone-therapy',k:'Options',title:'Hormone Therapy, Explained Without the Fear',tag:'The 2002 headline, what changed since, and the questions that make the conversation a real one.',
+{n:4,slug:'hormone-therapy',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105028/menopause_north_reading_m04.png',k:'Options',title:'Hormone Therapy, Explained Without the Fear',tag:'The 2002 headline, what changed since, and the questions that make the conversation a real one.',
  runtime:'36 min',g:['#1d1d1f','#4a4a4f'],
  summary:'One study in 2002 set menopause care back twenty years. This module explains what that study found, what the re-analysis showed, what the options actually are in Canada today — and the questions to take to your prescriber. It does not tell you what to take. That decision is between you and your clinician.',
  take:[['Timing matters','Guidance today looks at age, time since menopause and personal history — not a blanket yes or no.'],['Approved vs compounded','Health Canada-approved products, including body-identical estradiol and micronized progesterone, are reviewed for safety and dosing. Compounded products are not reviewed the same way.'],['Local is different','Vaginal estrogen acts mainly where it’s applied, with low systemic absorption, and is used for genitourinary symptoms.']],
@@ -420,7 +422,7 @@ var MODULES = [
   {q:'Who decides whether hormone therapy is right for you?',a:['This program','Your friends','You and your prescriber, based on your history and preferences','Your pharmacist alone'],c:2,e:'The Playbook gives you the language and the questions. The decision is clinical and personal — and it belongs to you and your clinician.'}],
  tool:'myths',assets:['Myth vs. fact cards','Questions for your prescriber (printable)']},
 
-{n:5,slug:'eating',k:'Body',title:'Why “Eat Less, Move More” Stopped Working',tag:'The advice wasn’t wrong for someone. It was wrong for a body in midlife.',
+{n:5,slug:'eating',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105029/menopause_north_reading_m05.png',k:'Body',title:'Why “Eat Less, Move More” Stopped Working',tag:'The advice wasn’t wrong for someone. It was wrong for a body in midlife.',
  runtime:'47 min',g:['#2b1f0a','#6b4a10'],
  summary:'Every woman in this program has been told she isn’t trying hard enough. This module explains what changes in midlife — muscle, insulin sensitivity, where the body stores fat — and why cutting harder backfires after 45. It teaches principles, not prescriptions. Individual plans belong to a Registered Dietitian.',
  take:[['Muscle is the lever','Losing muscle lowers the energy your body uses at rest. Aggressive cutting accelerates that loss.'],['Build a plate','Canada’s Food Guide: half vegetables and fruit, a quarter whole grains, a quarter protein foods. That survives past week three.'],['Not a meal plan','Individual nutrition prescriptions require a Registered Dietitian — and anyone selling one without that credential shouldn’t be.']],
@@ -434,7 +436,7 @@ var MODULES = [
   {q:'Who can legally give you an individualised meal plan in Canada?',a:['Any coach','A Registered Dietitian (RD)','A gym','An influencer with a certificate'],c:1,e:'“Dietitian” is a regulated, protected title. Principles and general guidance are education; a plan for you specifically is clinical care.'}],
  tool:'plate',assets:['The Plate Guide (visual framework)','Canadian high-protein grocery list']},
 
-{n:6,slug:'strength',k:'Body',title:'Strength Is The Treatment',tag:'Lifting as medicine for bone, muscle and blood sugar — and a way to start from zero.',
+{n:6,slug:'strength',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105031/menopause_north_reading_m06.png',k:'Body',title:'Strength Is The Treatment',tag:'Lifting as medicine for bone, muscle and blood sugar — and a way to start from zero.',
  runtime:'44 min',g:['#0b1f1e','#1f6f6b'],
  summary:'The behaviour with the most evidence behind it and the least uptake. This module frames strength training as medicine for bone density, muscle mass and glucose control — not as a way to look different — because that framing survives the first month. You screen first, then you start.',
  take:[['The ten-year window','Bone loss accelerates around menopause. What you do in this decade matters most.'],['Progressive, not pink','Strength comes from gradually increasing the challenge. Three sets of twelve with the same weight forever isn’t doing it.'],['Screen first','Complete the PAR-Q+ before you begin. If anything flags, see your doctor before the tracker unlocks.']],
@@ -448,7 +450,7 @@ var MODULES = [
   {q:'You feel leaking, heaviness or pressure in the pelvic floor while lifting. You should…',a:['Push through — it’s normal','Stop that movement and see a pelvic health physiotherapist or your doctor','Lift heavier to strengthen it','Ignore it'],c:1,e:'These are signals, not weaknesses to train through. Pelvic health physio is the right next stop.'}],
  tool:'strength',assets:['PAR-Q+ screening form (official)','12-Week Strength Template (printable)','Home vs gym equipment list']},
 
-{n:7,slug:'sleep',k:'Mind',title:'Sleep, Mood, And The Things Nobody Mentions',tag:'The 3 a.m. wake-up, the fog, the rage — named, explained, and worth raising.',
+{n:7,slug:'sleep',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105032/menopause_north_reading_m07.png',k:'Mind',title:'Sleep, Mood, And The Things Nobody Mentions',tag:'The 3 a.m. wake-up, the fog, the rage — named, explained, and worth raising.',
  runtime:'36 min',g:['#0b1220','#2a3a5c'],
  summary:'The symptoms women don’t raise because they don’t know they’re connected — 58% didn’t know migraines, anxiety, low mood or memory problems were on the list. Naming them is this module’s whole job, along with the practical sleep changes that actually move the needle.',
  take:[['3 a.m. has causes','Night sweats and changing sleep architecture, made worse by evening alcohol and late caffeine.'],['Fog is usually temporary','Cognitive changes in perimenopause are common and tend to improve after the transition.'],['Persistent low mood is medical','Not something to wait out. Raise it, in writing, at a dedicated appointment.']],
@@ -462,7 +464,7 @@ var MODULES = [
   {q:'If low mood is persistent or severe, the right move is…',a:['Wait it out — it’s hormonal','Treat it as a medical conversation and book a dedicated appointment','Buy a supplement','Push through with more exercise'],c:1,e:'Persistent low mood needs a clinician. Bring your log and say the words out loud.'}],
  tool:'sleep',assets:['Sleep Reset Checklist','Conversation starters for a partner']},
 
-{n:8,slug:'bones-heart',k:'Body · Long term',title:'Bones, Heart, and the Decade Ahead',tag:'The two things that matter most after 50 — and the screening conversations to start now.',
+{n:8,slug:'bones-heart',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105033/menopause_north_reading_m08.png',k:'Body · Long term',title:'Bones, Heart, and the Decade Ahead',tag:'The two things that matter most after 50 — and the screening conversations to start now.',
  runtime:'34 min',g:['#1a0f1f','#5a2d63'],
  summary:'Hot flashes get the attention. Bone density and cardiovascular risk get the outcomes. This module explains what shifts after menopause, what Canadian screening guidance actually says, and how to ask your doctor for the right conversations at the right age — without self-prescribing anything.',
  take:[['Start the bone conversation at 50','Osteoporosis Canada frames fracture-risk assessment from age 50, with testing based on age and risk factors. Ask when it’s appropriate for you.'],['Heart risk rises','After menopause, cardiovascular disease becomes the leading cause of death for Canadian women. Blood pressure, lipids and blood sugar are the numbers to know.'],['Move under load','Weight-bearing and resistance exercise support bone. It’s Module 06, again, for a different reason.']],
@@ -476,7 +478,7 @@ var MODULES = [
   {q:'On calcium and vitamin D supplements, the right approach is…',a:['Take the highest dose available','Talk to your doctor about your needs; don’t self-prescribe high doses','Avoid them completely','Only take them in winter'],c:1,e:'Needs vary. Food first, then an individual conversation about whether and how much to supplement.'}],
  tool:'screening',assets:['Screening timeline checklist','Questions for your doctor about bone and heart']},
 
-{n:9,slug:'pelvic',k:'Body · The unspoken',title:'Pelvic Health and Intimacy',tag:'The symptoms most likely to persist — and the ones least likely to be raised.',
+{n:9,slug:'pelvic',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105035/menopause_north_reading_m09.png',k:'Body · The unspoken',title:'Pelvic Health and Intimacy',tag:'The symptoms most likely to persist — and the ones least likely to be raised.',
  runtime:'30 min',g:['#2b0f14','#8B2F26'],
  summary:'Genitourinary symptoms — dryness, discomfort, recurrent UTIs, urgency — don’t fade the way hot flashes often do. Without treatment they tend to persist or worsen. This module names them, explains what pelvic health physiotherapy does, and gives you the words to bring it up.',
  take:[['It has a name','Genitourinary syndrome of menopause (GSM). Naming it makes it a medical conversation.'],['It doesn’t fade on its own','Unlike vasomotor symptoms, GSM often persists or progresses without treatment.'],['Pelvic physio is real care','Usually private-pay in Canada — often covered by extended health or an HSA.']],
@@ -490,7 +492,7 @@ var MODULES = [
   {q:'The best way to raise these symptoms with your doctor is…',a:['Hope they ask','Write it down and say it plainly — it’s a legitimate medical topic','Only mention it if it becomes unbearable','Ask a friend instead'],c:1,e:'A written note gets it said in the first minute. Clinicians treat this routinely; the hard part is usually just saying it.'}],
  tool:'flash',assets:['Term flashcards','Conversation starters (partner and doctor)']},
 
-{n:10,slug:'work-90-days',k:'Canada · Action',ca:true,title:'Menopause At Work — And Your Next 90 Days',tag:'What it costs Canadian workplaces, how to ask for what you need, and the four things to start this week.',
+{n:10,slug:'work-90-days',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105036/menopause_north_reading_m10.png',k:'Canada · Action',ca:true,title:'Menopause At Work — And Your Next 90 Days',tag:'What it costs Canadian workplaces, how to ask for what you need, and the four things to start this week.',
  runtime:'28 min',g:['#0F2B2C','#0F4C4A'],
  summary:'The program closes on agency rather than symptoms. Unmanaged menopause symptoms cost the Canadian economy an estimated $3.5 billion a year, and most workplaces have no plan. This module shows you how to ask for reasonable adjustments without disclosing more than you want to — then builds your 90-day plan.',
  take:[['$3.5B a year','The Menopause Foundation of Canada’s estimate of what unmanaged symptoms cost the Canadian economy — lost income, lost productivity, lost women.'],['You choose what to share','A conversation about adjustments doesn’t require a diagnosis. Formal accommodation may require documentation.'],['Four things this week','Book the appointment. Start the log. Pick one sleep change. Schedule the first strength session.']],
@@ -504,7 +506,7 @@ var MODULES = [
   {q:'How do you know the program worked?',a:['You feel vaguely better','You re-score the Symptom Inventory at day 90 and compare it with day 1','Your doctor tells you','You finish the videos'],c:1,e:'Day 1 vs day 90. That’s your before-and-after — no photos required.'}],
  tool:'plan90',assets:['The 90-Day Plan (fillable)','One-page menopause brief to forward to your employer']},
 
-{n:11,slug:'inner-critic',k:'Mind',title:'Rewire the Inner Critic',tag:'Emotional eating, the habits that actually stick, and the diet-culture lies you can finally stop believing.',
+{n:11,slug:'inner-critic',readImg:'https://res.cloudinary.com/dyhyjdu3c/image/upload/v1789105038/menopause_north_reading_m11.png',k:'Mind',title:'Rewire the Inner Critic',tag:'Emotional eating, the habits that actually stick, and the diet-culture lies you can finally stop believing.',
  runtime:'34 min',g:['#2E1420','#8E2C55'],
  summary:'Most women in this program have been told for years that the problem is willpower. It isn’t. This module explains how habits actually form and change, why the 9 p.m. snack is a signal rather than a failure, and how to replace self-critique with the kind of self-talk that produces a different next choice. It is education about habits — not therapy. If eating has become something bigger than a habit, the module tells you where to get real help in Canada.',
  take:[['Cue, routine, reward','Every habit runs on a loop. You don’t break a loop by trying harder — you keep the reward and swap the routine.'],['Hunger vs. signal','Tired, stressed, bored, lonely and a 3 a.m. wake-up all feel like hunger. Naming the real signal is the whole skill.'],['The inner coach','“You blew it” makes the next choice worse, not better. Self-compassion after a slip is a performance strategy, not a soft one.']],
@@ -754,7 +756,7 @@ function renderModule(m){
   +'<ul class="chapters">'+m.chapters.map(function(c){ return '<li><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></li>'; }).join('')+'</ul>'
   +'</div></section>'
 
-  +'<section id="lessons"><div class="wrap rv"><span class="eyebrow">Lessons</span><h2 class="h-m" style="margin-bottom:8px">Work through the readings</h2><p style="color:var(--ink-2);margin-bottom:26px">Tap anywhere in a row to tick it off. <span id="lcount"></span></p>'
+  +'<section id="lessons"><div class="wrap rv">'+(m.readImg?'<div class="readimg"><img src="'+esc(m.readImg)+'" alt="" loading="lazy" decoding="async"></div>':'')+'<span class="eyebrow">Lessons</span><h2 class="h-m" style="margin-bottom:8px">Work through the readings</h2><p style="color:var(--ink-2);margin-bottom:26px">Tap anywhere in a row to tick it off. <span id="lcount"></span></p>'
   +'<ul class="lessons">'+m.lessons.map(function(l,i){ var on=!!S.lessons[m.n+'-'+i]; return '<li class="lesson'+(on?' on':'')+'" data-i="'+i+'"><span class="n">'+m.n+'.'+(i+1)+'</span><div><h4>'+esc(l[0])+'</h4><p>'+esc(l[1])+'</p></div><button class="chk'+(on?' on':'')+'" data-lesson="'+i+'" aria-pressed="'+on+'" aria-label="Mark lesson '+(i+1)+' done">'+CHECK+'</button></li>'; }).join('')+'</ul>'
   +'</div></section>'
 
