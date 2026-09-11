@@ -163,6 +163,8 @@ tbody tr:last-child td{border-bottom:none}
 /* ---------- carol ---------- */
 .about{display:grid;grid-template-columns:.85fr 1.15fr;gap:44px;align-items:start}
 .portrait{background:var(--surface-2);border:1px solid var(--rule);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:var(--ink-3);font-family:"Bricolage Grotesque",sans-serif;font-size:13px;line-height:1.5}
+.portrait.photo{padding:0;overflow:hidden}
+.portrait.photo img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
 .pull{border-left:3px solid var(--gold);padding:4px 0 4px 20px;margin:24px 0;font-size:20px;line-height:1.45;color:var(--ink)}
 
 /* ---------- disclaimer / footer ---------- */
@@ -301,7 +303,7 @@ footer.site a:hover{color:var(--gold)}
     <div class="container narrow">
       <p class="eyebrow">The course</p>
       <h1>The Canadian Menopause Playbook</h1>
-      <p class="lead">Seven modules. Thirty-six lessons. Nine printable tools. Everything Carol wishes someone had handed her at 46 — written for the country you actually live in.</p>
+      <p class="lead">Seven modules. Thirty-six lessons. Nine printable tools. The guide Carol wishes had existed — written for the country you actually live in.</p>
       <p style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn lg" href="#buy">Get the Playbook — $147 CAD</a><a class="btn lg ghost" href="program/">Preview the program</a></p>
     </div>
   </section>
@@ -388,7 +390,7 @@ footer.site a:hover{color:var(--gold)}
   <section class="tight">
     <div class="container narrow">
       <h2>Questions people ask</h2>
-      <details><summary>Is Carol a doctor?</summary><p>No, and the course never pretends otherwise. Carol went through this herself and spent years figuring out how the Canadian system works. The Playbook is education and navigation — it makes you a better-prepared patient. Every module ends the same way: take this to your doctor.</p></details>
+      <details><summary>Is Carol a doctor?</summary><p>No, and the course never pretends otherwise. Carol has rebuilt her life from scratch more than once, and built this as the Canadian navigation guide she couldn’t find. The Playbook is education and navigation — it makes you a better-prepared patient. Every module ends the same way: take this to your doctor.</p></details>
       <details><summary>Will this tell me whether to take hormone therapy?</summary><p>No. That decision is between you and your prescriber, and it depends on your history. What the Playbook does is explain the options in plain English, tell you what your province covers, and give you the questions to ask so the conversation is a real one.</p></details>
       <details><summary>I’m 43 and not sure I’m in perimenopause yet.</summary><p>That’s the most common place to start, and it’s the best time to do this. Perimenopause typically begins years before periods stop. Take the quiz first — it’s free, and it will tell you whether this is worth your time right now.</p></details>
       <details><summary>Is there a meal plan?</summary><p>Deliberately not. Individual nutrition prescriptions need a Registered Dietitian, and anyone selling you one without that credential is doing something they shouldn’t. Module 04 teaches the principles and shows you how to build a plate — which is more useful anyway, because it survives past week three.</p></details>
@@ -461,21 +463,22 @@ footer.site a:hover{color:var(--gold)}
   <section>
     <div class="container about">
       <div>
-        <div class="portrait">Portrait of Carol<br>4:5 · replace with a real photo<br><br>Shoot in daylight, at home,<br>no gym backdrop</div>
+        <div class="portrait photo"><img src="carol-danis.webp?v=1" alt="Carol Danis" width="608" height="1080" loading="eager" decoding="async"></div>
       </div>
       <div>
         <p class="eyebrow">Who’s behind this</p>
         <h1 style="font-size:clamp(30px,4.6vw,44px)">Carol Danis</h1>
-        <p class="lead">I’m not a doctor. I’m the person who spent two years being told she was fine.</p>
-        <p style="margin-top:22px">It started with sleep. Then the weight that wouldn’t move no matter how carefully I ate. Then a meeting where I lost the word I was reaching for and had to sit there while someone finished my sentence. I went to my doctor four times over two years and left every appointment with the sense that I’d described it badly.</p>
-        <div class="pull">The fifth time, I brought a written list. That appointment changed everything — not because the doctor was different, but because I was prepared.</div>
-        <p>What I learned afterwards was that almost none of the good information out there is Canadian. It doesn’t know what your province covers. It doesn’t know how a walk-in works. It tells you to “ask your provider about testing” as if that were a straightforward request in an eight-minute appointment.</p>
-        <p>So I built the thing I needed. The Playbook is everything I figured out the hard way, in order, with the printable pages I wish someone had handed me at 46 — and it is honest about what it is. I’m not treating anyone. I’m getting you ready for the person who can.</p>
-        <p style="margin-top:24px"><a class="btn" href="#/playbook">See the Playbook</a></p>
+        <p class="lead">I’m not a doctor. I’m someone who has rebuilt her life from scratch more than once.</p>
+        <p style="margin-top:22px">I spent twenty years as a fashion designer and entrepreneur. I built a boutique, lost it overnight to a hurricane, and rebuilt it from nothing in a new country. Since then I’ve started over more than once — through a divorce, through a financial collapse — and each time I found my way back stronger.</p>
+        <div class="pull">You don’t need a happy ending to start a new chapter. You just need to pick up the pen.</div>
+        <p>For the past six years I’ve worked as a high-ticket sales closer and mentor, helping people get clear on what’s actually right for them and then reverse-engineer the steps to get there. Menopause is one of the crossroads that work is for — the moment a woman is told, in a hundred quiet ways, that she’s done being capable of more. She isn’t.</p>
+        <p>Menopause North is the practical chapter: what’s happening to you, how to be taken seriously by a Canadian doctor, and what your province will actually pay for. It is honest about what it is. I’m not treating anyone. I’m getting you ready for the person who can.</p>
+        <p style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="#/playbook">See the Playbook</a><a class="btn ghost" href="../a-new-book-of-life/">A New Book of Life — the 6-month program</a></p>
       </div>
     </div>
   </section>
 </main>
+
 
 <!-- ==================== QUIZ ==================== -->
 <main class="page" id="p-quiz">
@@ -504,6 +507,7 @@ footer.site a:hover{color:var(--gold)}
           <li><a href="#/coverage">Coverage in Canada</a></li>
           <li><a href="#/quiz">Free symptom quiz</a></li>
           <li><a href="#/carol">About Carol</a></li>
+          <li><a href="../a-new-book-of-life/">A New Book of Life · 6-month program</a></li>
         </ul>
       </div>
       <div>
