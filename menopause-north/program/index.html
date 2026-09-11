@@ -156,7 +156,9 @@ section.tight{padding:64px 0}
 
 /* lessons */
 .lessons{list-style:none;margin:0;padding:0;border-top:1px solid var(--line-2)}
-.lesson{display:grid;grid-template-columns:44px 1fr auto;gap:18px;align-items:center;padding:20px 0;border-bottom:1px solid var(--line-2)}
+.lesson{display:grid;grid-template-columns:44px 1fr auto;gap:18px;align-items:center;padding:20px 14px;margin:0 -14px;border-bottom:1px solid var(--line-2);border-radius:12px;cursor:pointer;transition:background .12s}
+.lesson:hover{background:var(--bg-2)}
+.lesson:active{background:var(--line-2)}
 .lesson .n{font-size:13px;color:var(--ink-3);font-weight:500;font-variant-numeric:tabular-nums}
 .lesson h4{font-size:18px;font-weight:600;margin-bottom:3px}
 .lesson p{margin:0;color:var(--ink-2);font-size:15px}
@@ -752,7 +754,7 @@ function renderModule(m){
   +'<ul class="chapters">'+m.chapters.map(function(c){ return '<li><b>'+c[0]+'</b><span>'+esc(c[1])+'</span></li>'; }).join('')+'</ul>'
   +'</div></section>'
 
-  +'<section id="lessons"><div class="wrap rv"><span class="eyebrow">Lessons</span><h2 class="h-m" style="margin-bottom:8px">Work through the readings</h2><p style="color:var(--ink-2);margin-bottom:26px">Tick each one as you go. <span id="lcount"></span></p>'
+  +'<section id="lessons"><div class="wrap rv"><span class="eyebrow">Lessons</span><h2 class="h-m" style="margin-bottom:8px">Work through the readings</h2><p style="color:var(--ink-2);margin-bottom:26px">Tap anywhere in a row to tick it off. <span id="lcount"></span></p>'
   +'<ul class="lessons">'+m.lessons.map(function(l,i){ var on=!!S.lessons[m.n+'-'+i]; return '<li class="lesson'+(on?' on':'')+'" data-i="'+i+'"><span class="n">'+m.n+'.'+(i+1)+'</span><div><h4>'+esc(l[0])+'</h4><p>'+esc(l[1])+'</p></div><button class="chk'+(on?' on':'')+'" data-lesson="'+i+'" aria-pressed="'+on+'" aria-label="Mark lesson '+(i+1)+' done">'+CHECK+'</button></li>'; }).join('')+'</ul>'
   +'</div></section>'
 
@@ -769,7 +771,7 @@ function renderModule(m){
   +'</div></section>'
   +'</main>';
 
-  app.querySelectorAll('[data-lesson]').forEach(function(b){ b.addEventListener('click', function(){ var i=b.getAttribute('data-lesson'); var k=m.n+'-'+i; S.lessons[k]=!S.lessons[k]; save(); b.classList.toggle('on',!!S.lessons[k]); b.setAttribute('aria-pressed',!!S.lessons[k]); b.closest('.lesson').classList.toggle('on',!!S.lessons[k]); refreshStatus(m); }); });
+  app.querySelectorAll('.lesson').forEach(function(li){ li.addEventListener('click', function(){ var i=li.getAttribute('data-i'); var k=m.n+'-'+i; S.lessons[k]=!S.lessons[k]; save(); var on=!!S.lessons[k]; li.classList.toggle('on',on); var b=li.querySelector('.chk'); b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); refreshStatus(m); }); });
   renderQuiz(m); renderTool(m); refreshStatus(m);
 }
 function refreshStatus(m){
