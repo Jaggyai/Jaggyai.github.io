@@ -341,6 +341,7 @@ body.printing .printable{position:absolute;left:0;top:0;width:100%;padding:24px;
       <a href="#/modules">Modules</a>
       <a href="#/progress">Progress</a>
       <a href="#/sources">Sources</a>
+      <a href="../#/carol">About Carol</a>
       <a class="pill" id="navprog" href="#/progress">0 / 11</a>
     </nav>
   </div>
@@ -352,7 +353,7 @@ body.printing .printable{position:absolute;left:0;top:0;width:100%;padding:24px;
   <div class="wrap">
     <p><strong style="color:var(--ink-2)">Menopause North provides education, not medical care.</strong> Carol is not a physician, nurse practitioner or Registered Dietitian. Nothing in this program is a diagnosis, a treatment plan, or a personalised nutrition or exercise prescription — it is a guide to understanding menopause and to working effectively with your own healthcare providers in Canada. Always consult your physician before changing medication, nutrition or physical activity, particularly if you have an existing health condition.</p>
     <p>Coverage information reflects publicly available provincial program details as of September 2026 and can change — confirm current coverage with your provincial program or pharmacist. Your progress is saved in this browser only and is never sent anywhere.</p>
-    <p>© 2026 Menopause North · <a href="../">Main site</a> · <a href="../playbook.html">Curriculum</a> · <a href="#/sources">Reading list &amp; sources</a></p>
+    <p>© 2026 Menopause North · <a href="../">Main site</a> · <a href="../playbook.html">Curriculum</a> · <a href="#/sources">Reading list &amp; sources</a> · <a href="../#/carol">About Carol</a> · <a href="../../a-new-book-of-life/">A New Book of Life</a></p>
   </div>
 </footer>
 
@@ -365,8 +366,8 @@ var MODULES = [
  runtime:'38 min',g:['#0F2B2C','#1f6f6b'],
  summary:'Most women arrive knowing three symptoms and living with seven. This module gives you the real definitions, the real timeline, and the full symptom list — including the ones nobody warned you about — in plain English.',
  take:[['The definitions','Perimenopause is the transition. Menopause is one day — 12 months after your last period. Postmenopause is everything after.'],['The timeline','This is years, not months. Symptoms commonly begin in the early-to-mid 40s and can run for a decade.'],['The list','There are 30+ recognised symptoms. Brain fog, joint pain, anxiety and heart palpitations are on it.']],
- lessons:[['Perimenopause, menopause, postmenopause','The actual definitions — and why “menopause” is technically one day.'],['The timeline','Why this lasts 7–10 years, not 7–10 months.'],['The 30+ symptom list','Including the ones nobody warned you about.'],['Estrogen, progesterone, testosterone','A plain-English explainer with no biochemistry required.'],['Why it hit sleep, mood and your midsection at once','The connection between fluctuating hormones and everything else.'],['Carol’s story','The two years I thought it was just stress.']],
- chapters:[['0:00','Why nobody told you'],['2:10','The three stages, defined'],['8:40','The real timeline'],['13:30','The full symptom list'],['24:00','Hormones in plain English'],['31:15','Carol: two years of “just stress”']],
+ lessons:[['Perimenopause, menopause, postmenopause','The actual definitions — and why “menopause” is technically one day.'],['The timeline','Why this lasts 7–10 years, not 7–10 months.'],['The 30+ symptom list','Including the ones nobody warned you about.'],['Estrogen, progesterone, testosterone','A plain-English explainer with no biochemistry required.'],['Why it hit sleep, mood and your midsection at once','The connection between fluctuating hormones and everything else.'],['Carol’s story','Rebuilding from nothing more than once — and why this chapter gets its own guide.']],
+ chapters:[['0:00','Why nobody told you'],['2:10','The three stages, defined'],['8:40','The real timeline'],['13:30','The full symptom list'],['24:00','Hormones in plain English'],['31:15','Carol’s story']],
  quiz:[
   {q:'Menopause is officially defined as…',a:['Your first hot flash','12 consecutive months without a period','Turning 50','When periods become irregular'],c:1,e:'It’s a retrospective diagnosis — you only know it happened 12 months later. Everything before that is perimenopause.'},
   {q:'How long does the perimenopause-to-postmenopause transition typically take?',a:['A few weeks','About six months','Years — commonly 4 to 8, and symptoms can continue after','Exactly 12 months'],c:2,e:'The transition runs for years. Some symptoms ease after periods stop; others, like genitourinary changes, can persist without treatment.'},
@@ -762,6 +763,7 @@ function renderModule(m){
   +'<section class="grey tight"><div class="wrap">'
   +'<div class="card" style="padding:32px 36px"><h3 style="font-size:20px;margin-bottom:12px">Ships with this module</h3><ul style="margin:0;padding-left:20px;color:var(--ink-2)">'+m.assets.map(function(a){ return '<li style="margin-bottom:6px">'+esc(a)+'</li>'; }).join('')+'</ul>'+goDeeper(m)
   +'<p class="disc"><strong>This is education, not medical advice — take it to your doctor.</strong> Carol is not a physician, nurse practitioner or Registered Dietitian.</p></div>'
+  +(next?'':nextChapter())
   +'<div class="pn">'+(prev?'<a href="#/module/'+prev.n+'"><small>← Previous</small><b>'+pad(prev.n)+' · '+esc(prev.title)+'</b></a>':'<a href="#/"><small>← Back</small><b>Program overview</b></a>')
   +(next?'<a class="r" href="#/module/'+next.n+'"><small>Next →</small><b>'+pad(next.n)+' · '+esc(next.title)+'</b></a>':'<a class="r" href="#/progress"><small>Finish →</small><b>Your progress & certificate</b></a>')+'</div>'
   +'</div></section>'
@@ -1169,6 +1171,11 @@ function renderSources(){
 /* =========================================================
    STARTING LINE + WEEKLY CHECK-IN
    ========================================================= */
+function nextChapter(){
+  return '<div class="card d" style="margin-top:36px"><span class="eyebrow" style="color:#D9AC4D">What’s next</span><h2>Finished the Playbook? Start the next chapter.</h2>'
+  +'<p class="lead"><b style="color:#f5f5f7">A New Book of Life</b> is Carol’s six-month live reinvention program — six chapters, one a month, live and guided, for every woman standing at the edge of her next chapter. The Playbook gets you ready for your doctor. This gets you ready for the next five years.</p>'
+  +'<div class="row"><a class="btn light" href="../../a-new-book-of-life/">See A New Book of Life →</a><a class="btn ghost" style="color:#f5f5f7;border-color:#555" href="../#/carol">Meet Carol</a></div></div>';
+}
 function renderStart(){
   var t=T('start'); t.sym=t.sym||[];
   var STAGES=['Not sure yet','Early perimenopause','Perimenopause','Late peri / postmenopause'];
@@ -1240,6 +1247,7 @@ function renderProgress(){
   +checkinHTML()
   +'<section class="grey" style="padding-top:40px"><div class="wrap"><div class="pgrid">'+MODULES.map(function(m){ var ld=lessonsDone(m), qb=quizBest(m), d=isDone(m); var p=Math.round((ld/m.lessons.length*70)+(qb!==null&&qb>=4?30:qb!==null?qb*4:0)); return '<a class="prow" href="#/module/'+m.n+'" style="color:inherit"><span class="n">'+pad(m.n)+'</span><div><h4>'+esc(m.title)+'</h4><div class="bar"><i style="width:'+p+'%'+(d?';background:var(--ok)':'')+'"></i></div></div><span class="st">'+(d?'✓ Complete':ld+'/'+m.lessons.length+' lessons'+(qb!==null?' · quiz '+qb+'/5':' · quiz —'))+'</span></a>'; }).join('')+'</div>'
   +(dc===MODULES.length?'<div class="cert printable"><div class="e">Certificate of completion</div><h2>The Canadian Menopause Playbook</h2><p>This certifies that</p><div class="who">'+(S.name?esc(S.name):'________________')+'</div><p>completed all eleven modules of the Menopause North program — the readings, the tools and the checks — and is walking into the next appointment ready.</p><p style="font-size:13px;color:var(--ink-3);margin-top:22px">Menopause North · Education, not medical care · '+new Date().toLocaleDateString('en-CA',{year:'numeric',month:'long',day:'numeric'})+'</p></div><div class="row noprint" style="justify-content:center"><input type="text" id="cname" placeholder="Your name for the certificate" value="'+esc(S.name||'')+'" style="max-width:320px"><button class="btn sm" id="cprint">Print certificate</button></div>':'')
+  +nextChapter()
   +'<div class="row noprint" style="justify-content:center;margin-top:36px"><button class="btn sm ghost" id="reset">Reset all progress</button></div>'
   +'</div></section></main>';
   var cn=document.getElementById('cname'); if(cn){ cn.addEventListener('input',function(e){ S.name=e.target.value; save(); var w=app.querySelector('.cert .who'); if(w) w.textContent=S.name||'________________'; }); document.getElementById('cprint').addEventListener('click',function(){ printEl(app.querySelector('.cert')); }); }
