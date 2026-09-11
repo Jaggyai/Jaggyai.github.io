@@ -291,6 +291,14 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .scale10{display:flex;gap:6px;flex-wrap:wrap}
 .scale10 button{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:600;color:var(--ink-3)}
 .scale10 button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.srcs{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.srcs li{background:#fff;border:1.5px solid var(--line-2);border-radius:14px;padding:14px 16px}
+.grey .srcs li{background:var(--bg-2);border-color:transparent}
+.srcs .top{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline}
+.srcs .top a,.srcs .top b{font-weight:600;color:var(--ink);font-size:16px;text-decoration:none}
+.srcs .top a:hover{color:var(--accent);text-decoration:underline}
+.srcs .by{font-size:13px;color:var(--ink-3)}
+.srcs p{margin:6px 0 0;font-size:14.5px;color:var(--ink-2)}
 .cert{background:#fff;border:1px solid var(--line-2);border-radius:var(--radius);padding:56px 48px;text-align:center;margin-top:36px}
 .cert .e{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700}
 .cert h2{font-size:clamp(30px,4vw,44px);margin:14px 0 8px}
@@ -332,6 +340,7 @@ body.printing .printable{position:absolute;left:0;top:0;width:100%;padding:24px;
       <a href="#/">Overview</a>
       <a href="#/modules">Modules</a>
       <a href="#/progress">Progress</a>
+      <a href="#/sources">Sources</a>
       <a class="pill" id="navprog" href="#/progress">0 / 11</a>
     </nav>
   </div>
@@ -343,7 +352,7 @@ body.printing .printable{position:absolute;left:0;top:0;width:100%;padding:24px;
   <div class="wrap">
     <p><strong style="color:var(--ink-2)">Menopause North provides education, not medical care.</strong> Carol is not a physician, nurse practitioner or Registered Dietitian. Nothing in this program is a diagnosis, a treatment plan, or a personalised nutrition or exercise prescription — it is a guide to understanding menopause and to working effectively with your own healthcare providers in Canada. Always consult your physician before changing medication, nutrition or physical activity, particularly if you have an existing health condition.</p>
     <p>Coverage information reflects publicly available provincial program details as of September 2026 and can change — confirm current coverage with your provincial program or pharmacist. Your progress is saved in this browser only and is never sent anywhere.</p>
-    <p>© 2026 Menopause North · <a href="../">Main site</a> · <a href="../playbook.html">Curriculum</a></p>
+    <p>© 2026 Menopause North · <a href="../">Main site</a> · <a href="../playbook.html">Curriculum</a> · <a href="#/sources">Reading list &amp; sources</a></p>
   </div>
 </footer>
 
@@ -627,6 +636,7 @@ function route(){
   if(h.indexOf('#')>-1 && !m){ anchor = h.split('#')[1]; h = h.split('#')[0]; }
   if(m){ var mod = MODULES[parseInt(m[1],10)-1]; if(mod){ renderModule(mod); anchor = m[2]||null; } else { renderHome(); } }
   else if(h==='/start'){ renderStart(); }
+  else if(h==='/sources'){ renderSources(); }
   else if(h==='/modules'){ renderModules(); }
   else if(h==='/progress'){ renderProgress(); }
   else { renderHome(); }
@@ -706,7 +716,7 @@ function renderHome(){
 
   +'<section class="dark"><div class="wrap rv"><span class="eyebrow">Built for Canada</span><h2 class="h-l">The parts no American program can teach.</h2>'
   +'<p class="sub" style="margin-left:0">What your province covers. How a Canadian appointment actually works. What a Wellness Spending Account will reimburse. What the Menopause Foundation of Canada says employers owe you.</p>'
-  +'<div class="links" style="justify-content:flex-start"><a class="lnk chev" href="#/module/2" style="color:#fff">Getting taken seriously</a><a class="lnk chev" href="#/module/3" style="color:#fff">Coverage map</a><a class="lnk chev" href="#/module/10" style="color:#fff">Menopause at work</a></div>'
+  +'<div class="links" style="justify-content:flex-start"><a class="lnk chev" href="#/module/2" style="color:#fff">Getting taken seriously</a><a class="lnk chev" href="#/module/3" style="color:#fff">Coverage map</a><a class="lnk chev" href="#/module/10" style="color:#fff">Menopause at work</a><a class="lnk chev" href="#/sources" style="color:#fff">Reading list &amp; sources</a></div>'
   +'</div></section>'
 
   +'<section class="center tight"><div class="wrap rv"><p style="color:var(--ink-3);font-size:14px;max-width:none">Menopause North provides education, not medical care. Every module ends the same way: take this to your doctor.</p></div></section>'
@@ -750,7 +760,7 @@ function renderModule(m){
   +'<section id="quiz"><div class="wrap rv"><div class="card"><span class="eyebrow">Check your understanding</span><div id="quizbox"></div></div></div></section>'
 
   +'<section class="grey tight"><div class="wrap">'
-  +'<div class="card" style="padding:32px 36px"><h3 style="font-size:20px;margin-bottom:12px">Ships with this module</h3><ul style="margin:0;padding-left:20px;color:var(--ink-2)">'+m.assets.map(function(a){ return '<li style="margin-bottom:6px">'+esc(a)+'</li>'; }).join('')+'</ul>'
+  +'<div class="card" style="padding:32px 36px"><h3 style="font-size:20px;margin-bottom:12px">Ships with this module</h3><ul style="margin:0;padding-left:20px;color:var(--ink-2)">'+m.assets.map(function(a){ return '<li style="margin-bottom:6px">'+esc(a)+'</li>'; }).join('')+'</ul>'+goDeeper(m)
   +'<p class="disc"><strong>This is education, not medical advice — take it to your doctor.</strong> Carol is not a physician, nurse practitioner or Registered Dietitian.</p></div>'
   +'<div class="pn">'+(prev?'<a href="#/module/'+prev.n+'"><small>← Previous</small><b>'+pad(prev.n)+' · '+esc(prev.title)+'</b></a>':'<a href="#/"><small>← Back</small><b>Program overview</b></a>')
   +(next?'<a class="r" href="#/module/'+next.n+'"><small>Next →</small><b>'+pad(next.n)+' · '+esc(next.title)+'</b></a>':'<a class="r" href="#/progress"><small>Finish →</small><b>Your progress & certificate</b></a>')+'</div>'
@@ -1088,6 +1098,72 @@ function printEl(el){
   document.body.appendChild(clone); document.body.classList.add('printing');
   var done=function(){ document.body.classList.remove('printing'); var c=document.getElementById('print-root'); if(c) c.remove(); window.removeEventListener('afterprint',done); };
   window.addEventListener('afterprint',done); window.print(); setTimeout(done,1500);
+}
+
+/* =========================================================
+   SOURCES — reading list, podcasts, Canadian bodies, evidence
+   ========================================================= */
+var AMZ_TAG='jaggysports-20';
+function amz(q){ return 'https://www.amazon.ca/s?k='+encodeURIComponent(q)+'&tag='+AMZ_TAG; }
+function spot(q){ return 'https://open.spotify.com/search/'+encodeURIComponent(q); }
+var SOURCES=[
+ {id:'b1',g:'book',t:'The Menopause Manifesto',by:'Dr. Jen Gunter',url:amz('The Menopause Manifesto Jen Gunter'),note:'Evidence-first and myth-busting, by a Canadian OB/GYN. If you read one book, read this one.'},
+ {id:'b2',g:'book',t:'Estrogen Matters',by:'Avrum Bluming & Carol Tavris (revised 2024)',url:amz('Estrogen Matters Bluming Tavris'),note:'The case for hormone therapy, and what the Women’s Health Initiative actually showed.'},
+ {id:'b3',g:'book',t:'The New Menopause',by:'Dr. Mary Claire Haver',url:amz('The New Menopause Mary Claire Haver'),note:'Symptom-by-symptom toolkit. The biggest audience in the category.'},
+ {id:'b4',g:'book',t:'Next Level',by:'Dr. Stacy Sims',url:amz('Next Level Stacy Sims'),note:'Strength, recovery and nutrition for women over 40. The thinking behind Modules 05 and 06.'},
+ {id:'b5',g:'book',t:'Unbreakable',by:'Dr. Vonda Wright (2025)',url:amz('Unbreakable Vonda Wright'),note:'An orthopaedic surgeon on bone, muscle and ageing with power.'},
+ {id:'b6',g:'book',t:'The Menopause Brain',by:'Dr. Lisa Mosconi',url:amz('The Menopause Brain Lisa Mosconi'),note:'A neuroscientist on brain fog, mood, and what protects cognition.'},
+ {id:'b7',g:'book',t:'You Are Not Broken',by:'Dr. Kelly Casperson',url:amz('You Are Not Broken Kelly Casperson'),note:'A urologist on sex, hormones and shame-free pelvic health.'},
+ {id:'b8',g:'book',t:'What Fresh Hell Is This?',by:'Heather Corinna',url:amz('What Fresh Hell Is This Heather Corinna'),note:'Funny, plain-English, inclusive introduction to the whole transition.'},
+ {id:'b9',g:'book',t:'How to Menopause',by:'Tamsen Fadal (2025)',url:amz('How to Menopause Tamsen Fadal'),note:'A journalist’s practical guide, strong on the workplace and on advocacy.'},
+ {id:'b10',g:'book',t:'Atomic Habits',by:'James Clear',url:amz('Atomic Habits James Clear'),note:'The habit-loop mechanics behind Module 11 — cue, routine, reward.'},
+
+ {id:'p1',g:'pod',t:'Hit Play Not Pause',by:'Selene Yeager',url:spot('Hit Play Not Pause'),note:'Ranked the #1 menopause podcast for 2026. Active women, strength, performance.'},
+ {id:'p2',g:'pod',t:'Dr. Streicher’s Inside Information',by:'Dr. Lauren Streicher',url:spot('Dr. Streicher Inside Information'),note:'Frank, funny and clinical, from a leading OB/GYN.'},
+ {id:'p3',g:'pod',t:'You Are Not Broken',by:'Dr. Kelly Casperson',url:spot('You Are Not Broken Kelly Casperson'),note:'Pelvic health and intimacy, done properly.'},
+ {id:'p4',g:'pod',t:'The ’Pause Life',by:'Dr. Mary Claire Haver',url:spot('The Pause Life Mary Claire Haver'),note:'Big audience, big guests. Good for the questions everyone is asking.'},
+ {id:'p5',g:'pod',t:'The Tamsen Show',by:'Tamsen Fadal',url:spot('The Tamsen Show'),note:'Celebrity guests and expert interviews from an Emmy-winning journalist.'},
+ {id:'p6',g:'pod',t:'Menopause Reimagined',by:'Andrea Donsky · Toronto',url:spot('Menopause Reimagined Andrea Donsky'),note:'Canadian. Good interviews — note the host also sells supplements. Enjoy the conversations, skip the shop.'},
+
+ {id:'c1',g:'ca',t:'Menopause Foundation of Canada',by:'menopausefoundationcanada.ca',url:'https://menopausefoundationcanada.ca/',note:'The Menopause in Canada and Menopause & Work reports. Every Canadian number in this program comes from here.'},
+ {id:'c2',g:'ca',t:'Menopause and U',by:'Society of Obstetricians and Gynaecologists of Canada',url:'https://www.menopauseandu.ca/',note:'Patient handouts and plain-language answers from Canada’s OB/GYN society.'},
+ {id:'c3',g:'ca',t:'Canadian Menopause Society',by:'formerly SIGMA · canadianmenopausesociety.org',url:'https://www.canadianmenopausesociety.org/professionals/menopause-hub/guidelines/',note:'The clinician society. Clinical practice guidelines on vasomotor symptoms, genitourinary health, mood, sleep and cognition, and cardiovascular health.'},
+ {id:'c4',g:'ca',t:'HealthLink BC',by:'healthlinkbc.ca · 8-1-1',url:'https://www.healthlinkbc.ca/',note:'Free 24/7 nurse line and plain-language menopause pages for BC residents.'},
+ {id:'c5',g:'ca',t:'BC PharmaCare Plan NP — menopausal hormone therapy',by:'Government of British Columbia',url:'https://www2.gov.bc.ca/gov/content/health/practitioner-professional-resources/pharmacare/plans/national-pharmacare-plan-np/plan-np-menopausal-hormone-therapy',note:'The $0 hormone therapy coverage, from the source. Module 03.'},
+ {id:'c6',g:'ca',t:'Osteoporosis Canada',by:'osteoporosis.ca',url:'https://osteoporosis.ca/',note:'Bone density, fracture risk, calcium and vitamin D guidance. Modules 06 and 08.'},
+ {id:'c7',g:'ca',t:'Heart & Stroke',by:'heartandstroke.ca',url:'https://www.heartandstroke.ca/',note:'Blood pressure, cholesterol and women’s heart risk after menopause. Module 08.'},
+ {id:'c8',g:'ca',t:'NEDIC — National Eating Disorder Information Centre',by:'nedic.ca · 1-866-633-4220',url:'https://nedic.ca/',note:'Confidential helpline. Module 11’s “more than a habit” door.'},
+ {id:'c9',g:'ca',t:'Canada’s Food Guide',by:'Health Canada',url:'https://food-guide.canada.ca/',note:'The plate in Module 05.'},
+
+ {id:'e1',g:'ev',t:'The Menopause Society',by:'formerly NAMS · menopause.org',url:'https://www.menopause.org/',note:'The clinical gold standard. The 2022 Hormone Therapy Position Statement, and a certified-practitioner directory that includes Canadians.'},
+ {id:'e2',g:'ev',t:'NICE guideline NG23 — Menopause',by:'UK National Institute for Health and Care Excellence (updated 2024)',url:'https://www.nice.org.uk/guidance/ng23',note:'A national guideline written for patients as much as clinicians.'},
+ {id:'e3',g:'ev',t:'The Women’s Health Initiative, two decades on',by:'Manson et al., JAMA 2024',url:'https://pubmed.ncbi.nlm.nih.gov/?term=Manson+%22Women%27s+Health+Initiative+Randomized+Trials+and+Clinical+Practice%22',note:'What the study that scared a generation off hormone therapy actually shows now. Module 04.'},
+ {id:'e4',g:'ev',t:'The Lancet 2024 menopause series',by:'Hickey et al.',url:'https://pubmed.ncbi.nlm.nih.gov/?term=Hickey+menopause+Lancet+2024+series',note:'The counterweight — a case against over-medicalising a normal transition. Read this alongside the hormone books.'},
+ {id:'e5',g:'ev',t:'PROT-AGE protein recommendations',by:'Bauer et al., 2013',url:'https://pubmed.ncbi.nlm.nih.gov/?term=PROT-AGE+Study+Group+Bauer+2013',note:'Where the 1.0–1.2 g per kg figure in Module 05 comes from.'},
+ {id:'e6',g:'ev',t:'PAR-Q+ (official)',by:'eparmedx.com',url:'https://eparmedx.com/',note:'Canada’s pre-exercise screening questionnaire — the gate in Module 06.'},
+
+ {id:'x1',g:'warn',t:'The Dr. Louise Newson Podcast',by:'UK',url:spot('Dr Louise Newson Podcast'),note:'Huge and often useful — but the host has faced UK regulator scrutiny and a 2024 BBC Panorama investigation over high-dose prescribing. Cross-check anything on doses with The Menopause Society or NICE.'},
+ {id:'x2',g:'warn',t:'“Hormone balancing,” saliva or hormone test kits, supplement stacks',by:'Anywhere',url:'',note:'The SOGC and The Menopause Society both say hormone testing isn’t needed to diagnose perimenopause. If a source’s answer is always a product, it isn’t a source.'}
+];
+var REFS={1:['b1','b8','c2','c1'],2:['c1','e1','c3','p2'],3:['c5','c4','c2'],4:['b2','b3','e1','e2','e3','e4'],5:['b4','c9','e5'],6:['b4','b5','e6','c6','p1'],7:['b6','c3','p2'],8:['c6','c7','c3','b5'],9:['b7','p3','c3'],10:['c1','b9','p5'],11:['b10','c8','b8']};
+var GNAME={book:'Books',pod:'Podcasts',ca:'Canadian sources',ev:'Guidelines & research',warn:'Use with a filter'};
+var GKIND={book:'Book',pod:'Podcast',ca:'Canada',ev:'Evidence',warn:'Caution'};
+function srcById(id){ for(var i=0;i<SOURCES.length;i++){ if(SOURCES[i].id===id) return SOURCES[i]; } return null; }
+function srcItem(x){ return '<li><div class="top"><span class="tag'+(x.g==='book'?' gold':x.g==='ca'?' ok':x.g==='warn'?' alert':'')+'">'+GKIND[x.g]+'</span>'+(x.url?'<a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.t)+'</a>':'<b>'+esc(x.t)+'</b>')+'<span class="by">'+esc(x.by)+'</span></div><p>'+esc(x.note)+'</p></li>'; }
+var AFF_NOTE='Book links go to Amazon.ca. As an Amazon Associate, Menopause North earns from qualifying purchases — it doesn’t change what we recommend, and every book here was chosen for the evidence in it.';
+function goDeeper(m){
+  var ids=REFS[m.n]||[]; if(!ids.length) return '';
+  var hasBook=ids.some(function(id){ var x=srcById(id); return x&&x.g==='book'; });
+  return '<h3 style="font-size:20px;margin:22px 0 10px">Go deeper</h3><ul class="srcs">'+ids.map(function(id){ var x=srcById(id); return x?srcItem(x):''; }).join('')+'</ul>'
+   +'<p class="note">'+(hasBook?AFF_NOTE+' ':'')+'<a href="#/sources">The full reading list and every source →</a></p>';
+}
+function renderSources(){
+  var groups=['book','pod','ca','ev','warn'];
+  app.innerHTML='<main><section class="hero center" style="padding-bottom:40px"><div class="wrap"><span class="eyebrow">Reading list &amp; sources</span><h1 class="h-l">Where this program comes from.</h1><p class="sub">The books, podcasts, Canadian bodies and clinical guidelines behind every module — and a short list of what to read with a filter on. Every claim in this program traces back to something on this page.</p></div></section>'
+  +'<section class="grey" style="padding-top:40px"><div class="wrap">'
+  +groups.map(function(g){ var items=SOURCES.filter(function(x){ return x.g===g; }); return '<div class="card" style="margin-bottom:16px"><span class="eyebrow">'+GNAME[g]+'</span>'+(g==='book'?'<p class="lead" style="font-size:17px;margin-bottom:4px">Start with <b>The Menopause Manifesto</b>. Then pick by what you need: hormones, strength, brain, pelvic health, work.</p>':g==='pod'?'<p class="lead" style="font-size:17px;margin-bottom:4px">All available on Apple Podcasts and Spotify. Links open a Spotify search.</p>':g==='ca'?'<p class="lead" style="font-size:17px;margin-bottom:4px">The part no American program can give you.</p>':g==='ev'?'<p class="lead" style="font-size:17px;margin-bottom:4px">What we cite on screen. When two of these disagree, we say so.</p>':'<p class="lead" style="font-size:17px;margin-bottom:4px">Not banned — filtered.</p>')+'<ul class="srcs">'+items.map(srcItem).join('')+'</ul>'+(g==='book'?'<p class="note">'+AFF_NOTE+'</p>':'')+'</div>'; }).join('')
+  +'<p class="disc" style="margin-top:8px"><strong>This is education, not medical advice — take it to your doctor.</strong> Carol is not a physician, nurse practitioner or Registered Dietitian. Sources last reviewed September 2026.</p>'
+  +'</div></section></main>';
 }
 
 /* =========================================================
