@@ -452,7 +452,7 @@
   }
 
   function optionRow(opts){
-    return '<label class="option" data-type="' + opts.type + '" data-name="' + opts.name + '" data-value="' + opts.value + '">' +
+    return '<label class="option' + (opts.checked ? " selected" : "") + '" data-type="' + opts.type + '" data-name="' + opts.name + '" data-value="' + opts.value + '">' +
       '<input type="' + opts.type + '" name="' + opts.name + '" value="' + opts.value + '" ' + (opts.checked ? "checked" : "") + '>' +
       '<span class="mark">' + (opts.type === "radio" ? '<span class="dot"></span>' : icon("check")) + '</span>' +
       '<span class="opt-body"><div class="opt-title">' + opts.title + '</div>' + (opts.hint ? '<div class="opt-hint">' + opts.hint + '</div>' : '') + '</span>' +
