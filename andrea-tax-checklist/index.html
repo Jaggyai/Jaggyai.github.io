@@ -556,8 +556,15 @@
   }
 
   function miniCheck(name, label, checked){
-    return '<label class="mini-option" data-mini="' + name + '"><span class="mark">' + icon("check") + '</span>' + label + '</label>'
-      .replace('<span class="mark">', checked ? '<span class="mark" style="background:var(--primary);border-color:var(--primary)">' : '<span class="mark">');
+    // Rewritten 2026-09-13 -- the previous version chained .replace() after the
+    // string concatenation, but .replace() binds to only the LAST operand
+    // ('</label>') due to JS operator precedence, so it silently never matched
+    // anything and the checked-state style never applied. Also, the main
+    // .option/.selected CSS rule that shows the checkmark svg doesn't target
+    // .mini-option at all, so the icon needs to be inlined directly here too.
+    var markStyle = checked ? ' style="background:var(--primary);border-color:var(--primary)"' : '';
+    var markIcon = checked ? '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+    return '<label class="mini-option" data-mini="' + name + '"><span class="mark"' + markStyle + '>' + markIcon + '</span>' + label + '</label>';
   }
 
   function wireMini(card){
