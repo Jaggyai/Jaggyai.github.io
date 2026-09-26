@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qué Enviarle a Andrea</title>
+<meta name="description" content="Responde unas preguntas sobre tu año fiscal y recibe una lista personalizada de los documentos exactos que debes enviar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#FAF7F0;
+    --surface:#FFFFFF;
+    --surface-2:#F3EEE3;
+    --ink:#211E1B;
+    --ink-muted:#736A5C;
+    --ink-faint:#A79E8D;
+    --primary:#1F5C4C;
+    --primary-dim:#DCE9E4;
+    --primary-ink:#FFFFFF;
+    --accent:#B4711E;
+    --accent-dim:#F3E3CD;
+    --border:#E4DCCC;
+    --border-strong:#CFC4AC;
+    --danger:#9C4221;
+    --shadow: 0 1px 2px rgba(33,30,27,0.04), 0 8px 24px -12px rgba(33,30,27,0.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#171F1B;
+      --surface:#1E2722;
+      --surface-2:#26312B;
+      --ink:#ECE6D9;
+      --ink-muted:#AFA593;
+      --ink-faint:#7C7364;
+      --primary:#5DAE93;
+      --primary-dim:#28382F;
+      --primary-ink:#0F1613;
+      --accent:#E2A55B;
+      --accent-dim:#3A2E1B;
+      --border:#313B34;
+      --border-strong:#3F4A42;
+      --danger:#E28866;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#171F1B;
+    --surface:#1E2722;
+    --surface-2:#26312B;
+    --ink:#ECE6D9;
+    --ink-muted:#AFA593;
+    --ink-faint:#7C7364;
+    --primary:#5DAE93;
+    --primary-dim:#28382F;
+    --primary-ink:#0F1613;
+    --accent:#E2A55B;
+    --accent-dim:#3A2E1B;
+    --border:#313B34;
+    --border-strong:#3F4A42;
+    --danger:#E28866;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.6);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{ background:var(--bg); }
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:'Public Sans', system-ui, -apple-system, sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:40px 24px 80px;
+  }
+  @media (max-width:600px){
+    .wrap{padding:28px 16px 64px;}
+  }
+
+  .eyebrow{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--primary);
+    margin:0 0 10px;
+  }
+  h1{
+    font-family:'Fraunces', Georgia, serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:clamp(28px, 4.4vw, 40px);
+    line-height:1.12;
+    letter-spacing:-0.01em;
+    margin:0 0 12px;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  .lede{
+    font-size:16px;
+    color:var(--ink-muted);
+    max-width:52ch;
+    margin:0 0 32px;
+  }
+
+  /* stepper */
+  .stepper{
+    display:flex;
+    align-items:center;
+    gap:0;
+    margin:0 0 32px;
+    list-style:none;
+    padding:0;
+  }
+  .step-item{
+    display:flex;
+    align-items:center;
+    flex:1;
+    min-width:0;
+  }
+  .step-dot{
+    width:28px;height:28px;
+    border-radius:50%;
+    border:1.5px solid var(--border-strong);
+    background:var(--surface);
+    color:var(--ink-faint);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;
+    font-weight:700;
+    flex-shrink:0;
+    transition:all .2s ease;
+    font-variant-numeric:tabular-nums;
+  }
+  .step-item.done .step-dot{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:var(--primary-ink);
+  }
+  .step-item.current .step-dot{
+    border-color:var(--primary);
+    color:var(--primary);
+    box-shadow:0 0 0 3px var(--primary-dim);
+  }
+  .step-label{
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-faint);
+    margin-left:8px;
+    white-space:nowrap;
+    display:none;
+  }
+  .step-item.current .step-label{ color:var(--primary); }
+  .step-item.done .step-label{ color:var(--ink-muted); }
+  @media (min-width:760px){ .step-label{ display:inline; } }
+  .step-line{
+    flex:1;
+    height:1.5px;
+    background:var(--border);
+    margin:0 6px;
+  }
+  .step-item.done + .step-connector .step-line{ background:var(--primary); }
+
+  /* cards */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:28px;
+    box-shadow:var(--shadow);
+  }
+  @media (max-width:600px){ .card{padding:20px;} }
+
+  .q-title{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    font-size:22px;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+  }
+  .q-sub{
+    font-size:14px;
+    color:var(--ink-muted);
+    margin:0 0 20px;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    border:1.5px solid var(--border);
+    border-radius:10px;
+    padding:14px 16px;
+    cursor:pointer;
+    background:var(--surface);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .option:hover{ border-color:var(--border-strong); }
+  .option.selected{
+    border-color:var(--primary);
+    background:var(--primary-dim);
+  }
+  .option input{ position:absolute; opacity:0; pointer-events:none; }
+  .mark{
+    width:20px;height:20px;
+    border-radius:6px;
+    border:1.5px solid var(--border-strong);
+    background:var(--surface);
+    flex-shrink:0;
+    margin-top:1px;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .15s ease;
+  }
+  .option[data-type="radio"] .mark{ border-radius:50%; }
+  .option.selected .mark{
+    background:var(--primary);
+    border-color:var(--primary);
+  }
+  .mark svg{ width:12px;height:12px; opacity:0; transition:opacity .1s ease; }
+  .option.selected .mark svg{ opacity:1; }
+  .option[data-type="radio"] .mark .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--primary-ink);opacity:0;
+  }
+  .option[data-type="radio"].selected .mark .dot{ opacity:1; }
+
+  .opt-body{ flex:1; }
+  .opt-title{ font-weight:600; font-size:15px; color:var(--ink); }
+  .opt-hint{ font-size:13px; color:var(--ink-muted); margin-top:2px; }
+
+  .sub-panel{
+    margin:10px 0 4px 32px;
+    padding:14px 16px;
+    background:var(--surface-2);
+    border-radius:10px;
+    border:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .sub-panel-label{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-muted); }
+  .mini-option{
+    display:flex; align-items:center; gap:10px;
+    font-size:14px; cursor:pointer;
+  }
+  .mini-option .mark{ width:17px;height:17px; }
+
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:24px;
+    gap:12px;
+  }
+  button{
+    font-family:inherit;
+    font-size:15px;
+    font-weight:600;
+    border-radius:9px;
+    padding:11px 20px;
+    cursor:pointer;
+    border:1.5px solid transparent;
+    transition:transform .08s ease, opacity .15s ease, background .15s ease;
+  }
+  button:active{ transform:scale(0.98); }
+  button:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+  .btn-primary{
+    background:var(--primary);
+    color:var(--primary-ink);
+  }
+  .btn-primary:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-primary:not(:disabled):hover{ opacity:.92; }
+  .btn-ghost{
+    background:transparent;
+    color:var(--ink-muted);
+    border-color:var(--border-strong);
+  }
+  .btn-ghost:hover{ color:var(--ink); border-color:var(--ink-muted); }
+  .btn-ghost:disabled{ opacity:.35; cursor:not-allowed; }
+
+  /* checklist / results */
+  .doc-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:14px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .doc-title{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    font-size:24px;
+  }
+  .doc-meta{
+    font-size:12px;
+    color:var(--ink-muted);
+    text-align:right;
+    font-variant-numeric:tabular-nums;
+  }
+  .checklist-group{
+    margin-top:22px;
+  }
+  .group-title{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:0 0 10px;
+  }
+  .doc-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+  }
+  .doc-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .doc-item:last-child{ border-bottom:none; }
+  .doc-check{
+    width:18px;height:18px;
+    border:1.5px solid var(--border-strong);
+    border-radius:5px;
+    flex-shrink:0;
+    margin-top:2px;
+  }
+  .doc-text b{ font-weight:600; }
+  .doc-note{ font-size:13px; color:var(--ink-muted); margin-top:2px; }
+
+  .result-actions{
+    display:flex; gap:10px; flex-wrap:wrap;
+    margin-top:28px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+  }
+  .btn-outline{
+    background:var(--surface);
+    border-color:var(--border-strong);
+    color:var(--ink);
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-outline:hover{ border-color:var(--primary); color:var(--primary); }
+  .btn-outline svg{ width:16px;height:16px; }
+
+  .restart-link{
+    background:none; border:none; color:var(--ink-faint); font-size:13px;
+    text-decoration:underline; cursor:pointer; padding:0; margin-top:16px;
+  }
+  .restart-link:hover{ color:var(--ink-muted); }
+
+  .footnote{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:28px;
+    text-align:center;
+  }
+
+  @media print{
+    .stepper, .nav-row, .result-actions, .restart-link, .footnote, .eyebrow, .lede{ display:none !important; }
+    body{ background:#fff; }
+    .wrap{ padding:0; max-width:100%; }
+    .card{ box-shadow:none; border:none; padding:0; }
+    h1{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <p class="eyebrow">Lista de Documentos para tus Impuestos</p>
+  <h1>¿Qué necesito enviarle a Andrea?</h1>
+  <p class="lede">Responde unas preguntas sobre tu año y recibe una lista personalizada de exactamente lo que tienes que enviar, para que no falte nada y nada se envíe dos veces.</p>
+
+  <ol class="stepper" id="stepper"></ol>
+
+  <div class="card" id="card"></div>
+
+  <p class="footnote">Nada de lo que ingreses aquí se guarda ni se envía a ningún lado, a menos que tú decidas enviar tu lista por correo. · <a href="../andrea-tax-checklist/" style="color:inherit">English</a></p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Practice details (edit these two lines for your practice) ----
+  var PRACTICE_NAME = "Andrea";
+  var PRACTICE_EMAIL = "andrea@yourpractice.ca";
+
+  var state = {
+    clientType: null,          // 'new' | 'returning'
+    filingTypes: new Set(),    // 'individual' | 'business'
+    individual: new Set(),     // situation keys
+    newResidentIncome: null,   // bool
+    newResidentAssets: null,   // bool
+    bizStructure: null,        // 'sole' | 'partnership' | 'incorporated'
+    business: new Set()        // situation keys
+  };
+
+  function baseSteps(){
+    var steps = ["status", "filingType"];
+    if (state.filingTypes.has("individual")) steps.push("individualSituations");
+    if (state.filingTypes.has("business")) steps.push("businessSituations");
+    steps.push("checklist");
+    return steps;
+  }
+
+  var stepIdx = 0;
+  var stepLabels = {
+    status: "Situación",
+    filingType: "Declaración",
+    individualSituations: "Tu año",
+    businessSituations: "Negocio",
+    checklist: "Lista"
+  };
+
+  function currentSteps(){ return baseSteps(); }
+
+  function icon(name){
+    if(name==="check") return '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    if(name==="print") return '<svg viewBox="0 0 24 24" fill="none"><path d="M6 9V3h12v6M6 18H4a1 1 0 01-1-1v-6a1 1 0 011-1h16a1 1 0 011 1v6a1 1 0 01-1 1h-2M6 14h12v7H6v-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    if(name==="mail") return '<svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18v12H3V6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+    return "";
+  }
+
+  function renderStepper(){
+    var steps = currentSteps();
+    if (stepIdx > steps.length - 1) stepIdx = steps.length - 1;
+    var html = "";
+    steps.forEach(function(key, i){
+      var cls = i < stepIdx ? "done" : (i === stepIdx ? "current" : "");
+      html += '<li class="step-item ' + cls + '">' +
+                '<span class="step-dot">' + (i < stepIdx ? icon("check") : (i+1)) + '</span>' +
+                '<span class="step-label">' + stepLabels[key] + '</span>' +
+              '</li>';
+      if (i < steps.length - 1) html += '<li class="step-connector" style="flex:1"><div class="step-line"></div></li>';
+    });
+    document.getElementById("stepper").innerHTML = html;
+  }
+
+  function optionRow(opts){
+    return '<label class="option' + (opts.checked ? " selected" : "") + '" data-type="' + opts.type + '" data-name="' + opts.name + '" data-value="' + opts.value + '">' +
+      '<input type="' + opts.type + '" name="' + opts.name + '" value="' + opts.value + '" ' + (opts.checked ? "checked" : "") + '>' +
+      '<span class="mark">' + (opts.type === "radio" ? '<span class="dot"></span>' : icon("check")) + '</span>' +
+      '<span class="opt-body"><div class="opt-title">' + opts.title + '</div>' + (opts.hint ? '<div class="opt-hint">' + opts.hint + '</div>' : '') + '</span>' +
+    '</label>';
+  }
+
+  function wireOptions(container, onChange){
+    container.querySelectorAll(".option").forEach(function(el){
+      el.addEventListener("click", function(e){
+        e.preventDefault();
+        var input = el.querySelector("input");
+        if (input.type === "radio"){
+          container.querySelectorAll('.option[data-name="' + input.name + '"]').forEach(function(o){ o.classList.remove("selected"); });
+          el.classList.add("selected");
+          input.checked = true;
+        } else {
+          input.checked = !input.checked;
+          el.classList.toggle("selected", input.checked);
+        }
+        onChange();
+      });
+    });
+  }
+
+  function renderStatus(card){
+    card.innerHTML =
+      '<h2 class="q-title">¿Ya has presentado tu declaración con ' + PRACTICE_NAME + ' antes?</h2>' +
+      '<p class="q-sub">Así sabemos si necesitamos pedirte tus datos básicos.</p>' +
+      '<div class="options" id="opts">' +
+        optionRow({type:"radio", name:"status", value:"returning", title:"Ya soy cliente", hint:"Ya declaraste con nosotros antes — ya tenemos tus datos en el expediente.", checked: state.clientType==="returning"}) +
+        optionRow({type:"radio", name:"status", value:"new", title:"Cliente nuevo", hint:"Es tu primera vez declarando con nosotros.", checked: state.clientType==="new"}) +
+      '</div>' +
+      navRow(false, !state.clientType);
+
+    wireOptions(card.querySelector("#opts"), function(){
+      state.clientType = card.querySelector('input[name="status"]:checked').value;
+      card.querySelector(".btn-primary").disabled = false;
+    });
+    wireNav(card);
+  }
+
+  function renderFilingType(card){
+    card.innerHTML =
+      '<h2 class="q-title">¿Cómo vas a declarar este año?</h2>' +
+      '<p class="q-sub">Elige todo lo que aplique — mucha gente tiene las dos.</p>' +
+      '<div class="options" id="opts">' +
+        optionRow({type:"checkbox", name:"filing", value:"individual", title:"Personal — declaración de impuestos personal", hint:"Empleo, trabajo independiente, rentas, inversiones, familia, etc.", checked: state.filingTypes.has("individual")}) +
+        optionRow({type:"checkbox", name:"filing", value:"business", title:"Negocio o corporación", hint:"Trabajador independiente con negocio registrado, sociedad o corporación.", checked: state.filingTypes.has("business")}) +
+      '</div>' +
+      navRow(true, state.filingTypes.size===0);
+
+    wireOptions(card.querySelector("#opts"), function(){
+      state.filingTypes = new Set(Array.from(card.querySelectorAll('input[name="filing"]:checked')).map(function(i){return i.value;}));
+      card.querySelector(".btn-primary").disabled = state.filingTypes.size===0;
+      renderStepper();
+    });
+    wireNav(card);
+  }
+
+  var INDIVIDUAL_SITUATIONS = [
+    {key:"multiJob", title:"Más de un empleo este año", hint:"Necesitarás un T4 de cada empleador."},
+    {key:"selfEmployed", title:"Ingresos como independiente o freelance", hint:"Incluye trabajos por app, contratos y negocios secundarios sin registro formal."},
+    {key:"rental", title:"Ingresos por rentar una propiedad", hint:"Eres dueño y rentas una propiedad, completa o en parte."},
+    {key:"investment", title:"Ingresos por inversiones", hint:"Acciones, dividendos, intereses, fondos mutuos o criptomonedas."},
+    {key:"capitalGains", title:"Vendiste una propiedad, inversiones u otro bien", hint:"Cualquier cosa que pueda generar una ganancia o pérdida de capital."},
+    {key:"retirement", title:"Retiro o pensión", hint:"Aportaciones al RRSP, ingresos de pensión o retiros de una cuenta de retiro."},
+    {key:"family", title:"Dependientes o cambios en tu familia", hint:"Hijos, matrimonio o unión libre (common-law), o gastos de guardería."},
+    {key:"home", title:"Compraste casa o hiciste renovaciones", hint:"Podrías calificar para créditos de primera vivienda o de renovación."},
+    {key:"medical", title:"Gastos médicos importantes", hint:"Sobre todo si el seguro solo te reembolsó una parte."},
+    {key:"donations", title:"Donaciones a caridad", hint:"A una organización benéfica registrada, con recibo oficial."},
+    {key:"moving", title:"Te mudaste por trabajo o estudios", hint:"Podrías deducir los gastos de mudanza que califiquen."},
+    {key:"foreign", title:"Ingresos o bienes en el extranjero", hint:"Bienes o ingresos fuera de Canadá con valor de más de $100,000 CAD."},
+    {key:"newResident", title:"Te hiciste residente de Canadá este año", hint:"Tu primera declaración como residente canadiense."}
+  ];
+
+  function renderIndividualSituations(card){
+    var rows = INDIVIDUAL_SITUATIONS.map(function(s){
+      var row = optionRow({type:"checkbox", name:"indiv", value:s.key, title:s.title, hint:s.hint, checked: state.individual.has(s.key)});
+      if (s.key === "newResident" && state.individual.has("newResident")){
+        row += '<div class="sub-panel" id="newResidentPanel">' +
+          '<div class="sub-panel-label">Un par de preguntas rápidas</div>' +
+          miniCheck("nrIncome", "Tuve ingresos entre el 1 de enero y la fecha en que llegué", state.newResidentIncome) +
+          miniCheck("nrAssets", "Tenía propiedades u otros bienes en mi país de origen antes de llegar", state.newResidentAssets) +
+        '</div>';
+      }
+      return row;
+    }).join("");
+
+    card.innerHTML =
+      '<h2 class="q-title">¿Cuáles de estas situaciones aplicaron para ti este año?</h2>' +
+      '<p class="q-sub">Marca todas las que apliquen — entre más sepamos, más precisa será tu lista.</p>' +
+      '<div class="options" id="opts">' + rows + '</div>' +
+      navRow(true, false);
+
+    wireOptions(card.querySelector("#opts"), function(){
+      state.individual = new Set(Array.from(card.querySelectorAll('input[name="indiv"]:checked')).map(function(i){return i.value;}));
+      renderIndividualSituations(card);
+    });
+    wireMini(card);
+    wireNav(card);
+  }
+
+  function miniCheck(name, label, checked){
+    // Rewritten 2026-09-13 -- the previous version chained .replace() after the
+    // string concatenation, but .replace() binds to only the LAST operand
+    // ('</label>') due to JS operator precedence, so it silently never matched
+    // anything and the checked-state style never applied. Also, the main
+    // .option/.selected CSS rule that shows the checkmark svg doesn't target
+    // .mini-option at all, so the icon needs to be inlined directly here too.
+    var markStyle = checked ? ' style="background:var(--primary);border-color:var(--primary)"' : '';
+    var markIcon = checked ? '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
+    return '<label class="mini-option" data-mini="' + name + '"><span class="mark"' + markStyle + '>' + markIcon + '</span>' + label + '</label>';
+  }
+
+  function wireMini(card){
+    card.querySelectorAll(".mini-option").forEach(function(el){
+      el.addEventListener("click", function(e){
+        e.stopPropagation();
+        var name = el.getAttribute("data-mini");
+        if (name === "nrIncome") state.newResidentIncome = !state.newResidentIncome;
+        if (name === "nrAssets") state.newResidentAssets = !state.newResidentAssets;
+        renderIndividualSituations(card);
+      });
+    });
+  }
+
+  var BUSINESS_SITUATIONS = [
+    {key:"gstHst", title:"Registrado para GST/HST", hint:"Necesitaremos el resumen de tu declaración o tus registros de ventas."},
+    {key:"payroll", title:"Empleados en nómina", hint:"Resúmenes de nómina y los T4 que les emitiste a tus empleados."},
+    {key:"inventory", title:"Manejas inventario", hint:"El conteo o la valuación del inventario al cierre del año."},
+    {key:"capitalAssets", title:"Compraste equipo, vehículos u otros activos de capital", hint:"Se manejan distinto a los gastos normales."},
+    {key:"homeOffice", title:"Usas parte de tu casa para el negocio", hint:"Para calcular el uso de la casa para el negocio."},
+    {key:"shareholderLoans", title:"Préstamos de accionista o retiros del dueño", hint:"Dinero que se movió entre tú y el negocio."}
+  ];
+
+  function renderBusinessSituations(card){
+    card.innerHTML =
+      '<h2 class="q-title">Cuéntanos sobre el negocio</h2>' +
+      '<p class="q-sub">Primero la estructura, luego todo lo demás que aplique.</p>' +
+      '<div class="options" id="structOpts" style="margin-bottom:18px">' +
+        optionRow({type:"radio", name:"struct", value:"sole", title:"Negocio propio (sole proprietorship)", checked: state.bizStructure==="sole"}) +
+        optionRow({type:"radio", name:"struct", value:"partnership", title:"Sociedad (partnership)", checked: state.bizStructure==="partnership"}) +
+        optionRow({type:"radio", name:"struct", value:"incorporated", title:"Incorporado", checked: state.bizStructure==="incorporated"}) +
+      '</div>' +
+      '<div class="options" id="opts">' +
+        BUSINESS_SITUATIONS.map(function(s){
+          return optionRow({type:"checkbox", name:"biz", value:s.key, title:s.title, hint:s.hint, checked: state.business.has(s.key)});
+        }).join("") +
+      '</div>' +
+      navRow(true, !state.bizStructure);
+
+    wireOptions(card.querySelector("#structOpts"), function(){
+      state.bizStructure = card.querySelector('input[name="struct"]:checked').value;
+      card.querySelector(".btn-primary").disabled = false;
+    });
+    wireOptions(card.querySelector("#opts"), function(){
+      state.business = new Set(Array.from(card.querySelectorAll('input[name="biz"]:checked')).map(function(i){return i.value;}));
+    });
+    wireNav(card);
+  }
+
+  function buildChecklist(){
+    var groups = [];
+
+    if (state.clientType === "new"){
+      groups.push({
+        title: "Para empezar",
+        items: [
+          {text:"Tu nombre legal completo, fecha de nacimiento y SIN (número de seguro social)"},
+          {text:"Tu dirección y número de teléfono actuales"},
+          {text:"Una copia de tu Notice of Assessment (aviso de evaluación) más reciente de la CRA", note:"Para ver cómo se declaró el año pasado."}
+        ]
+      });
+    }
+
+    if (state.filingTypes.has("individual")){
+      var emp = [];
+      if (state.individual.has("multiJob")) emp.push({text:"El T4 de cada empleador de este año"});
+      else emp.push({text:"El T4 de tu empleador", note:"Si tuviste empleo este año."});
+      groups.push({title:"Empleo", items: emp});
+
+      if (state.individual.has("selfEmployed")){
+        groups.push({title:"Trabajo independiente / freelance", items:[
+          {text:"Resumen de ingresos y gastos del negocio", note:"Archivo de contabilidad, hoja de cálculo o recibos organizados — lo que tengas."},
+          {text:"Detalle de gastos de oficina en casa", note:"Si trabajaste desde casa."},
+          {text:"Gastos del vehículo o bitácora de kilometraje", note:"Si usaste un vehículo para trabajar."}
+        ]});
+      }
+      if (state.individual.has("rental")){
+        groups.push({title:"Propiedad en renta", items:[
+          {text:"Total de renta cobrada en el año"},
+          {text:"Estado de cuenta de intereses de la hipoteca"},
+          {text:"Recibo del impuesto predial (property tax)"},
+          {text:"Recibos de seguro y reparaciones"}
+        ]});
+      }
+      if (state.individual.has("investment")){
+        groups.push({title:"Inversiones", items:[
+          {text:"Formularios T5 y T3", note:"Intereses, dividendos e ingresos de fideicomisos."},
+          {text:"Estados de cuenta de tu casa de bolsa o plataforma de inversión"},
+          {text:"Historial de transacciones de criptomonedas", note:"La exportación completa, si compraste, vendiste o intercambiaste este año."}
+        ]});
+      }
+      if (state.individual.has("capitalGains")){
+        groups.push({title:"Ventas y ganancias de capital", items:[
+          {text:"Comprobantes de compra y venta de todo lo que vendiste", note:"Propiedades, inversiones u otros bienes."}
+        ]});
+      }
+      if (state.individual.has("retirement")){
+        groups.push({title:"Retiro y pensión", items:[
+          {text:"Recibos de aportaciones al RRSP"},
+          {text:"Formulario T4A", note:"Ingresos de pensión."},
+          {text:"Formulario T4RIF / T4RSP", note:"Si retiraste dinero de una cuenta de retiro."}
+        ]});
+      }
+      if (state.individual.has("family")){
+        groups.push({title:"Familia y dependientes", items:[
+          {text:"Estado civil, y nombres y fechas de nacimiento de tus dependientes"},
+          {text:"Recibos de gastos de guardería o cuidado de niños"},
+          {text:"Formulario de colegiatura T2202", note:"Si algún dependiente es estudiante."}
+        ]});
+      }
+      if (state.individual.has("home")){
+        groups.push({title:"Vivienda propia", items:[
+          {text:"Documentos de cierre de la compra de tu casa", note:"Para el crédito de comprador de primera vivienda."},
+          {text:"Recibos de renovaciones", note:"Si el trabajo podría calificar para un crédito de renovación."}
+        ]});
+      }
+      if (state.individual.has("medical")){
+        groups.push({title:"Gastos médicos", items:[
+          {text:"Recibos de gastos médicos"},
+          {text:"Estado de cuenta de tu seguro de gastos médicos", note:"Que muestre lo que te reembolsaron — solo cuenta lo que pagaste tú."}
+        ]});
+      }
+      if (state.individual.has("donations")){
+        groups.push({title:"Donaciones a caridad", items:[
+          {text:"Recibos oficiales de donación de cada organización"}
+        ]});
+      }
+      if (state.individual.has("moving")){
+        groups.push({title:"Gastos de mudanza", items:[
+          {text:"Recibos de gastos de mudanza", note:"Aplican si te mudaste por trabajo o estudios."}
+        ]});
+      }
+      if (state.individual.has("foreign")){
+        groups.push({title:"Ingresos y bienes en el extranjero", items:[
+          {text:"Comprobantes de cualquier ingreso del extranjero"},
+          {text:"Una lista de bienes en el extranjero de más de $100,000 CAD", note:"Se necesita para el formulario T1135."}
+        ]});
+      }
+      if (state.individual.has("newResident")){
+        var nrItems = [
+          {text:"La fecha exacta en que entraste a Canadá"},
+          {text:"Documentos de inmigración", note:"Confirmación de Residencia Permanente, permiso de trabajo o lo que aplique en tu caso."}
+        ];
+        if (state.newResidentIncome !== false) nrItems.push({text:"Comprobante de ingresos del 1 de enero a la fecha en que llegaste"});
+        if (state.newResidentAssets !== false) nrItems.push({text:"Una lista de bienes o propiedades que tenías antes de llegar a Canadá"});
+        groups.push({title:"Nuevo en Canadá", items: nrItems});
+      }
+    }
+
+    if (state.filingTypes.has("business")){
+      var bizItems = [];
+      if (state.bizStructure === "incorporated") bizItems.push({text:"Acta constitutiva (articles of incorporation)", note:"Si es tu primer año declarando como corporación."});
+      if (state.business.has("gstHst")) bizItems.push({text:"Resumen de la declaración de GST/HST o registros de ventas"});
+      if (state.business.has("payroll")) bizItems.push({text:"Resumen de nómina y los T4 emitidos a tus empleados"});
+      if (state.business.has("inventory")) bizItems.push({text:"Conteo o valuación del inventario al cierre del año"});
+      if (state.business.has("capitalAssets")) bizItems.push({text:"Facturas de compra de equipo, vehículos o activos de capital"});
+      if (state.business.has("homeOffice")) bizItems.push({text:"Cálculo del uso de la casa para el negocio", note:"Metros o pies cuadrados y los gastos relacionados."});
+      if (state.business.has("shareholderLoans")) bizItems.push({text:"Resumen de préstamos de accionista o retiros del dueño"});
+      if (bizItems.length === 0) bizItems.push({text:"Resumen básico de ingresos y gastos del negocio del año"});
+      groups.push({title:"Negocio — " + ({sole:"Negocio propio", partnership:"Sociedad", incorporated:"Incorporado"}[state.bizStructure] || ""), items: bizItems});
+    }
+
+    return groups;
+  }
+
+  function checklistToText(groups){
+    var lines = [];
+    groups.forEach(function(g){
+      lines.push(g.title.toUpperCase());
+      g.items.forEach(function(it){
+        lines.push("- " + it.text + (it.note ? " (" + it.note + ")" : ""));
+      });
+      lines.push("");
+    });
+    return lines.join("\n");
+  }
+
+  function renderChecklist(card){
+    var groups = buildChecklist();
+    var today = new Date().toLocaleDateString("es-MX", {year:"numeric", month:"long", day:"numeric"});
+
+    var html = '<div class="doc-head">' +
+        '<div class="doc-title">Tu Lista de Documentos</div>' +
+        '<div class="doc-meta">Preparada el ' + today + '<br>Para ' + PRACTICE_NAME + '</div>' +
+      '</div>';
+
+    groups.forEach(function(g){
+      html += '<div class="checklist-group"><p class="group-title">' + g.title + '</p><ul class="doc-list">';
+      g.items.forEach(function(it){
+        html += '<li class="doc-item"><span class="doc-check"></span><div><div class="doc-text">' + it.text + '</div>' + (it.note ? '<div class="doc-note">' + it.note + '</div>' : '') + '</div></li>';
+      });
+      html += '</ul></div>';
+    });
+
+    html += '<div class="result-actions">' +
+        '<button class="btn-outline" id="printBtn">' + icon("print") + ' Imprimir / Guardar como PDF</button>' +
+        '<button class="btn-outline" id="emailBtn">' + icon("mail") + ' Enviarle esta lista a ' + PRACTICE_NAME + '</button>' +
+      '</div>' +
+      '<button class="restart-link" id="restartBtn">Empezar de nuevo</button>';
+
+    card.innerHTML = html;
+
+    card.querySelector("#printBtn").addEventListener("click", function(){ window.print(); });
+    card.querySelector("#emailBtn").addEventListener("click", function(){
+      var subject = "Mi lista de documentos para impuestos";
+      var body = "Hola " + PRACTICE_NAME + ",\n\nEsto es lo que entiendo que necesito enviarte:\n\n" + checklistToText(groups);
+      window.location.href = "mailto:" + PRACTICE_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    });
+    card.querySelector("#restartBtn").addEventListener("click", function(){
+      state = {clientType:null, filingTypes:new Set(), individual:new Set(), newResidentIncome:null, newResidentAssets:null, bizStructure:null, business:new Set()};
+      stepIdx = 0;
+      render();
+    });
+  }
+
+  function navRow(showBack, disablePrimary){
+    return '<div class="nav-row">' +
+      '<button class="btn-ghost" id="backBtn" ' + (showBack ? "" : "disabled") + '>Atrás</button>' +
+      '<button class="btn-primary" ' + (disablePrimary ? "disabled" : "") + '>Continuar</button>' +
+    '</div>';
+  }
+
+  function wireNav(card){
+    var back = card.querySelector("#backBtn");
+    var next = card.querySelector(".btn-primary");
+    if (back) back.addEventListener("click", function(){ if (stepIdx>0){ stepIdx--; render(); } });
+    if (next) next.addEventListener("click", function(){ stepIdx++; render(); });
+  }
+
+  function render(){
+    renderStepper();
+    var card = document.getElementById("card");
+    var step = currentSteps()[stepIdx];
+    if (step === "status") renderStatus(card);
+    else if (step === "filingType") renderFilingType(card);
+    else if (step === "individualSituations") renderIndividualSituations(card);
+    else if (step === "businessSituations") renderBusinessSituations(card);
+    else if (step === "checklist") renderChecklist(card);
+    window.scrollTo({top:0, behavior:"instant"});
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
