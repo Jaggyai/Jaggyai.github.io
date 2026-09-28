@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LeadBot</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--text:#16181d;--muted:#6b7280;--line:#e3e6eb;--accent:#2563eb;--ok:#15803d;--bad:#b91c1c;--chip:#eef2ff}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#171a21;--text:#e8eaef;--muted:#9aa3b2;--line:#2a2f3a;--accent:#60a5fa;--ok:#4ade80;--bad:#f87171;--chip:#1e2533}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:2}
+header h1{font-size:17px;margin:0}
+header .upd{color:var(--muted);font-size:12px;margin-left:auto}
+main{padding:16px;max-width:1500px;margin:0 auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:20px}.stat span{color:var(--muted);font-size:12px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+input,select,button{font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+input[type=search]{flex:1 1 220px}
+button{cursor:pointer}button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.tablewrap{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:980px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap;position:sticky;top:0;background:var(--card)}
+td.name b{display:block}td.name small{color:var(--muted)}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.muted{color:var(--muted)}
+.soc a{display:inline-block;background:var(--chip);border-radius:6px;padding:1px 6px;margin:0 3px 3px 0;font-size:12px}
+.pager{display:flex;gap:8px;align-items:center;justify-content:flex-end;padding:10px 0}
+#lock{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:5;padding:16px}
+#lock form{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px}
+#lock h2{margin:0 0 4px;font-size:18px}#err{color:var(--bad);font-size:13px;min-height:18px}
+</style>
+</head>
+<body>
+<div id="lock"><form id="lockform">
+  <h2>LeadBot</h2>
+  <span class="muted">Enter your password to unlock your leads.</span>
+  <input id="pw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
+  <label class="muted"><input type="checkbox" id="remember"> Remember on this device</label>
+  <button class="primary" type="submit">Unlock</button>
+  <div id="err"></div>
+</form></div>
+
+<header><h1>LeadBot</h1><span class="upd" id="upd"></span></header>
+<main>
+  <div class="stats" id="stats"></div>
+  <div class="filters">
+    <input type="search" id="q" placeholder="Search name, email, city, category…">
+    <select id="fsearch"><option value="">All searches</option></select>
+    <select id="fcity"><option value="">All cities</option></select>
+    <select id="femail">
+      <option value="">Any email status</option>
+      <option value="valid">Verified email</option>
+      <option value="personal">Verified personal email</option>
+      <option value="none">No email</option>
+    </select>
+    <select id="fextra">
+      <option value="">Any</option>
+      <option value="phone">Has phone</option>
+      <option value="social">Has social</option>
+      <option value="nosite">No website</option>
+    </select>
+    <button id="csv" class="primary">Export CSV</button>
+  </div>
+  <div class="tablewrap"><table>
+    <thead><tr>
+      <th data-k="n">Business</th><th data-k="city">City</th><th data-k="phone">Phone</th>
+      <th data-k="email">Best email</th><th>Socials</th><th data-k="rating">Rating</th><th data-k="reviews">Reviews</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <div class="pager"><span class="muted" id="count"></span>
+    <button id="prev">‹ Prev</button><span id="page"></span><button id="next">Next ›</button></div>
+</main>
+
+<script>
+const PAGE = 100;
+let ALL = [], VIEW = [], page = 0, sortK = "", sortDir = 1;
+const $ = id => document.getElementById(id);
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+async function decrypt(pw) {
+  const blob = await (await fetch("data.enc.json?v=" + Date.now())).json();
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(blob.salt), iterations:blob.iter, hash:"SHA-256"},
+    base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64(blob.iv)}, key, b64(blob.ct));
+  const text = await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
+  return JSON.parse(text);
+}
+
+async function unlock(pw, remember) {
+  $("err").textContent = "Unlocking…";
+  try {
+    const data = await decrypt(pw);
+    try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
+    ALL = data.leads;
+    $("upd").textContent = "Updated " + data.updated;
+    $("lock").remove();
+    init();
+  } catch (e) {
+    $("err").textContent = "Wrong password.";
+    try { localStorage.removeItem("lb_pw"); } catch (e2) {}
+  }
+}
+$("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
+try { const saved = localStorage.getItem("lb_pw"); if (saved) unlock(saved, true); } catch (e) {}
+
+function fillSelect(el, vals) {
+  [...new Set(vals.filter(Boolean))].sort().forEach(v => el.add(new Option(v, v)));
+}
+
+function init() {
+  fillSelect($("fsearch"), ALL.map(r => r.q));
+  fillSelect($("fcity"), ALL.map(r => r.city));
+  ["q","fsearch","fcity","femail","fextra"].forEach(id => $(id).addEventListener("input", () => { page = 0; apply(); }));
+  document.querySelectorAll("th[data-k]").forEach(th => th.onclick = () => {
+    const k = th.dataset.k; sortDir = sortK === k ? -sortDir : 1; sortK = k; apply();
+  });
+  $("prev").onclick = () => { if (page > 0) { page--; render(); } };
+  $("next").onclick = () => { if ((page + 1) * PAGE < VIEW.length) { page++; render(); } };
+  $("csv").onclick = exportCsv;
+  apply();
+}
+
+function apply() {
+  const q = $("q").value.toLowerCase().trim(), fs = $("fsearch").value, fc = $("fcity").value,
+        fe = $("femail").value, fx = $("fextra").value;
+  VIEW = ALL.filter(r => {
+    if (fs && r.q !== fs) return false;
+    if (fc && r.city !== fc) return false;
+    if (fe === "valid" && r.st !== "valid") return false;
+    if (fe === "personal" && !(r.st === "valid" && r.personal)) return false;
+    if (fe === "none" && r.email) return false;
+    if (fx === "phone" && !r.phone) return false;
+    if (fx === "social" && !(r.fb || r.ig || r.li || r.tt || r.yt || r.x)) return false;
+    if (fx === "nosite" && r.site) return false;
+    if (q && !(`${r.n} ${r.email} ${r.emails} ${r.city} ${r.cat} ${r.q}`.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  if (sortK) VIEW.sort((a, b) => {
+    const x = a[sortK] ?? "", y = b[sortK] ?? "";
+    return (typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y))) * sortDir;
+  });
+  stats(); render();
+}
+
+function stats() {
+  const n = VIEW.length, c = f => VIEW.filter(f).length;
+  const s = [["Leads", n], ["Verified email", c(r => r.st === "valid")], ["Personal email", c(r => r.st === "valid" && r.personal)],
+             ["Phone", c(r => r.phone)], ["Social profile", c(r => r.fb || r.ig || r.li || r.tt || r.yt || r.x)], ["No website", c(r => !r.site)]];
+  $("stats").innerHTML = s.map(([k, v]) => `<div class="stat"><b>${v.toLocaleString()}</b><span>${k}</span></div>`).join("");
+}
+
+function soc(r) {
+  return [["fb","Facebook"],["ig","Instagram"],["li","LinkedIn"],["tt","TikTok"],["yt","YouTube"],["x","X"]]
+    .filter(([k]) => r[k]).map(([k, l]) => `<a href="${esc(r[k])}" target="_blank" rel="noopener">${l}</a>`).join("");
+}
+
+function render() {
+  const slice = VIEW.slice(page * PAGE, (page + 1) * PAGE);
+  $("rows").innerHTML = slice.map(r => `<tr>
+    <td class="name"><b>${r.maps ? `<a href="${esc(r.maps)}" target="_blank" rel="noopener">${esc(r.n)}</a>` : esc(r.n)}</b>
+      <small>${esc(r.cat)}${r.site ? ` · <a href="${esc(r.site)}" target="_blank" rel="noopener">website</a>` : ""}</small></td>
+    <td>${esc(r.city)}</td>
+    <td>${r.phone ? `<a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>` : '<span class="muted">—</span>'}</td>
+    <td>${r.email ? `<a href="mailto:${esc(r.email)}">${esc(r.email)}</a> <span class="${r.st === "valid" ? "ok" : "bad"}" title="${esc(r.st)}">${r.st === "valid" ? "✓" : "✗"}</span>` : `<span class="muted">${esc(r.st || "—")}</span>`}</td>
+    <td class="soc">${soc(r) || '<span class="muted">—</span>'}</td>
+    <td>${r.rating || ""}</td><td>${r.reviews || ""}</td></tr>`).join("");
+  const pages = Math.max(1, Math.ceil(VIEW.length / PAGE));
+  $("page").textContent = `${page + 1} / ${pages}`;
+  $("count").textContent = `${VIEW.length.toLocaleString()} leads`;
+}
+
+function exportCsv() {
+  const cols = [["n","name"],["cat","category"],["q","search"],["city","city"],["addr","address"],["phone","phone"],
+    ["email","best_email"],["st","email_status"],["emails","all_emails"],["site","website"],["fb","facebook"],["ig","instagram"],
+    ["li","linkedin"],["tt","tiktok"],["yt","youtube"],["x","x"],["rating","rating"],["reviews","reviews"],["maps","google_maps"]];
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = [cols.map(c => c[1]).join(","), ...VIEW.map(r => cols.map(c => q(r[c[0]])).join(","))].join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + csv], {type: "text/csv"}));
+  a.download = `leads_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+}
+</script>
+</body>
+</html>
