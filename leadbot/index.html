@@ -125,6 +125,17 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
 .stars{color:var(--amber);font-weight:700;white-space:nowrap}.stars small{color:var(--muted);font-weight:600;margin-left:4px}
 .src{font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap}
 
+.fit{min-width:118px}
+.tier{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:11px;letter-spacing:.05em;padding:3px 9px 3px 7px;border-radius:99px}
+.tier i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.tier.HOT{background:color-mix(in srgb,#fb923c 22%,transparent);color:#fb923c}
+.tier.HOT i{box-shadow:0 0 0 0 rgba(251,146,60,.7);animation:ping 2s infinite}
+.tier.WARM{background:color-mix(in srgb,var(--amber) 20%,transparent);color:var(--amber)}
+.tier.COLD{background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.tier em{font-style:normal;font-variant-numeric:tabular-nums;opacity:.85}
+.why{margin-top:4px;font-size:11px;color:var(--muted);line-height:1.35;max-width:210px}
+.offerlbl{display:flex;align-items:center;gap:8px;font-weight:700;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.offerlbl select{border-color:color-mix(in srgb,var(--pink) 55%,var(--line));font-weight:700}
 .pager{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:14px}
 .pager .n{color:var(--muted);font-weight:600}
 .pager .btns{display:flex;gap:8px;align-items:center}
@@ -180,6 +191,18 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
     <div class="toolbar">
       <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         <input type="search" id="q" placeholder="Search business, email, city…"></div>
+      <label class="offerlbl">I sell
+        <select id="f-offer">
+          <option value="any">anything (general fit)</option>
+          <option value="web">websites &amp; web design</option>
+          <option value="mkt">marketing &amp; social media</option>
+          <option value="rep">reviews &amp; reputation (Google Maps leads)</option>
+          <option value="ai">AI &amp; automation</option>
+        </select></label>
+      <select id="f-tier">
+        <option value="HW">Hot + Warm (qualified)</option><option value="HOT">Hot only</option>
+        <option value="WARM">Warm only</option><option value="ALL">Everything incl. Cold</option>
+      </select>
       <select id="f-prov"><option value="">All provinces</option></select>
       <select id="f-city"><option value="">All cities</option></select>
       <select id="f-kind"><option value="">All categories</option></select>
@@ -198,7 +221,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
     <div class="chips" id="chips" style="padding:0 14px"></div>
     <div class="tablewrap"><table>
       <thead><tr>
-        <th data-k="n">Business</th><th data-k="city">Location</th><th data-k="phone">Phone</th>
+        <th data-k="adj">Fit</th><th data-k="n">Business</th><th data-k="city">Location</th><th data-k="phone">Phone</th>
         <th data-k="email">Email</th><th>Socials</th><th data-k="rating">Rating</th>
       </tr></thead>
       <tbody id="rows"></tbody>
@@ -211,7 +234,30 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
 
 <script>
 const PAGE = 50;
-let ALL = [], VIEW = [], page = 0, sortK = "", sortDir = 1;
+let ALL = [], VIEW = [], page = 0, sortK = "adj", sortDir = -1;
+const HOT = 62, WARM = 40;
+const DEFAULTS = {"f-tier": "HW", "f-offer": "any"};
+// extra points per offer, from the signals the scorer stored for each lead (qualify.py flags)
+const OFFERS = {
+  any: {},
+  web: {nosite: 18, "nosite?": 6, site: -4},
+  mkt: {nosocial: 10, lowrev: 6, site: 4},
+  rep: {lowrate: 16, lowrev: 8},
+  ai:  {site: 6, email: 6, strong: 6, personal: 4},
+};
+const WHY = {email: "verified email", personal: "direct email", own: "own-domain email", "email?": "unverified email", phone: "phone",
+  nosite: "no website", "nosite?": "no website listed", nosocial: "no socials", lowrev: "few reviews", lowrate: "rating under 4", strong: "strong reviews",
+  pending: "email check pending", institution: "institution", hours: "hours listed"};
+function rescore() {
+  const o = OFFERS[$("f-offer").value] || {};
+  for (const r of ALL) {
+    let s = r.qs; for (const f of r.fl) s += o[f] || 0;
+    r.adj = Math.max(0, Math.min(100, s));
+    r.tier = r.adj >= HOT ? "HOT" : r.adj >= WARM ? "WARM" : "COLD";
+  }
+}
+const whyOf = r => ["personal", "email", "phone", "nosite", "nosite?", "nosocial", "lowrev", "lowrate", "strong", "pending", "institution"]
+  .filter(f => r.fl.has(f) && !(f === "email" && r.fl.has("personal"))).map(f => WHY[f]).slice(0, 4).join(" · ");
 const $ = id => document.getElementById(id);
 const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -233,7 +279,9 @@ async function unlock(pw, remember) {
     const data = await decrypt(pw);
     try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
     ALL = data.leads.map(r => ({...r, kind: titled((r.q || "").split(" in ")[0]) || r.cat, prov: r.prov || "BC",
-      src: r.src || "maps", soc: !!(r.fb || r.ig || r.li || r.tt || r.yt || r.x)}));
+      src: r.src || "maps", soc: !!(r.fb || r.ig || r.li || r.tt || r.yt || r.x),
+      qs: r.qs || 0, fl: new Set((r.qf || "").split(",").filter(Boolean))}));
+    rescore();
     $("upd").textContent = "Updated " + data.updated;
     $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
     init();
@@ -254,9 +302,10 @@ function init() {
   fill($("f-kind"), counts(ALL, "kind").slice(0, 400));
   let t; const later = () => { clearTimeout(t); t = setTimeout(() => { page = 0; apply(); }, 140); };
   $("q").addEventListener("input", later);
-  ["f-prov","f-city","f-kind","f-email","f-extra","f-src"].forEach(id => $(id).addEventListener("change", () => { page = 0; apply(); }));
+  ["f-prov","f-city","f-kind","f-email","f-extra","f-src","f-tier"].forEach(id => $(id).addEventListener("change", () => { page = 0; apply(); }));
+  $("f-offer").addEventListener("change", () => { rescore(); sortK = "adj"; sortDir = -1; page = 0; apply(); });
   document.querySelectorAll("th[data-k]").forEach(th => th.onclick = () => {
-    const k = th.dataset.k; sortDir = sortK === k ? -sortDir : (k === "rating" ? -1 : 1); sortK = k; apply();
+    const k = th.dataset.k; sortDir = sortK === k ? -sortDir : (k === "rating" || k === "adj" ? -1 : 1); sortK = k; apply();
   });
   $("prev").onclick = () => { if (page > 0) { page--; render(); scrollTo({top: $("rows").closest(".panel").offsetTop - 70, behavior: "smooth"}); } };
   $("next").onclick = () => { if ((page + 1) * PAGE < VIEW.length) { page++; render(); scrollTo({top: $("rows").closest(".panel").offsetTop - 70, behavior: "smooth"}); } };
@@ -266,8 +315,9 @@ function init() {
 
 function apply() {
   const q = $("q").value.toLowerCase().trim(), v = id => $(id).value;
-  const fp = v("f-prov"), fc = v("f-city"), fk = v("f-kind"), fe = v("f-email"), fx = v("f-extra"), fs = v("f-src");
+  const fp = v("f-prov"), fc = v("f-city"), fk = v("f-kind"), fe = v("f-email"), fx = v("f-extra"), fs = v("f-src"), ft = v("f-tier");
   VIEW = ALL.filter(r =>
+    (ft === "ALL" || (ft === "HW" ? r.tier !== "COLD" : r.tier === ft)) &&
     (!fp || r.prov === fp) && (!fc || r.city === fc) && (!fk || r.kind === fk) && (!fs || r.src === fs) &&
     (fe !== "valid" || r.st === "valid") && (fe !== "personal" || (r.st === "valid" && r.personal)) &&
     (fe !== "any" || r.email) && (fe !== "none" || !r.email) &&
@@ -276,7 +326,7 @@ function apply() {
   if (sortK) VIEW.sort((a, b) => { const x = a[sortK] ?? "", y = b[sortK] ?? "";
     return (typeof x === "number" || typeof y === "number" ? (+x || 0) - (+y || 0) : String(x).localeCompare(String(y))) * sortDir; });
   document.querySelectorAll("th").forEach(th => { th.classList.toggle("s", th.dataset.k === sortK); th.classList.toggle("up", th.dataset.k === sortK && sortDir < 0); });
-  $("totalpill").textContent = ALL.length.toLocaleString() + " leads";
+  $("totalpill").textContent = ALL.length.toLocaleString() + " qualified leads";
   kpis(); charts(); chips(); render();
 }
 
@@ -286,7 +336,8 @@ const ICONS = {
   user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
   heart:'<path d="M12 21s-8-5-8-11a5 5 0 0 1 8-3 5 5 0 0 1 8 3c0 6-8 11-8 11z"/>',
-  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/><path d="m4 4 16 16"/>'};
+  globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/><path d="m4 4 16 16"/>',
+  bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'};
 function countUp(el, to) {
   const from = +el.dataset.v || 0, t0 = performance.now(); el.dataset.v = to;
   const step = t => { const p = Math.min(1, (t - t0) / 700), e = 1 - Math.pow(1 - p, 3);
@@ -297,18 +348,20 @@ function countUp(el, to) {
 function kpis() {
   const c = f => VIEW.filter(f).length, n = VIEW.length || 1;
   const K = [
-    ["all","Leads",VIEW.length,"#8b5cf6",null,null],
+    ["all","Leads shown",VIEW.length,"#8b5cf6",null,null],
+    ["bolt","Hot leads",c(r => r.tier === "HOT"),"#fb923c","f-tier","HOT"],
     ["mail","Verified email",c(r => r.st === "valid"),"#34d399","f-email","valid"],
-    ["user","Personal email",c(r => r.st === "valid" && r.personal),"#22d3ee","f-email","personal"],
-    ["phone","Has phone",c(r => r.phone),"#fb923c","f-extra","phone"],
-    ["heart","Has socials",c(r => r.soc),"#ec4899","f-extra","social"],
-    ["globe","No website",c(r => !r.site),"#fbbf24","f-extra","nosite"]];
+    ["phone","Has phone",c(r => r.phone),"#22d3ee","f-extra","phone"],
+    ["globe","No website",c(r => !r.site),"#fbbf24","f-extra","nosite"],
+    ["heart","Has socials",c(r => r.soc),"#ec4899","f-extra","social"]];
   if (!$("kpis").children.length) {
     $("kpis").innerHTML = K.map(([ic, l, , col], i) => `<div class="kpi" style="--c:${col};animation-delay:${i * 60}ms" data-i="${i}">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[ic]}</svg></div>
       <b>0</b><span>${l}</span><small></small></div>`).join("");
     [...$("kpis").children].forEach((el, i) => el.onclick = () => { const [, , , , f, v] = K[i];
-      if (!f) { ["f-email","f-extra"].forEach(id => $(id).value = ""); } else $(f).value = $(f).value === v ? "" : v; page = 0; apply(); });
+      if (!f) { ["f-email","f-extra"].forEach(id => $(id).value = ""); $("f-tier").value = "HW"; }
+      else $(f).value = $(f).value === v ? (DEFAULTS[f] ?? "") : v;
+      page = 0; apply(); });
   }
   [...$("kpis").children].forEach((el, i) => { const [, , v, , f, fv] = K[i];
     countUp(el.querySelector("b"), v); el.querySelector("small").textContent = i ? Math.round(v / n * 100) + "%" : "";
@@ -333,12 +386,15 @@ function charts() {
     .map(([c, l, x]) => `<div><i style="background:${c}"></i>${l}<em>${x.toLocaleString()}</em></div>`).join("");
 }
 function chips() {
-  const ids = {"f-prov":"Province","f-city":"City","f-kind":"Category","f-email":"Email","f-extra":"Filter","f-src":"Source"}, out = [];
+  const ids = {"f-tier":"Tier","f-offer":"Selling","f-prov":"Province","f-city":"City","f-kind":"Category","f-email":"Email","f-extra":"Filter","f-src":"Source"}, out = [];
   if ($("q").value) out.push(["q", `“${$("q").value}”`]);
-  for (const [id, l] of Object.entries(ids)) if ($(id).value) out.push([id, `${l}: ${$(id).selectedOptions[0].text.replace(/ \(\d[\d,]*\)$/, "")}`]);
+  for (const [id, l] of Object.entries(ids)) if ($(id).value !== (DEFAULTS[id] ?? "")) out.push([id, `${l}: ${$(id).selectedOptions[0].text.replace(/ \(\d[\d,]*\)$/, "")}`]);
   $("chips").innerHTML = out.map(([id, t]) => `<span class="chip" data-id="${id}">${esc(t)} ✕</span>`).join("") + (out.length > 1 ? '<span class="chip clear" data-id="*">Clear all</span>' : "");
   $("chips").querySelectorAll(".chip").forEach(c => c.onclick = () => {
-    (c.dataset.id === "*" ? ["q", ...Object.keys(ids)] : [c.dataset.id]).forEach(id => $(id).value = ""); page = 0; apply(); });
+    const reset = id => { $(id).value = DEFAULTS[id] ?? ""; };
+    (c.dataset.id === "*" ? ["q", ...Object.keys(ids)] : [c.dataset.id]).forEach(reset);
+    if (c.dataset.id === "*" || c.dataset.id === "f-offer") { rescore(); sortK = "adj"; sortDir = -1; }
+    page = 0; apply(); });
 }
 const SOC = [["fb","f","#1877f2","Facebook"],["ig","ig","linear-gradient(45deg,#f58529,#dd2a7b,#8134af)","Instagram"],["li","in","#0a66c2","LinkedIn"],
              ["tt","tt","#111","TikTok"],["yt","▶","#ff0000","YouTube"],["x","X","#000","X"]];
@@ -352,6 +408,7 @@ function render() {
   $("empty").hidden = VIEW.length > 0;
   $("rows").innerHTML = slice.map((r, i) => { const col = hue(r.kind);
     return `<tr style="animation-delay:${Math.min(i, 20) * 18}ms">
+    <td data-l="Fit" class="fit"><span class="tier ${r.tier}"><i></i>${r.tier}<em>${r.adj}</em></span><div class="why">${esc(whyOf(r))}</div></td>
     <td><div class="biz"><div class="av" style="background:${hue(r.n)}">${esc((r.n.match(/[A-Za-z0-9]/) || ["?"])[0].toUpperCase())}</div><div>
       <b>${r.maps ? `<a href="${esc(r.maps)}" target="_blank" rel="noopener">${esc(r.n)}</a>` : esc(r.n)}</b>
       <span class="tag" style="background:${col}22;color:${col}">${esc(r.kind || r.cat || "Business")}</span>${r.site ? `<a class="site" href="${esc(r.site)}" target="_blank" rel="noopener">website ↗</a>` : ""}
@@ -371,7 +428,8 @@ async function copyEmails() {
   try { await navigator.clipboard.writeText(em.join("\n")); toast(`Copied ${em.length.toLocaleString()} emails`); } catch (e) { toast("Copy blocked by browser"); }
 }
 function exportCsv() {
-  const cols = [["n","name"],["kind","category"],["cat","maps_category"],["city","city"],["prov","province"],["addr","address"],["phone","phone"],
+  VIEW.forEach(r => { r.why = whyOf(r); });
+  const cols = [["tier","tier"],["adj","score"],["why","why"],["n","name"],["kind","category"],["cat","maps_category"],["city","city"],["prov","province"],["addr","address"],["phone","phone"],
     ["email","best_email"],["st","email_status"],["emails","all_emails"],["site","website"],["fb","facebook"],["ig","instagram"],["li","linkedin"],
     ["tt","tiktok"],["yt","youtube"],["x","x"],["rating","rating"],["reviews","reviews"],["src","source"],["maps","google_maps"]];
   const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
