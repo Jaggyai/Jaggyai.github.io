@@ -326,7 +326,8 @@ function apply() {
   if (sortK) VIEW.sort((a, b) => { const x = a[sortK] ?? "", y = b[sortK] ?? "";
     return (typeof x === "number" || typeof y === "number" ? (+x || 0) - (+y || 0) : String(x).localeCompare(String(y))) * sortDir; });
   document.querySelectorAll("th").forEach(th => { th.classList.toggle("s", th.dataset.k === sortK); th.classList.toggle("up", th.dataset.k === sortK && sortDir < 0); });
-  $("totalpill").textContent = ALL.length.toLocaleString() + " qualified leads";
+  const hotN = ALL.filter(r => r.tier === "HOT").length, qualN = ALL.filter(r => r.tier !== "COLD").length;
+  $("totalpill").textContent = `${hotN.toLocaleString()} hot · ${qualN.toLocaleString()} qualified · ${ALL.length.toLocaleString()} in database`;
   kpis(); charts(); chips(); render();
 }
 
