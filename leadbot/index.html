@@ -205,7 +205,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
           <select id="b-vert"><option value="">everything</option></select></label>
         <select id="b-city"><option value="">All cities</option></select>
         <select id="b-src">
-          <option value="">All sources</option><option value="reddit">People asking (Reddit)</option><option value="permit">Projects starting (permits)</option><option value="tender">Government tenders</option>
+          <option value="">All sources</option><option value="reddit">People asking (Reddit)</option><option value="permit">Projects starting (permits)</option><option value="tender">Government tenders</option><option value="newbiz">New businesses (just licensed)</option>
         </select>
         <select id="b-age">
           <option value="3">Last 3 days</option><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option>
@@ -501,7 +501,7 @@ function applyBuyers() {
   BVIEW.sort((a, b) => sort === "new" ? (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0)
     : sort === "value" ? (b.val || 0) - (a.val || 0) || b.adj - a.adj : b.adj - a.adj || (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0));
   const k = [["Buyers shown", BVIEW.length, "#8b5cf6"], ["People asking for a service", BVIEW.filter(r => r.src === "reddit").length, "#ec4899"],
-             ["Projects + tenders", BVIEW.filter(r => r.src !== "reddit").length, "#fb923c"],
+             ["Projects, tenders + new businesses", BVIEW.filter(r => r.src !== "reddit").length, "#fb923c"],
              ["New in last 3 days", BVIEW.filter(r => (now - (Date.parse(r.d) || 0)) / 864e5 <= 3).length, "#34d399"]];
   if (!$("bkpis").children.length) $("bkpis").innerHTML = k.map(([l, , col], i) => `<div class="kpi" style="--c:${col};animation-delay:${i * 60}ms;cursor:default"><b>0</b><span>${l}</span></div>`).join("");
   [...$("bkpis").children].forEach((el, i) => countUp(el.querySelector("b"), k[i][1]));
@@ -511,19 +511,20 @@ function renderBuyers() {
   const slice = BVIEW.slice(bpage * BPAGE, (bpage + 1) * BPAGE);
   $("blist").innerHTML = slice.length ? slice.map((r, i) => {
     const col = r.adj >= 75 ? "linear-gradient(135deg,#34d399,#22d3ee)" : r.adj >= 62 ? "linear-gradient(135deg,#fb923c,#ec4899)" : "linear-gradient(135deg,#8b5cf6,#22d3ee)";
-    const vc = hue(r.v), isR = r.src === "reddit", isT = r.src === "tender";
-    const link = (isR || isT) ? r.u : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${r.addr}, ${r.c}, ${r.p}`);
-    const also = !isR && !isT && (r.tags || []).length > 1 ? `<span>also needs: ${(r.tags || []).slice(1, 5).map(t => VLABEL[t] || t).join(", ")}</span>` : "";
+    const vc = hue(r.v), isR = r.src === "reddit", isT = r.src === "tender", isB = r.src === "newbiz";
+    const link = (isR || isT) ? r.u : isB ? "https://www.google.com/search?q=" + encodeURIComponent(`${r.t} ${r.c} ${r.p}`)
+      : "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${r.addr}, ${r.c}, ${r.p}`);
+    const also = !isR && !isT && (r.tags || []).length > 1 ? `<span>${isB ? "likely needs" : "also needs"}: ${(r.tags || []).slice(isB ? 0 : 1, 5).map(t => VLABEL[t] || t).join(", ")}</span>` : "";
     return `<div class="bcard" style="animation-delay:${Math.min(i, 12) * 25}ms">
       <div class="bscore" style="background:${col}"><div>${r.adj}<small>MATCH</small></div></div>
       <div><div class="btitle">${esc(r.t)}</div>
         <div class="bmeta"><span class="bchip" style="background:${vc}22;color:${vc}">${esc(VLABEL[r.v] || r.v)}</span>
           <span>📍 ${esc(r.c || r.p || "Canada")}</span><span>🕒 ${isT ? "posted " : ""}${esc(ago(r.d))}</span>
-          <span>${isR ? "💬 asked on r/" + esc(r.sub || "reddit") : isT ? "🏛️ " + esc(r.ent || "Government of Canada") : "🏗️ permit " + esc(r.permit || "")}</span>${isT && r.close ? `<span style="color:var(--amber)">closes ${esc(r.close)}</span>` : ""}${r.gc ? '<span style="color:var(--amber)">contractor already named</span>' : ""}${also}</div>
+          <span>${isR ? "💬 asked on r/" + esc(r.sub || "reddit") : isT ? "🏛️ " + esc(r.ent || "Government of Canada") : isB ? "🆕 just licensed" + (r.home ? " (home-based)" : "") : "🏗️ permit " + esc(r.permit || "")}</span>${isT && r.close ? `<span style="color:var(--amber)">closes ${esc(r.close)}</span>` : ""}${r.gc ? '<span style="color:var(--amber)">contractor already named</span>' : ""}${also}</div>
         ${r.s && r.s !== r.t ? `<div class="bsnip">${esc(r.s)}</div>` : ""}
         ${!isR && !isT && r.addr ? `<div class="bmeta"><span>🏠 ${esc(r.addr)}${r.geo ? " · " + esc(r.geo) : ""}</span></div>` : ""}</div>
       <div class="bright">${r.val ? `<div class="bval">$${Math.round(r.val).toLocaleString()}</div>` : ""}
-        <a class="btn bgo" href="${esc(link)}" target="_blank" rel="noopener">${isR ? "Open post ↗" : isT ? "Open tender ↗" : "View on map ↗"}</a></div></div>`;
+        <a class="btn bgo" href="${esc(link)}" target="_blank" rel="noopener">${isR ? "Open post ↗" : isT ? "Open tender ↗" : isB ? "Look them up ↗" : "View on map ↗"}</a></div></div>`;
   }).join("") : '<div class="empty">No buyers match yet. The collectors add new ones every few hours.</div>';
   const pages = Math.max(1, Math.ceil(BVIEW.length / BPAGE));
   $("bpage").textContent = `${bpage + 1} / ${pages.toLocaleString()}`;
