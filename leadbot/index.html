@@ -471,6 +471,10 @@ function render() {
 /* ---------------- Buyers looking now (intent leads) ---------------- */
 let BUY = [], BVIEW = [], bpage = 0;
 const BPAGE = 25;
+// how explicit the buying signal is: someone asking / a tender beats a project (maybe already hired) beats an inferred need (new business)
+const SRC_BONUS = {reddit: 10, tender: 0, permit: 0, newbiz: -8};
+let LAST_VISIT = 0;
+try { LAST_VISIT = +localStorage.getItem("lb_last_visit") || 0; } catch (e) {}
 const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", hvac:"HVAC / furnace", painter:"Painter", landscaper:"Landscaping / yard",
   cleaner:"Cleaning service", mover:"Movers", renovator:"Renovation / contractor", realtor:"Realtor", mortgage:"Mortgage broker", dentist:"Dentist",
   lawyer:"Lawyer", accountant:"Accountant / tax", insurance:"Insurance broker", web:"Web / marketing", auto:"Auto repair", pest:"Pest control",
@@ -493,11 +497,12 @@ function initBuyers() {
   $("bnext").onclick = () => { if ((bpage + 1) * BPAGE < BVIEW.length) { bpage++; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("b-csv").onclick = exportBuyers;
   applyBuyers();
+  try { setTimeout(() => localStorage.setItem("lb_last_visit", String(Date.now())), 4000); } catch (e) {}
 }
 function applyBuyers() {
   const v = $("b-vert").value, c = $("b-city").value, s = $("b-src").value, age = +$("b-age").value, sort = $("b-sort").value, now = Date.now();
   BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s) && (now - (Date.parse(r.d) || now)) / 864e5 <= age)
-    .map(r => ({...r, adj: Math.max(5, r.sc - (v && r.v !== v ? 5 : 0))}));
+    .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
   BVIEW.sort((a, b) => sort === "new" ? (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0)
     : sort === "value" ? (b.val || 0) - (a.val || 0) || b.adj - a.adj : b.adj - a.adj || (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0));
   const k = [["Buyers shown", BVIEW.length, "#8b5cf6"], ["People asking for a service", BVIEW.filter(r => r.src === "reddit").length, "#ec4899"],
@@ -517,7 +522,7 @@ function renderBuyers() {
     const also = !isR && !isT && (r.tags || []).length > 1 ? `<span>${isB ? "likely needs" : "also needs"}: ${(r.tags || []).slice(isB ? 0 : 1, 5).map(t => VLABEL[t] || t).join(", ")}</span>` : "";
     return `<div class="bcard" style="animation-delay:${Math.min(i, 12) * 25}ms">
       <div class="bscore" style="background:${col}"><div>${r.adj}<small>MATCH</small></div></div>
-      <div><div class="btitle">${esc(r.t)}</div>
+      <div><div class="btitle">${r.fresh && LAST_VISIT ? '<span class="bchip" style="background:#34d39933;color:#34d399;margin-right:6px">NEW</span>' : ""}${esc(r.t)}</div>
         <div class="bmeta"><span class="bchip" style="background:${vc}22;color:${vc}">${esc(VLABEL[r.v] || r.v)}</span>
           <span>📍 ${esc(r.c || r.p || "Canada")}</span><span>🕒 ${isT ? "posted " : ""}${esc(ago(r.d))}</span>
           <span>${isR ? "💬 asked on r/" + esc(r.sub || "reddit") : isT ? "🏛️ " + esc(r.ent || "Government of Canada") : isB ? "🆕 just licensed" + (r.home ? " (home-based)" : "") : "🏗️ permit " + esc(r.permit || "")}</span>${isT && r.close ? `<span style="color:var(--amber)">closes ${esc(r.close)}</span>` : ""}${r.gc ? '<span style="color:var(--amber)">contractor already named</span>' : ""}${also}</div>
