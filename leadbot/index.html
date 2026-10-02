@@ -197,7 +197,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
 <main>
   <div id="tab-buyers">
     <p class="lead-def"><b>Qualified leads</b> = people and businesses who are <i>actively looking</i> for a service right now &mdash; not just a list of companies.
-      Pick what your client sells and see who needs it today.</p>
+      Pick what your client sells and see who needs it today. <span id="bupd" style="margin-left:6px;color:var(--muted);font-size:12px"></span></p>
     <section class="kpis kpis4" id="bkpis"></section>
     <section class="panel">
       <div class="toolbar">
@@ -321,7 +321,7 @@ async function unlock(pw, remember) {
   $("err").textContent = "Unlocking…";
   try {
     const data = await decrypt(pw);
-    try { BUY = (await decrypt(pw, "intent.enc.json")).leads || []; } catch (e) { BUY = []; }   // buyers file may not exist yet
+    try { const ib = await decrypt(pw, "intent.enc.json"); BUY = ib.leads || []; BUY_UPD = ib.updated || ""; } catch (e) { BUY = []; }   // buyers file may not exist yet
     try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
     ALL = data.leads.map(r => ({...r, kind: titled((r.q || "").split(" in ")[0]) || r.cat, prov: r.prov || "BC",
       src: r.src || "maps", soc: !!(r.fb || r.ig || r.li || r.tt || r.yt || r.x),
@@ -469,7 +469,7 @@ function render() {
   $("count").textContent = `${VIEW.length.toLocaleString()} leads`;
 }
 /* ---------------- Buyers looking now (intent leads) ---------------- */
-let BUY = [], BVIEW = [], bpage = 0;
+let BUY = [], BVIEW = [], bpage = 0, BUY_UPD = "";
 const BPAGE = 25;
 // how explicit the buying signal is: someone asking / a tender beats a project (maybe already hired) beats an inferred need (new business)
 const SRC_BONUS = {reddit: 10, tender: 0, permit: 0, newbiz: -8};
@@ -496,6 +496,7 @@ function initBuyers() {
   $("bprev").onclick = () => { if (bpage > 0) { bpage--; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("bnext").onclick = () => { if ((bpage + 1) * BPAGE < BVIEW.length) { bpage++; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("b-csv").onclick = exportBuyers;
+  if (BUY_UPD) $("bupd").textContent = `Buyers updated ${BUY_UPD} · refreshes about every 3 hours`;
   applyBuyers();
   try { setTimeout(() => localStorage.setItem("lb_last_visit", String(Date.now())), 4000); } catch (e) {}
 }
