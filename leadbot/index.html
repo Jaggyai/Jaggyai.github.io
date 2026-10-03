@@ -479,7 +479,7 @@ const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", h
   cleaner:"Cleaning service", mover:"Movers", renovator:"Renovation / contractor", realtor:"Realtor", mortgage:"Mortgage broker", dentist:"Dentist",
   lawyer:"Lawyer", accountant:"Accountant / tax", insurance:"Insurance broker", web:"Web / marketing", auto:"Auto repair", pest:"Pest control",
   events:"Events / photo / catering", locksmith:"Locksmith", junk:"Junk removal", appliance:"Appliance repair", vet_pet:"Vet / pet services",
-  fitness:"Fitness / coach", childcare:"Childcare / tutoring", mkt:"Marketing / advertising", b2b:"Other business services", beauty:"Hair / beauty / tattoo", therapy:"Therapist / counsellor", repair:"Repair / refinishing", tech:"IT / smart home"};
+  fitness:"Fitness / coach", childcare:"Childcare / tutoring", mkt:"Social media & digital marketing", website:"Website services", ai:"AI & automation", menopause:"Menopause products & advice", b2b:"Other business services", beauty:"Hair / beauty / tattoo", therapy:"Therapist / counsellor", repair:"Repair / refinishing", tech:"IT / smart home"};
 const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.max(0, (Date.now() - t) / 60000);
   return m < 60 ? Math.round(m) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
 const bmatch = (r, sel) => !sel || r.v === sel || (r.tags || []).includes(sel);
