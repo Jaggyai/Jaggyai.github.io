@@ -319,20 +319,28 @@ async function decrypt(pw, file = "data.enc.json") {
 }
 async function unlock(pw, remember) {
   $("err").textContent = "Unlocking…";
-  try {
+  let ib;
+  try { ib = await decrypt(pw, "intent.enc.json"); }      // small file (~0.7 MB): password check + buyers shown straight away
+  catch (e) {
+    $("err").textContent = (e && e.name === "OperationError") ? "Wrong password." : "Could not load. Check your connection and try again.";
+    if (e && e.name === "OperationError") { try { localStorage.removeItem("lb_pw"); } catch (e2) {} }
+    return;
+  }
+  BUY = ib.leads || []; BUY_UPD = ib.updated || "";
+  try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
+  $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
+  initBuyers();
+  $("totalpill").textContent = "Loading the prospect database (12 MB)…";
+  try {                                                    // big file (~12 MB): loads in the background
     const data = await decrypt(pw);
-    try { const ib = await decrypt(pw, "intent.enc.json"); BUY = ib.leads || []; BUY_UPD = ib.updated || ""; } catch (e) { BUY = []; }   // buyers file may not exist yet
-    try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
     ALL = data.leads.map(r => ({...r, kind: titled((r.q || "").split(" in ")[0]) || r.cat, prov: r.prov || "BC",
       src: r.src || "maps", soc: !!(r.fb || r.ig || r.li || r.tt || r.yt || r.x),
       qs: r.qs || 0, fl: new Set((r.qf || "").split(",").filter(Boolean))}));
     rescore();
     $("upd").textContent = "Updated " + data.updated;
-    $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
-    init(); initBuyers();
+    init();
   } catch (e) {
-    $("err").textContent = "Wrong password.";
-    try { localStorage.removeItem("lb_pw"); } catch (e2) {}
+    $("totalpill").textContent = "Prospect database failed to load. Refresh to retry.";
   }
 }
 $("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
