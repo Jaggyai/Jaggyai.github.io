@@ -483,6 +483,7 @@ const BPAGE = 25;
 const SRC_BONUS = {reddit: 10, tender: 0, permit: 0, newbiz: -8};
 let LAST_VISIT = 0;
 try { LAST_VISIT = +localStorage.getItem("lb_last_visit") || 0; } catch (e) {}
+const PRIORITY = ["mortrenew", "lifeins", "lifeevent", "newcomer", "debt", "elder", "divorce", "insurance", "mortgage"];
 const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", hvac:"HVAC / furnace", painter:"Painter", landscaper:"Landscaping / yard",
   cleaner:"Cleaning service", mover:"Movers", renovator:"Renovation / contractor", realtor:"Realtor", mortgage:"Mortgage broker", dentist:"Dentist",
   lawyer:"Lawyer", accountant:"Accountant / tax", insurance:"Insurance broker", web:"Web / marketing", auto:"Auto repair", pest:"Pest control",
@@ -498,7 +499,12 @@ function initBuyers() {
     $("tab-buyers").hidden = b.dataset.t !== "buyers"; $("tab-db").hidden = b.dataset.t !== "db";
   });
   const vc = {}; BUY.forEach(r => new Set([r.v, ...(r.tags || [])]).forEach(v => v && (vc[v] = (vc[v] || 0) + 1)));
-  Object.entries(vc).sort((a, b) => b[1] - a[1]).forEach(([v, n]) => $("b-vert").add(new Option(`${VLABEL[v] || v} (${n.toLocaleString()})`, v)));
+  // high-demand niches (people in a stressful moment asking a licensed professional for help) are listed first, in this order
+  const sel = $("b-vert"), mk = (v, n) => new Option(`${VLABEL[v] || v} (${n.toLocaleString()})`, v);
+  const grp = (label) => { const g = document.createElement("optgroup"); g.label = label; sel.appendChild(g); return g; };
+  const g1 = grp("⭐ High-demand niches"), g2 = grp("Home services, business & more");
+  PRIORITY.forEach(v => { if (vc[v]) g1.appendChild(mk(v, vc[v])); });
+  Object.entries(vc).filter(([v]) => !PRIORITY.includes(v)).sort((a, b) => b[1] - a[1]).forEach(([v, n]) => g2.appendChild(mk(v, n)));
   fill($("b-city"), counts(BUY.map(r => ({city: r.c})), "city"));
   ["b-vert", "b-city", "b-src", "b-age", "b-sort"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
   $("bprev").onclick = () => { if (bpage > 0) { bpage--; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
@@ -521,7 +527,7 @@ function applyBuyers() {
   refreshCities();
   const v = $("b-vert").value, c = $("b-city").value, s = $("b-src").value, age = +$("b-age").value, sort = $("b-sort").value, now = Date.now();
   BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s) && (now - (Date.parse(r.d) || now)) / 864e5 <= age)
-    .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
+    .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) + (PRIORITY.includes(r.v) ? 6 : 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
   BVIEW.sort((a, b) => sort === "new" ? (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0)
     : sort === "value" ? (b.val || 0) - (a.val || 0) || b.adj - a.adj : b.adj - a.adj || (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0));
   const k = [["Buyers shown", BVIEW.length, "#8b5cf6"], ["People asking for a service", BVIEW.filter(r => r.src === "reddit").length, "#ec4899"],
