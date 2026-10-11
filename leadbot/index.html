@@ -205,6 +205,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
         <button class="btn" id="b-tbtn" type="button" title="Show only government tenders (IT, web, marketing, trades...)">🏛️ Government tenders</button>
         <label class="offerlbl">My client sells
           <select id="b-vert"><option value="">everything</option></select></label>
+        <select id="b-prov" title="Province"><option value="">All provinces</option></select>
         <select id="b-city"><option value="">All cities</option></select>
         <select id="b-src">
           <option value="">All sources</option><option value="reddit">People asking (Reddit)</option><option value="permit">Projects starting (permits)</option><option value="tender">Government tenders</option><option value="newbiz">New businesses (just licensed)</option>
@@ -505,7 +506,6 @@ const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", h
   fitness:"Fitness / coach", childcare:"Childcare / tutoring", mkt:"Social media & digital marketing", website:"Website services", lifeins:"Life insurance", mortrenew:"Mortgage renewal / shopping around", newcomer:"Newcomer to Canada", debt:"Debt / CRA / back-tax trouble", elder:"Aging parent / estate planning", divorce:"Separation / divorce", selftax:"Self-employed / gig-worker taxes", bizcra:"Small-business CRA trouble (GST/HST, payroll)", landlord:"Landlord / tenant dispute", homeins:"Home / auto insurance shopping", lifeevent:"Life insurance - life event (not asked yet)", affiliate:"Affiliate marketing", ai:"AI & automation", menopause:"Menopause products & advice", b2b:"Other business services", beauty:"Hair / beauty / tattoo", therapy:"Therapist / counsellor", repair:"Repair / refinishing", tech:"IT / smart home"};
 const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.max(0, (Date.now() - t) / 60000);
   return m < 60 ? Math.round(m) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
-const locmatch = (r, c) => !c || (c === "__none__" ? (!r.c && !r.p) : c.startsWith("prov:") ? (!r.c && r.p === c.slice(5)) : r.c === c);
 const bmatch = (r, sel) => !sel || r.v === sel || (r.tags || []).includes(sel);
 
 function initBuyers() {
@@ -521,7 +521,7 @@ function initBuyers() {
   PRIORITY.forEach(v => { if (vc[v]) g1.appendChild(mk(v, vc[v])); });
   Object.entries(vc).filter(([v]) => !PRIORITY.includes(v)).sort((a, b) => b[1] - a[1]).forEach(([v, n]) => g2.appendChild(mk(v, n)));
   fill($("b-city"), counts(BUY.map(r => ({city: r.c})), "city"));
-  ["b-vert", "b-city", "b-src", "b-age", "b-sort", "b-tg", "b-tc", "b-te", "b-ca"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
+  ["b-vert", "b-prov", "b-city", "b-src", "b-age", "b-sort", "b-tg", "b-tc", "b-te", "b-ca"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
   $("bprev").onclick = () => { if (bpage > 0) { bpage--; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("bnext").onclick = () => { if ((bpage + 1) * BPAGE < BVIEW.length) { bpage++; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("b-csv").onclick = exportBuyers;
@@ -532,10 +532,17 @@ function initBuyers() {
 }
 const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
   ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon"};
-function refreshCities() {     // city list = only cities with buyers for the CURRENT service / source / age filters, A-Z, with matching counts
-  const v = $("b-vert").value, s = $("b-src").value, age = +$("b-age").value, now = Date.now(), sel = $("b-city"), keep = sel.value;
-  const m = new Map();
-  BUY.forEach(r => { if (r.c && bmatch(r, v) && (!s || r.src === s) && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)) m.set(r.c, (m.get(r.c) || 0) + 1); });
+function refreshCities() {     // province list + city list: only places with buyers for the CURRENT service / source / age filters, A-Z, with matching counts
+  const v = $("b-vert").value, s = $("b-src").value, age = +$("b-age").value, now = Date.now(), sel = $("b-city"), keep = sel.value, psel = $("b-prov"), pkeep = psel.value;
+  const ok = r => bmatch(r, v) && (!s || r.src === s) && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age);
+  const pm = new Map();
+  BUY.forEach(r => { if (r.p && ok(r)) pm.set(r.p, (pm.get(r.p) || 0) + 1); });
+  const provs = [...pm].sort((a, b) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[b[0]] || b[0]));
+  psel.innerHTML = `<option value="">All provinces (${provs.length})</option>`;
+  provs.forEach(([p, n]) => psel.appendChild(new Option(`${PROVN[p] || p} (${n.toLocaleString()})`, p)));
+  psel.value = pm.has(pkeep) ? pkeep : "";
+  const pv = psel.value, m = new Map();
+  BUY.forEach(r => { if (r.c && ok(r) && (!pv || r.p === pv)) m.set(r.c, (m.get(r.c) || 0) + 1); });
   const cities = [...m].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"}));
   sel.innerHTML = `<option value="">All cities (${cities.length.toLocaleString()})</option>`;
   fill(sel, cities);
@@ -548,7 +555,7 @@ function applyBuyers() {
   $("tendbox").hidden = s !== "tender";
   $("b-tbtn").classList.toggle("on", s === "tender"); $("b-tbtn").style.outline = s === "tender" ? "2px solid #8b5cf6" : "";
   const ca = $("b-ca").checked;
-  BVIEW = BUY.filter(r => bmatch(r, v) && locmatch(r, c) && (!s || r.src === s) && (!ca || r.ca)
+  BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!$("b-prov").value || r.p === $("b-prov").value) && (!s || r.src === s) && (!ca || r.ca)
       && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)          // a tender stays open until its closing date, however long ago it was posted
       && (s !== "tender" || ((!tg || tgroup(r.v) === tg) && (!tcl || (r.close && (Date.parse(r.close) - now) / 864e5 <= tcl)) && (!te || r.ce))))
     .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) + (PRIORITY.includes(r.v) ? 6 : 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
