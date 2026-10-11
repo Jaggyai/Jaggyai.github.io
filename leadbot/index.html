@@ -505,6 +505,7 @@ const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", h
   fitness:"Fitness / coach", childcare:"Childcare / tutoring", mkt:"Social media & digital marketing", website:"Website services", lifeins:"Life insurance", mortrenew:"Mortgage renewal / shopping around", newcomer:"Newcomer to Canada", debt:"Debt / CRA / back-tax trouble", elder:"Aging parent / estate planning", divorce:"Separation / divorce", selftax:"Self-employed / gig-worker taxes", bizcra:"Small-business CRA trouble (GST/HST, payroll)", landlord:"Landlord / tenant dispute", homeins:"Home / auto insurance shopping", lifeevent:"Life insurance - life event (not asked yet)", affiliate:"Affiliate marketing", ai:"AI & automation", menopause:"Menopause products & advice", b2b:"Other business services", beauty:"Hair / beauty / tattoo", therapy:"Therapist / counsellor", repair:"Repair / refinishing", tech:"IT / smart home"};
 const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.max(0, (Date.now() - t) / 60000);
   return m < 60 ? Math.round(m) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
+const locmatch = (r, c) => !c || (c === "__none__" ? (!r.c && !r.p) : c.startsWith("prov:") ? (!r.c && r.p === c.slice(5)) : r.c === c);
 const bmatch = (r, sel) => !sel || r.v === sel || (r.tags || []).includes(sel);
 
 function initBuyers() {
@@ -529,14 +530,26 @@ function initBuyers() {
   applyBuyers();
   try { setTimeout(() => localStorage.setItem("lb_last_visit", String(Date.now())), 4000); } catch (e) {}
 }
-function refreshCities() {     // city list = only cities with buyers for the CURRENT service / source / age filters, A-Z, with matching counts
+const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
+  ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon"};
+function refreshCities() {     // location list = cities with buyers for the CURRENT service / source / age filters (A-Z), then provinces where no city is stated, then "not stated"
   const v = $("b-vert").value, s = $("b-src").value, age = +$("b-age").value, now = Date.now(), sel = $("b-city"), keep = sel.value;
-  const m = new Map();
-  BUY.forEach(r => { if (r.c && bmatch(r, v) && (!s || r.src === s) && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)) m.set(r.c, (m.get(r.c) || 0) + 1); });
+  const m = new Map(), pv = new Map(); let none = 0, total = 0;
+  BUY.forEach(r => {
+    if (!(bmatch(r, v) && (!s || r.src === s) && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age))) return;
+    total++;
+    if (r.c) m.set(r.c, (m.get(r.c) || 0) + 1);
+    else if (r.p) pv.set(r.p, (pv.get(r.p) || 0) + 1);
+    else none++;
+  });
   const cities = [...m].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"}));
-  sel.innerHTML = `<option value="">All cities (${cities.length.toLocaleString()})</option>`;
+  sel.innerHTML = `<option value="">All locations (${total.toLocaleString()})</option>`;
   fill(sel, cities);
-  sel.value = m.has(keep) ? keep : "";
+  const provs = [...pv].sort((a, b) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[b[0]] || b[0]));
+  if (provs.length) { const g = document.createElement("optgroup"); g.label = "Province only (no city stated)"; provs.forEach(([p, n]) => g.appendChild(new Option(`${PROVN[p] || p} (${n.toLocaleString()})`, "prov:" + p))); sel.appendChild(g); }
+  if (none) sel.appendChild(new Option(`Location not stated (${none.toLocaleString()})`, "__none__"));
+  const ok = [...sel.options].some(o => o.value === keep);
+  sel.value = ok ? keep : "";
 }
 function applyBuyers() {
   refreshCities();
@@ -545,7 +558,7 @@ function applyBuyers() {
   $("tendbox").hidden = s !== "tender";
   $("b-tbtn").classList.toggle("on", s === "tender"); $("b-tbtn").style.outline = s === "tender" ? "2px solid #8b5cf6" : "";
   const ca = $("b-ca").checked;
-  BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s) && (!ca || r.ca)
+  BVIEW = BUY.filter(r => bmatch(r, v) && locmatch(r, c) && (!s || r.src === s) && (!ca || r.ca)
       && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)          // a tender stays open until its closing date, however long ago it was posted
       && (s !== "tender" || ((!tg || tgroup(r.v) === tg) && (!tcl || (r.close && (Date.parse(r.close) - now) / 864e5 <= tcl)) && (!te || r.ce))))
     .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) + (PRIORITY.includes(r.v) ? 6 : 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
