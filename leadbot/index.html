@@ -216,6 +216,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
           <select id="b-tc" title="Closing date"><option value="">Any closing date</option><option value="7">Closes within 7 days</option><option value="14">Closes within 14 days</option><option value="30">Closes within 30 days</option></select>
           <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="b-te"> has contact email</label>
         </span>
+        <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="b-ca"> 🇨🇦 Canada only</label>
         <select id="b-age">
           <option value="3">Last 3 days</option><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option>
         </select>
@@ -518,7 +519,7 @@ function initBuyers() {
   PRIORITY.forEach(v => { if (vc[v]) g1.appendChild(mk(v, vc[v])); });
   Object.entries(vc).filter(([v]) => !PRIORITY.includes(v)).sort((a, b) => b[1] - a[1]).forEach(([v, n]) => g2.appendChild(mk(v, n)));
   fill($("b-city"), counts(BUY.map(r => ({city: r.c})), "city"));
-  ["b-vert", "b-city", "b-src", "b-age", "b-sort", "b-tg", "b-tc", "b-te"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
+  ["b-vert", "b-city", "b-src", "b-age", "b-sort", "b-tg", "b-tc", "b-te", "b-ca"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
   $("bprev").onclick = () => { if (bpage > 0) { bpage--; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("bnext").onclick = () => { if ((bpage + 1) * BPAGE < BVIEW.length) { bpage++; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("b-csv").onclick = exportBuyers;
@@ -540,7 +541,8 @@ function applyBuyers() {
   const v = $("b-vert").value, c = $("b-city").value, s = $("b-src").value, age = +$("b-age").value, sort = $("b-sort").value, now = Date.now();
   const tg = $("b-tg").value, tcl = +$("b-tc").value, te = $("b-te").checked;
   $("tendbox").hidden = s !== "tender";
-  BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s)
+  const ca = $("b-ca").checked;
+  BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s) && (!ca || r.ca)
       && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)          // a tender stays open until its closing date, however long ago it was posted
       && (s !== "tender" || ((!tg || tgroup(r.v) === tg) && (!tcl || (r.close && (Date.parse(r.close) - now) / 864e5 <= tcl)) && (!te || r.ce))))
     .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) + (PRIORITY.includes(r.v) ? 6 : 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
