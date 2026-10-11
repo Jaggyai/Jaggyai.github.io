@@ -220,7 +220,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
     <select id="p-trade"><option value="">All trades</option></select>
     <select id="p-prov"><option value="">All provinces</option></select>
     <select id="p-city"><option value="">All cities</option></select>
-    <select id="p-src"><option value="">All sources</option><option value="kijiji">Kijiji ads</option><option value="craigslist">Craigslist ads</option><option value="newbiz">Newly licensed</option></select>
+    <select id="p-src"><option value="">All sources</option><option value="kijiji">Kijiji ads</option><option value="craigslist">Craigslist ads</option><option value="newbiz">Newly licensed</option><option value="maps">Established (Google Maps)</option></select>
     <select id="p-age"><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="180" selected>Last 6 months</option></select>
     <select id="p-sort"><option value="score">Best match first</option><option value="new">Newest first</option><option value="buyers">Most buyers waiting first</option></select>
     <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="p-ct"> has phone or email</label>
@@ -251,7 +251,10 @@ const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New B
   ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon"};
 const ICON = {plumber:"🔧", electrician:"⚡", roofer:"🏠", hvac:"❄️", painter:"🎨", landscaper:"🌿", cleaner:"🧽", mover:"🚚", renovator:"🔨", junk:"🗑️", locksmith:"🔑", pest:"🐜",
   appliance:"🔌", auto:"🚗", events:"📸", childcare:"👶", beauty:"💇", fitness:"💪", accountant:"📊", lawyer:"⚖️", tech:"💻", website:"🌐", mkt:"📣", vet_pet:"🐕", dentist:"🦷", repair:"🛠️"};
-const SRC = {kijiji: "Kijiji ad", craigslist: "Craigslist ad", newbiz: "just licensed"};
+Object.assign(VLABEL, {framer: "Framer / framing", drywaller: "Drywall / taping", mason: "Masonry / concrete", flooring: "Flooring / tile", siding: "Siding / windows / insulation",
+  excavation: "Excavation / demolition / paving", welder: "Welder / metal fabrication"});
+Object.assign(ICON, {framer: "🪚", drywaller: "🧱", mason: "🧱", flooring: "🪵", siding: "🏘️", excavation: "🚜", welder: "🔥"});
+const SRC = {kijiji: "Kijiji ad", craigslist: "Craigslist ad", newbiz: "just licensed", maps: "Google Maps business"};
 
 async function decrypt(pw, file) {
   const blob = await (await fetch(file + "?v=" + Date.now())).json();
@@ -316,8 +319,9 @@ function render() {
       : `<a class="btn bgo" style="text-decoration:none" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(r.n + " " + r.c + " " + r.p)}">Look them up ↗</a>`;
     const contact = [r.ph ? `<a href="tel:${esc(r.ph.replace(/\D/g, ""))}">📞 ${esc(r.ph)}</a>` : "", r.em ? `<a href="mailto:${esc(r.em)}">✉ ${esc(r.em)}</a>` : "",
       r.w ? `<a href="${esc(/^https?:/.test(r.w) ? r.w : "https://" + r.w)}" target="_blank" rel="noopener">🌐 ${esc(r.w.replace(/^https?:\/\/(www\.)?/, ""))}</a>` : ""].join("");
-    const bw = r.bw > 0 ? `<a class="pbuyers" href="index.html?v=${encodeURIComponent(r.t)}&c=${encodeURIComponent(r.c)}" title="Open the buyers asking for this trade in ${esc(r.c)}">🔥 ${r.bw} buyer${r.bw > 1 ? "s" : ""} asking in ${esc(r.c)}</a>`
-      : r.bp > 0 ? `<a class="pbuyers" style="background:#fb923c33;color:#fb923c" href="index.html?v=${encodeURIComponent(r.t)}" title="Buyers asking for this trade elsewhere in ${esc(PROVN[r.p] || r.p)}">${r.bp} asking in ${esc(PROVN[r.p] || r.p)}</a>` : "";
+    const jq = (scope) => `jobs.html?t=${encodeURIComponent(r.t)}&c=${encodeURIComponent(r.c)}&p=${encodeURIComponent(r.p)}&scope=${scope}&n=${encodeURIComponent(r.n.slice(0, 60))}&ph=${encodeURIComponent(r.ph)}&em=${encodeURIComponent(r.em)}`;
+    const bw = r.bw > 0 ? `<a class="pbuyers" href="${jq("city")}" title="See the ${r.bw} job${r.bw > 1 ? "s" : ""} in ${esc(r.c)}">🔥 ${r.bw} job${r.bw > 1 ? "s" : ""} asking in ${esc(r.c)} ›</a>`
+      : r.bp > 0 ? `<a class="pbuyers" style="background:#fb923c33;color:#fb923c" href="${jq("prov")}" title="See the ${r.bp} jobs across ${esc(PROVN[r.p] || r.p)}">${r.bp} job${r.bp > 1 ? "s" : ""} in ${esc(PROVN[r.p] || r.p)} ›</a>` : "";
     return `<div class="pcard"><div class="pav">${ICON[r.t] || "🛠️"}</div>
       <div><div class="ptitle">${esc(r.n)}</div>
         <div class="pmeta"><span class="bchip" style="background:#8b5cf622;color:#a78bfa">${esc(VLABEL[r.t] || r.t)}</span><span>📍 ${esc(r.c || PROVN[r.p] || "Canada")}${r.c && r.p ? ", " + esc(r.p) : ""}</span>
