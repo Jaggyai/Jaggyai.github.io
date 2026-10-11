@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LeadBot - Work-seekers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#0b0b1a;--bg2:#12122a;--card:rgba(255,255,255,.045);--card-solid:#16163a;--line:rgba(255,255,255,.09);
+  --text:#f1f1fb;--muted:#9a9cc0;--violet:#8b5cf6;--pink:#ec4899;--orange:#fb923c;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24;--red:#f87171;
+  --grad:linear-gradient(135deg,#8b5cf6 0%,#ec4899 55%,#fb923c 100%);
+  --glow:0 10px 40px -10px rgba(139,92,246,.55);
+}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){
+  --bg:#f5f3ff;--bg2:#fdf2f8;--card:rgba(255,255,255,.8);--card-solid:#fff;--line:rgba(76,29,149,.1);
+  --text:#1e1b3a;--muted:#6b6890;--glow:0 10px 30px -12px rgba(139,92,246,.45);--green:#059669;--amber:#b45309;--red:#dc2626;--cyan:#0891b2}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:14px/1.5 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--text);background:var(--bg);min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 35% at 15% 10%,rgba(139,92,246,.28),transparent 70%),
+             radial-gradient(35% 30% at 90% 20%,rgba(236,72,153,.22),transparent 70%),
+             radial-gradient(40% 35% at 70% 95%,rgba(251,146,60,.16),transparent 70%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(4%,-3%) rotate(6deg)}}
+a{color:inherit}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* lock */
+#lock{position:fixed;inset:0;display:grid;place-items:center;z-index:50;padding:16px;background:var(--bg)}
+#lock::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:var(--grad);filter:blur(120px);opacity:.35;animation:pulse 6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.5}}
+#lock form{position:relative;width:100%;max-width:360px;padding:32px 28px;border-radius:24px;background:var(--card-solid);border:1px solid var(--line);box-shadow:var(--glow);display:flex;flex-direction:column;gap:14px;text-align:center}
+.logo{width:56px;height:56px;margin:0 auto;border-radius:16px;background:var(--grad);display:grid;place-items:center;box-shadow:var(--glow)}
+.logo svg{width:30px;height:30px}
+#lock h2{margin:0;font-size:26px;font-weight:800}
+#err{color:var(--red);font-size:13px;min-height:18px}
+input,select{font:inherit;color:var(--text);background:var(--card-solid);border:1px solid var(--line);border-radius:12px;padding:10px 12px;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,92,246,.25)}
+.btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:10px 16px;cursor:pointer;color:#fff;background:var(--grad);box-shadow:var(--glow);transition:transform .15s,filter .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.btn.ghost{background:var(--card-solid);color:var(--text);border:1px solid var(--line);box-shadow:none}
+label.chk{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+
+/* layout */
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(11,11,26,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]) header{background:rgba(245,243,255,.78)}}
+header .logo{width:36px;height:36px;border-radius:11px;margin:0}header .logo svg{width:20px;height:20px}
+header h1{font-size:20px;font-weight:800;margin:0}
+.pill{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 0 0 rgba(52,211,153,.7);animation:ping 2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+header .sp{flex:1}
+main{max-width:1440px;margin:0 auto;padding:20px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(8px)}
+
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:18px}
+.kpi{position:relative;overflow:hidden;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--line);cursor:pointer;transition:transform .2s,border-color .2s;animation:rise .6s both}
+.kpi:hover{transform:translateY(-3px);border-color:var(--c)}
+.kpi.on{border-color:var(--c);box-shadow:0 0 0 1px var(--c) inset}
+.kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:var(--c);opacity:.14;filter:blur(8px)}
+.kpi .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 20%,transparent);color:var(--c);margin-bottom:10px}
+.kpi .ic svg{width:18px;height:18px}
+.kpi b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em}
+.kpi span{color:var(--muted);font-size:12px;font-weight:600}
+.kpi small{position:absolute;right:14px;bottom:14px;font-size:11px;font-weight:700;color:var(--c)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+
+.charts{display:grid;grid-template-columns:1fr 1fr 300px;gap:14px;margin-bottom:18px}
+.chart{padding:18px}
+.chart h3{margin:0 0 12px;font-size:14px;font-weight:700;display:flex;justify-content:space-between}
+.chart h3 span{color:var(--muted);font-weight:600;font-size:12px}
+.bar{display:grid;grid-template-columns:120px 1fr 52px;align-items:center;gap:10px;margin:7px 0;cursor:pointer;font-size:12.5px}
+.bar .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:600}
+.bar:hover .lbl,.bar.on .lbl{color:var(--text)}
+.bar .trk{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar .fill{height:100%;border-radius:99px;background:var(--grad);width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar.on .fill{background:linear-gradient(90deg,var(--cyan),var(--green))}
+.bar .v{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.donut{width:170px;height:170px;margin:4px auto 14px;border-radius:50%;position:relative;transition:background .6s}
+.donut::after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--card-solid)}
+.donut div{position:absolute;inset:0;display:grid;place-items:center;z-index:1;text-align:center}
+.donut b{font-size:28px;font-weight:800;display:block;line-height:1}.donut span{font-size:11px;color:var(--muted)}
+.legend{display:grid;gap:6px;font-size:12px}
+.legend div{display:flex;align-items:center;gap:8px}.legend i{width:10px;height:10px;border-radius:3px}.legend em{margin-left:auto;font-style:normal;font-weight:700}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;padding:14px;margin-bottom:10px;align-items:center}
+.search{position:relative;flex:1 1 260px}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.search input{width:100%;padding-left:36px}
+.toolbar select{flex:0 1 170px;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 2px 12px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--violet) 18%,transparent);border:1px solid color-mix(in srgb,var(--violet) 40%,transparent);cursor:pointer}
+.chip:hover{border-color:var(--pink)}
+.chip.clear{background:transparent;border-color:var(--line);color:var(--muted)}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:0}
+th{position:sticky;top:0;text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:var(--text)}th.s::after{content:" ↓"}th.s.up::after{content:" ↑"}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr{animation:fade .35s both;transition:background .15s}
+tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
+@keyframes fade{from{opacity:0;transform:translateX(-6px)}}
+.biz{display:flex;gap:12px;align-items:center;min-width:240px}
+.av{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;font-size:14px}
+.biz b{display:block;font-weight:700}.biz b a{text-decoration:none}.biz b a:hover{color:var(--pink)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;margin-top:3px}
+.site{font-size:11.5px;color:var(--muted);margin-left:6px;text-decoration:none}.site:hover{color:var(--cyan)}
+.ph{white-space:nowrap;text-decoration:none;font-weight:600;font-variant-numeric:tabular-nums}.ph:hover{color:var(--cyan)}
+.em{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;max-width:260px}
+.em span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st{flex:none;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;letter-spacing:.03em}
+.st.ok{background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--green)}
+.st.pers{background:color-mix(in srgb,var(--cyan) 18%,transparent);color:var(--cyan)}
+.st.warn{background:color-mix(in srgb,var(--amber) 18%,transparent);color:var(--amber)}
+.st.bad{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}
+.none{color:var(--muted);font-size:12px}
+.socs{display:flex;gap:6px}
+.so{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800;text-decoration:none;transition:transform .15s}
+.so:hover{transform:scale(1.15) rotate(-4deg)}
+.stars{color:var(--amber);font-weight:700;white-space:nowrap}.stars small{color:var(--muted);font-weight:600;margin-left:4px}
+.src{font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+
+.tabs{display:flex;gap:6px;margin-left:10px}
+.tab{font:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:10px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--text);background:var(--card);border-color:var(--line);box-shadow:var(--glow)}
+.lead-def{margin:0 0 14px;padding:12px 16px;border-radius:14px;background:color-mix(in srgb,var(--violet) 12%,transparent);border:1px solid color-mix(in srgb,var(--violet) 30%,transparent);color:var(--text);font-size:13px}
+.kpis4{grid-template-columns:repeat(4,1fr)}
+.bcard{display:grid;grid-template-columns:64px 1fr auto;gap:14px;padding:16px;border-bottom:1px solid var(--line);align-items:start;animation:fade .35s both;transition:background .15s}
+.bcard:hover{background:color-mix(in srgb,var(--violet) 7%,transparent)}
+.bscore{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff}
+.bscore small{display:block;font-size:9px;font-weight:700;letter-spacing:.06em;opacity:.85;margin-top:-2px}
+.btitle{font-weight:700;font-size:15px;line-height:1.35}
+.bmeta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;font-size:11.5px;font-weight:600;color:var(--muted);align-items:center}
+.bchip{padding:2px 8px;border-radius:99px;font-weight:700;font-size:11px}
+.bsnip{color:var(--muted);font-size:13px;line-height:1.45;max-width:780px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.bright{display:flex;flex-direction:column;gap:6px;align-items:flex-end;text-align:right;white-space:nowrap}
+.bval{font-weight:800;font-size:16px;color:var(--green)}
+.bgo{text-decoration:none}
+.fit{min-width:118px}
+.tier{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:11px;letter-spacing:.05em;padding:3px 9px 3px 7px;border-radius:99px}
+.tier i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.tier.HOT{background:color-mix(in srgb,#fb923c 22%,transparent);color:#fb923c}
+.tier.HOT i{box-shadow:0 0 0 0 rgba(251,146,60,.7);animation:ping 2s infinite}
+.tier.WARM{background:color-mix(in srgb,var(--amber) 20%,transparent);color:var(--amber)}
+.tier.COLD{background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.tier em{font-style:normal;font-variant-numeric:tabular-nums;opacity:.85}
+.why{margin-top:4px;font-size:11px;color:var(--muted);line-height:1.35;max-width:210px}
+.offerlbl{display:flex;align-items:center;gap:8px;font-weight:700;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.offerlbl select{border-color:color-mix(in srgb,var(--pink) 55%,var(--line));font-weight:700}
+.pager{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:14px}
+.pager .n{color:var(--muted);font-weight:600}
+.pager .btns{display:flex;gap:8px;align-items:center}
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,120px);background:var(--card-solid);border:1px solid var(--line);box-shadow:var(--glow);padding:12px 18px;border-radius:14px;font-weight:700;transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:60}
+.toast.show{transform:translate(-50%,0)}
+
+@media (max-width:720px){.bcard{grid-template-columns:48px 1fr;gap:10px}.bscore{width:46px;height:46px;font-size:17px}.bright{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;text-align:left}.kpis4{grid-template-columns:repeat(2,1fr)}.tabs{margin-left:0}header{flex-wrap:wrap}}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:1fr 1fr}.charts .donutc{grid-column:1/-1}}
+@media (max-width:720px){
+  main{padding:14px 16px}header{padding:10px 16px}header .pill.hide-sm{display:none}
+  .kpis{grid-template-columns:repeat(2,1fr);gap:10px}.kpi b{font-size:22px}
+  .charts{grid-template-columns:1fr}.bar{grid-template-columns:96px 1fr 44px}
+  .toolbar select{flex:1 1 45%}
+  thead{display:none}table,tbody,tr,td{display:block}
+  tbody tr{border-bottom:1px solid var(--line);padding:12px 4px}
+  td{border:0;padding:4px 10px}
+  td[data-l]::before{content:attr(data-l);display:inline-block;width:70px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+}
+#tendbox:not([hidden]){display:contents}
+
+#pblist .pcard{display:grid;grid-template-columns:56px 1fr auto;gap:14px;padding:16px;border-bottom:1px solid var(--line);align-items:start}
+#pblist .pcard:hover{background:color-mix(in srgb,var(--violet) 7%,transparent)}
+.pav{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:22px;color:#fff;background:linear-gradient(135deg,#8b5cf6,#22d3ee)}
+.ptitle{font-weight:700;font-size:15px;line-height:1.35}
+.pmeta{display:flex;flex-wrap:wrap;gap:6px 10px;margin:6px 0;font-size:11.5px;font-weight:600;color:var(--muted);align-items:center}
+.pcontact{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pcontact a{font-size:12.5px;font-weight:700;text-decoration:none;padding:5px 11px;border-radius:99px;background:color-mix(in srgb,var(--violet) 14%,transparent);color:var(--text)}
+.pcontact a:hover{background:color-mix(in srgb,var(--violet) 28%,transparent)}
+.pbuyers{display:inline-block;padding:3px 10px;border-radius:99px;font-weight:800;font-size:11.5px;background:#34d39933;color:#34d399;text-decoration:none}
+.pright{display:flex;flex-direction:column;gap:6px;align-items:flex-end;text-align:right;white-space:nowrap}
+@media (max-width:720px){#pblist .pcard{grid-template-columns:44px 1fr;gap:10px}.pav{width:40px;height:40px;font-size:18px}.pright{align-items:flex-start;grid-column:2}}
+#tab-bar{display:flex;gap:8px}
+</style>
+</head>
+<body>
+<div id="lock"><form id="lockform">
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></svg></div>
+  <h2><span class="grad-text">LeadBot</span></h2>
+  <span style="color:var(--muted)">Enter your password to unlock.</span>
+  <input id="pw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
+  <label class="chk"><input type="checkbox" id="remember"> Remember on this device</label>
+  <button class="btn" type="submit">Unlock</button>
+  <div id="err"></div>
+</form></div>
+
+<header>
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></svg></div>
+  <h1>Lead<span class="grad-text">Bot</span></h1>
+  <nav class="tabs"><a class="tab" href="index.html" style="text-decoration:none">🎯 Buyers looking now</a><button class="tab on" type="button">🛠️ Work-seekers</button></nav>
+  <span class="sp"></span>
+  <span class="pill hide-sm"><span class="live"></span><span id="upd"></span></span>
+  <span class="pill" id="totalpill"></span>
+</header>
+
+<main>
+  <p class="lead-def"><b>Work-seekers</b> = tradespeople and businesses that are advertising for customers right now (Kijiji and Craigslist service ads) or were just licensed and have none yet.
+    Connect them to a buyer who needs that trade: the <span style="color:#34d399;font-weight:800">green badge</span> shows how many people are asking for that trade in the same city.
+    <span style="margin-left:6px;color:var(--muted);font-size:12px" id="pupd"></span></p>
+  <section class="kpis kpis4" id="pkpis"></section>
+  <section class="panel">
+  <div class="toolbar">
+    <input id="p-q" type="search" placeholder="Search name, trade, phone..." style="flex:1 1 220px">
+    <select id="p-trade"><option value="">All trades</option></select>
+    <select id="p-prov"><option value="">All provinces</option></select>
+    <select id="p-city"><option value="">All cities</option></select>
+    <select id="p-src"><option value="">All sources</option><option value="kijiji">Kijiji ads</option><option value="craigslist">Craigslist ads</option><option value="newbiz">Newly licensed</option></select>
+    <select id="p-age"><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="180" selected>Last 6 months</option></select>
+    <select id="p-sort"><option value="score">Best match first</option><option value="new">Newest first</option><option value="buyers">Most buyers waiting first</option></select>
+    <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="p-ct"> has phone or email</label>
+    <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="p-bw"> buyers waiting</label>
+    <button class="btn" id="p-csv">Export CSV</button>
+  </div>
+  <div id="pblist"></div>
+  <div class="pager"><span class="n" id="pcount"></span>
+    <div class="btns"><button class="btn ghost" id="pprev">‹</button><span id="ppage" class="n"></span><button class="btn ghost" id="pnext">›</button></div></div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+const PER = 40;
+let ALL = [], VIEW = [], page = 0;
+const $ = id => document.getElementById(id);
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.max(0, (Date.now() - t) / 60000);
+  return m < 60 ? Math.round(m) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
+const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", hvac:"HVAC / furnace", painter:"Painter", landscaper:"Landscaping / yard",
+  cleaner:"Cleaning service", mover:"Movers", renovator:"Renovation / contractor", realtor:"Realtor", mortgage:"Mortgage broker", dentist:"Dentist",
+  lawyer:"Lawyer", accountant:"Accountant / tax", insurance:"Insurance broker", web:"Web / marketing", auto:"Auto repair", pest:"Pest control",
+  events:"Events / photo / catering", locksmith:"Locksmith", junk:"Junk removal", appliance:"Appliance repair", vet_pet:"Vet / pet services",
+  fitness:"Fitness / coach", childcare:"Childcare / tutoring", mkt:"Social media & digital marketing", website:"Website services", lifeins:"Life insurance", mortrenew:"Mortgage renewal / shopping around", newcomer:"Newcomer to Canada", debt:"Debt / CRA / back-tax trouble", elder:"Aging parent / estate planning", divorce:"Separation / divorce", selftax:"Self-employed / gig-worker taxes", bizcra:"Small-business CRA trouble (GST/HST, payroll)", landlord:"Landlord / tenant dispute", homeins:"Home / auto insurance shopping", lifeevent:"Life insurance - life event (not asked yet)", affiliate:"Affiliate marketing", ai:"AI & automation", menopause:"Menopause products & advice", b2b:"Other business services", beauty:"Hair / beauty / tattoo", therapy:"Therapist / counsellor", repair:"Repair / refinishing", tech:"IT / smart home"};
+const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
+  ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon"};
+const ICON = {plumber:"🔧", electrician:"⚡", roofer:"🏠", hvac:"❄️", painter:"🎨", landscaper:"🌿", cleaner:"🧽", mover:"🚚", renovator:"🔨", junk:"🗑️", locksmith:"🔑", pest:"🐜",
+  appliance:"🔌", auto:"🚗", events:"📸", childcare:"👶", beauty:"💇", fitness:"💪", accountant:"📊", lawyer:"⚖️", tech:"💻", website:"🌐", mkt:"📣", vet_pet:"🐕", dentist:"🦷", repair:"🛠️"};
+const SRC = {kijiji: "Kijiji ad", craigslist: "Craigslist ad", newbiz: "just licensed"};
+
+async function decrypt(pw, file) {
+  const blob = await (await fetch(file + "?v=" + Date.now())).json();
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(blob.salt), iterations:blob.iter, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64(blob.iv)}, key, b64(blob.ct));
+  return JSON.parse(await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream("gzip"))).text());
+}
+async function unlock(pw, remember) {
+  $("err").textContent = "Unlocking…";
+  let d;
+  try { d = await decrypt(pw, "providers.enc.json"); }
+  catch (e) {
+    $("err").textContent = (e && e.name === "OperationError") ? "Wrong password." : "Could not load. Check your connection and try again.";
+    if (e && e.name === "OperationError") { try { localStorage.removeItem("lb_pw"); } catch (e2) {} }
+    return;
+  }
+  try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
+  ALL = d.providers || [];
+  $("upd").textContent = "Updated " + d.updated;
+  $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
+  init();
+}
+$("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
+try { const s = localStorage.getItem("lb_pw"); if (s) unlock(s, true); } catch (e) {}
+
+const within = (r, age) => (Date.now() - (Date.parse(r.d) || Date.now())) / 864e5 <= age;
+function fillOpts(sel, pairs, label) {
+  const keep = sel.value;
+  sel.innerHTML = `<option value="">${label} (${pairs.length})</option>`;
+  pairs.forEach(([v, n, t]) => sel.add(new Option(`${t || v} (${n.toLocaleString()})`, v)));
+  sel.value = pairs.some(p => p[0] === keep) ? keep : "";
+}
+function refreshLists() {
+  const age = +$("p-age").value, src = $("p-src").value, tr = $("p-trade").value, pv = $("p-prov").value;
+  const base = ALL.filter(r => within(r, age) && (!src || r.src === src));
+  const cnt = (rows, f) => { const m = new Map(); rows.forEach(r => { const k = f(r); if (k) m.set(k, (m.get(k) || 0) + 1); }); return m; };
+  fillOpts($("p-trade"), [...cnt(base, r => r.t)].sort((a, b) => (VLABEL[a[0]] || a[0]).localeCompare(VLABEL[b[0]] || b[0])).map(([v, n]) => [v, n, VLABEL[v] || v]), "All trades");
+  const byTrade = base.filter(r => !$("p-trade").value || r.t === $("p-trade").value);
+  fillOpts($("p-prov"), [...cnt(byTrade, r => r.p)].sort((a, b) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[b[0]] || b[0])).map(([v, n]) => [v, n, PROVN[v] || v]), "All provinces");
+  const byProv = byTrade.filter(r => !$("p-prov").value || r.p === $("p-prov").value);
+  fillOpts($("p-city"), [...cnt(byProv, r => r.c)].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"})).map(([v, n]) => [v, n]), "All cities");
+}
+function apply() {
+  refreshLists();
+  const q = $("p-q").value.trim().toLowerCase(), tr = $("p-trade").value, pv = $("p-prov").value, ct = $("p-city").value, src = $("p-src").value, age = +$("p-age").value,
+        sort = $("p-sort").value, hasct = $("p-ct").checked, hasbw = $("p-bw").checked;
+  VIEW = ALL.filter(r => within(r, age) && (!tr || r.t === tr) && (!pv || r.p === pv) && (!ct || r.c === ct) && (!src || r.src === src)
+      && (!hasct || r.ph || r.em) && (!hasbw || r.bw > 0) && (!q || `${r.n} ${r.s} ${VLABEL[r.t] || r.t} ${r.c} ${r.ph} ${r.em} ${r.w}`.toLowerCase().includes(q)));
+  VIEW.sort((a, b) => sort === "new" ? (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0) : sort === "buyers" ? (b.bw - a.bw) || (b.sc - a.sc) : (b.sc - a.sc) || (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0));
+  page = 0;
+  const k = [["Work-seekers shown", VIEW.length, "#8b5cf6"], ["With a phone number", VIEW.filter(r => r.ph).length, "#ec4899"],
+             ["With an email", VIEW.filter(r => r.em).length, "#fb923c"], ["With buyers waiting in their city", VIEW.filter(r => r.bw > 0).length, "#34d399"]];
+  $("pkpis").innerHTML = k.map(([l, n, c], i) => `<div class="kpi" style="--c:${c};cursor:default"><b>${n.toLocaleString()}</b><span>${l}</span></div>`).join("");
+  $("totalpill").textContent = `${ALL.length.toLocaleString()} work-seekers`;
+  render();
+}
+function render() {
+  const slice = VIEW.slice(page * PER, (page + 1) * PER);
+  $("pblist").innerHTML = slice.length ? slice.map(r => {
+    const link = r.u ? `<a class="btn bgo" style="text-decoration:none" href="${esc(r.u)}" target="_blank" rel="noopener">Open ad ↗</a>`
+      : `<a class="btn bgo" style="text-decoration:none" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(r.n + " " + r.c + " " + r.p)}">Look them up ↗</a>`;
+    const contact = [r.ph ? `<a href="tel:${esc(r.ph.replace(/\D/g, ""))}">📞 ${esc(r.ph)}</a>` : "", r.em ? `<a href="mailto:${esc(r.em)}">✉ ${esc(r.em)}</a>` : "",
+      r.w ? `<a href="${esc(/^https?:/.test(r.w) ? r.w : "https://" + r.w)}" target="_blank" rel="noopener">🌐 ${esc(r.w.replace(/^https?:\/\/(www\.)?/, ""))}</a>` : ""].join("");
+    const bw = r.bw > 0 ? `<a class="pbuyers" href="index.html?v=${encodeURIComponent(r.t)}&c=${encodeURIComponent(r.c)}" title="Open the buyers asking for this trade in ${esc(r.c)}">🔥 ${r.bw} buyer${r.bw > 1 ? "s" : ""} asking in ${esc(r.c)}</a>`
+      : r.bp > 0 ? `<a class="pbuyers" style="background:#fb923c33;color:#fb923c" href="index.html?v=${encodeURIComponent(r.t)}" title="Buyers asking for this trade elsewhere in ${esc(PROVN[r.p] || r.p)}">${r.bp} asking in ${esc(PROVN[r.p] || r.p)}</a>` : "";
+    return `<div class="pcard"><div class="pav">${ICON[r.t] || "🛠️"}</div>
+      <div><div class="ptitle">${esc(r.n)}</div>
+        <div class="pmeta"><span class="bchip" style="background:#8b5cf622;color:#a78bfa">${esc(VLABEL[r.t] || r.t)}</span><span>📍 ${esc(r.c || PROVN[r.p] || "Canada")}${r.c && r.p ? ", " + esc(r.p) : ""}</span>
+          <span>🕒 ${esc(ago(r.d))}</span><span>${esc(SRC[r.src] || r.src)}</span>${bw}</div>
+        ${r.s ? `<div class="bsnip">${esc(r.s)}</div>` : ""}
+        ${contact ? `<div class="pcontact">${contact}</div>` : ""}</div>
+      <div class="pright">${link}</div></div>`;
+  }).join("") : '<div style="padding:40px;text-align:center;color:var(--muted)">No work-seekers match these filters yet.</div>';
+  const pages = Math.max(1, Math.ceil(VIEW.length / PER));
+  $("pcount").textContent = `${VIEW.length.toLocaleString()} work-seekers`;
+  $("ppage").textContent = `${page + 1}/${pages}`;
+}
+function exportCsv() {
+  const cols = [["n","name / ad title"],["t","trade"],["c","city"],["p","province"],["d","posted"],["src","source"],["ph","phone"],["em","email"],["w","website"],["bw","buyers_asking_in_city"],["bp","buyers_asking_in_province"],["u","link"],["s","details"]];
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = [cols.map(c => c[1]).join(","), ...VIEW.map(r => cols.map(c => q(r[c[0]])).join(","))].join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + csv], {type: "text/csv"}));
+  a.download = `work_seekers_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  $("toast").textContent = `Exported ${VIEW.length.toLocaleString()} work-seekers`; $("toast").classList.add("show"); setTimeout(() => $("toast").classList.remove("show"), 2200);
+}
+function init() {
+  ["p-trade", "p-prov", "p-city", "p-src", "p-age", "p-sort", "p-ct", "p-bw"].forEach(id => $(id).addEventListener("change", apply));
+  $("p-q").addEventListener("input", () => { clearTimeout(window._pq); window._pq = setTimeout(apply, 200); });
+  $("pprev").onclick = () => { if (page > 0) { page--; render(); scrollTo({top: 0, behavior: "smooth"}); } };
+  $("pnext").onclick = () => { if ((page + 1) * PER < VIEW.length) { page++; render(); scrollTo({top: 0, behavior: "smooth"}); } };
+  $("p-csv").onclick = exportCsv;
+  const qs = new URLSearchParams(location.search);
+  refreshLists();
+  if (qs.get("t")) { $("p-trade").value = qs.get("t"); refreshLists(); }
+  apply();
+}
+</script>
+</body>
+</html>
