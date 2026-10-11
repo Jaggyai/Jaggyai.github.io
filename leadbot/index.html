@@ -189,7 +189,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
 <header>
   <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></svg></div>
   <h1>Lead<span class="grad-text">Bot</span></h1>
-  <nav class="tabs"><button class="tab on" data-t="buyers">🎯 Buyers looking now</button><button class="tab" data-t="db">📇 Prospect database</button></nav>
+  <nav class="tabs"><button class="tab on" data-t="buyers">🎯 Buyers looking now</button><button class="tab" data-t="db">📇 Prospect database</button><a class="tab" href="providers.html" style="text-decoration:none;display:inline-flex;align-items:center">🛠️ Work-seekers</a></nav>
   <span class="sp"></span>
   <span class="pill hide-sm"><span class="live"></span><span id="upd"></span></span>
   <span class="pill" id="totalpill"></span>
@@ -509,8 +509,8 @@ const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.ma
 const bmatch = (r, sel) => !sel || r.v === sel || (r.tags || []).includes(sel);
 
 function initBuyers() {
-  document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
-    document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".tab[data-t]").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".tab[data-t]").forEach(x => x.classList.toggle("on", x === b));
     $("tab-buyers").hidden = b.dataset.t !== "buyers"; $("tab-db").hidden = b.dataset.t !== "db";
   });
   const vc = {}; BUY.forEach(r => new Set([r.v, ...(r.tags || [])]).forEach(v => v && (vc[v] = (vc[v] || 0) + 1)));
@@ -528,6 +528,8 @@ function initBuyers() {
   $("b-tbtn").onclick = () => { $("b-src").value = $("b-src").value === "tender" ? "" : "tender"; bpage = 0; applyBuyers(); };
   if (BUY_UPD) $("bupd").textContent = `Buyers updated ${BUY_UPD} · refreshes about every 3 hours`;
   applyBuyers();
+  { const qs = new URLSearchParams(location.search);     // links from the Work-seekers page: ?v=<trade>&c=<city>
+    if (qs.get("v")) { $("b-vert").value = qs.get("v"); applyBuyers(); if (qs.get("c")) { $("b-city").value = qs.get("c"); applyBuyers(); } } }
   try { setTimeout(() => localStorage.setItem("lb_last_visit", String(Date.now())), 4000); } catch (e) {}
 }
 const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
