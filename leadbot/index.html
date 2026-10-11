@@ -202,6 +202,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
     <section class="kpis kpis4" id="bkpis"></section>
     <section class="panel">
       <div class="toolbar">
+        <button class="btn" id="b-tbtn" type="button" title="Show only government tenders (IT, web, marketing, trades...)">🏛️ Government tenders</button>
         <label class="offerlbl">My client sells
           <select id="b-vert"><option value="">everything</option></select></label>
         <select id="b-city"><option value="">All cities</option></select>
@@ -523,6 +524,7 @@ function initBuyers() {
   $("bprev").onclick = () => { if (bpage > 0) { bpage--; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("bnext").onclick = () => { if ((bpage + 1) * BPAGE < BVIEW.length) { bpage++; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("b-csv").onclick = exportBuyers;
+  $("b-tbtn").onclick = () => { $("b-src").value = $("b-src").value === "tender" ? "" : "tender"; bpage = 0; applyBuyers(); };
   if (BUY_UPD) $("bupd").textContent = `Buyers updated ${BUY_UPD} · refreshes about every 3 hours`;
   applyBuyers();
   try { setTimeout(() => localStorage.setItem("lb_last_visit", String(Date.now())), 4000); } catch (e) {}
@@ -541,6 +543,7 @@ function applyBuyers() {
   const v = $("b-vert").value, c = $("b-city").value, s = $("b-src").value, age = +$("b-age").value, sort = $("b-sort").value, now = Date.now();
   const tg = $("b-tg").value, tcl = +$("b-tc").value, te = $("b-te").checked;
   $("tendbox").hidden = s !== "tender";
+  $("b-tbtn").classList.toggle("on", s === "tender"); $("b-tbtn").style.outline = s === "tender" ? "2px solid #8b5cf6" : "";
   const ca = $("b-ca").checked;
   BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s) && (!ca || r.ca)
       && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)          // a tender stays open until its closing date, however long ago it was posted
