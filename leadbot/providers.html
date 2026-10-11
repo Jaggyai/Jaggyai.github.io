@@ -266,17 +266,17 @@ async function unlock(pw, remember) {
   try { d = await decrypt(pw, "providers.enc.json"); }
   catch (e) {
     $("err").textContent = (e && e.name === "OperationError") ? "Wrong password." : "Could not load. Check your connection and try again.";
-    if (e && e.name === "OperationError") { try { localStorage.removeItem("lb_pw"); } catch (e2) {} }
+    if (e && e.name === "OperationError") { try { localStorage.removeItem("lb_pw"); sessionStorage.removeItem("lb_pw"); } catch (e2) {} }
     return;
   }
-  try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
+  try { sessionStorage.setItem("lb_pw", pw); remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
   ALL = d.providers || [];
   $("upd").textContent = "Updated " + d.updated;
   $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
   init();
 }
 $("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
-try { const s = localStorage.getItem("lb_pw"); if (s) unlock(s, true); } catch (e) {}
+try { const ls = localStorage.getItem("lb_pw"), s = ls || sessionStorage.getItem("lb_pw"); if (s) unlock(s, !!ls); } catch (e) {}
 
 const within = (r, age) => (Date.now() - (Date.parse(r.d) || Date.now())) / 864e5 <= age;
 function fillOpts(sel, pairs, label) {
