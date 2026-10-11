@@ -172,6 +172,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
   td{border:0;padding:4px 10px}
   td[data-l]::before{content:attr(data-l);display:inline-block;width:70px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
 }
+#tendbox:not([hidden]){display:contents}
 </style>
 </head>
 <body>
@@ -207,6 +208,14 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
         <select id="b-src">
           <option value="">All sources</option><option value="reddit">People asking (Reddit)</option><option value="permit">Projects starting (permits)</option><option value="tender">Government tenders</option><option value="newbiz">New businesses (just licensed)</option>
         </select>
+        <span id="tendbox" hidden>
+          <select id="b-tg" title="Type of government tender">
+            <option value="">All tender types</option><option value="it">IT, web &amp; software</option><option value="mkt">Marketing &amp; communications</option>
+            <option value="trades">Construction, trades &amp; facilities</option><option value="prof">Professional services (accounting, legal, consulting, insurance)</option><option value="other">Other services</option>
+          </select>
+          <select id="b-tc" title="Closing date"><option value="">Any closing date</option><option value="7">Closes within 7 days</option><option value="14">Closes within 14 days</option><option value="30">Closes within 30 days</option></select>
+          <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="b-te"> has contact email</label>
+        </span>
         <select id="b-age">
           <option value="3">Last 3 days</option><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option>
         </select>
@@ -483,6 +492,9 @@ const BPAGE = 25;
 const SRC_BONUS = {reddit: 10, tender: 0, permit: 0, newbiz: -8};
 let LAST_VISIT = 0;
 try { LAST_VISIT = +localStorage.getItem("lb_last_visit") || 0; } catch (e) {}
+const TGROUP = {web: "it", mkt: "mkt", renovator: "trades", electrician: "trades", plumber: "trades", hvac: "trades", landscaper: "trades", cleaner: "trades", pest: "trades", junk: "trades", locksmith: "trades",
+  accountant: "prof", lawyer: "prof", insurance: "prof", realtor: "prof", mortgage: "prof", fitness: "prof", therapy: "prof"};
+const tgroup = v => TGROUP[v] || "other";
 const PRIORITY = ["mortrenew", "lifeins", "lifeevent", "newcomer", "debt", "elder", "divorce", "selftax", "bizcra", "landlord", "homeins", "insurance", "mortgage"];
 const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", hvac:"HVAC / furnace", painter:"Painter", landscaper:"Landscaping / yard",
   cleaner:"Cleaning service", mover:"Movers", renovator:"Renovation / contractor", realtor:"Realtor", mortgage:"Mortgage broker", dentist:"Dentist",
@@ -506,7 +518,7 @@ function initBuyers() {
   PRIORITY.forEach(v => { if (vc[v]) g1.appendChild(mk(v, vc[v])); });
   Object.entries(vc).filter(([v]) => !PRIORITY.includes(v)).sort((a, b) => b[1] - a[1]).forEach(([v, n]) => g2.appendChild(mk(v, n)));
   fill($("b-city"), counts(BUY.map(r => ({city: r.c})), "city"));
-  ["b-vert", "b-city", "b-src", "b-age", "b-sort"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
+  ["b-vert", "b-city", "b-src", "b-age", "b-sort", "b-tg", "b-tc", "b-te"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
   $("bprev").onclick = () => { if (bpage > 0) { bpage--; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("bnext").onclick = () => { if ((bpage + 1) * BPAGE < BVIEW.length) { bpage++; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("b-csv").onclick = exportBuyers;
@@ -517,7 +529,7 @@ function initBuyers() {
 function refreshCities() {     // city list = only cities with buyers for the CURRENT service / source / age filters, A-Z, with matching counts
   const v = $("b-vert").value, s = $("b-src").value, age = +$("b-age").value, now = Date.now(), sel = $("b-city"), keep = sel.value;
   const m = new Map();
-  BUY.forEach(r => { if (r.c && bmatch(r, v) && (!s || r.src === s) && (now - (Date.parse(r.d) || now)) / 864e5 <= age) m.set(r.c, (m.get(r.c) || 0) + 1); });
+  BUY.forEach(r => { if (r.c && bmatch(r, v) && (!s || r.src === s) && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)) m.set(r.c, (m.get(r.c) || 0) + 1); });
   const cities = [...m].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"}));
   sel.innerHTML = `<option value="">All cities (${cities.length.toLocaleString()})</option>`;
   fill(sel, cities);
@@ -526,7 +538,11 @@ function refreshCities() {     // city list = only cities with buyers for the CU
 function applyBuyers() {
   refreshCities();
   const v = $("b-vert").value, c = $("b-city").value, s = $("b-src").value, age = +$("b-age").value, sort = $("b-sort").value, now = Date.now();
-  BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s) && (now - (Date.parse(r.d) || now)) / 864e5 <= age)
+  const tg = $("b-tg").value, tcl = +$("b-tc").value, te = $("b-te").checked;
+  $("tendbox").hidden = s !== "tender";
+  BVIEW = BUY.filter(r => bmatch(r, v) && (!c || r.c === c) && (!s || r.src === s)
+      && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)          // a tender stays open until its closing date, however long ago it was posted
+      && (s !== "tender" || ((!tg || tgroup(r.v) === tg) && (!tcl || (r.close && (Date.parse(r.close) - now) / 864e5 <= tcl)) && (!te || r.ce))))
     .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) + (PRIORITY.includes(r.v) ? 6 : 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
   BVIEW.sort((a, b) => sort === "new" ? (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0)
     : sort === "value" ? (b.val || 0) - (a.val || 0) || b.adj - a.adj : b.adj - a.adj || (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0));
