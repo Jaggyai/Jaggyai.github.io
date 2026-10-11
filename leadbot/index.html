@@ -335,11 +335,11 @@ async function unlock(pw, remember) {
   try { ib = await decrypt(pw, "intent.enc.json"); }      // small file (~0.7 MB): password check + buyers shown straight away
   catch (e) {
     $("err").textContent = (e && e.name === "OperationError") ? "Wrong password." : "Could not load. Check your connection and try again.";
-    if (e && e.name === "OperationError") { try { localStorage.removeItem("lb_pw"); } catch (e2) {} }
+    if (e && e.name === "OperationError") { try { localStorage.removeItem("lb_pw"); sessionStorage.removeItem("lb_pw"); } catch (e2) {} }
     return;
   }
   BUY = ib.leads || []; BUY_UPD = ib.updated || "";
-  try { remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
+  try { sessionStorage.setItem("lb_pw", pw); remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
   $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
   initBuyers();
   $("totalpill").textContent = "Loading the prospect database (12 MB)…";
@@ -356,7 +356,7 @@ async function unlock(pw, remember) {
   }
 }
 $("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
-try { const s = localStorage.getItem("lb_pw"); if (s) unlock(s, true); } catch (e) {}
+try { const ls = localStorage.getItem("lb_pw"), s = ls || sessionStorage.getItem("lb_pw"); if (s) unlock(s, !!ls); } catch (e) {}
 
 function counts(rows, k) { const m = new Map(); rows.forEach(r => r[k] && m.set(r[k], (m.get(r[k]) || 0) + 1)); return [...m].sort((a, b) => b[1] - a[1]); }
 function fill(sel, pairs) { pairs.forEach(([v, n]) => sel.add(new Option(`${v} (${n.toLocaleString()})`, v))); }
