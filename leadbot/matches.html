@@ -408,6 +408,7 @@ try { const ls = localStorage.getItem("lb_pw"), s = ls || sessionStorage.getItem
 
 // ---- matching: a pro matches a request when they do that trade (or a child trade of it) in the same city; province-wide fallback when the city has too few
 function buildIndex() {
+  buildIdf();
   IDX_C = new Map(); IDX_P = new Map(); TRADES = new Set();
   for (const p of PRO) {
     TRADES.add(p.t);
@@ -417,10 +418,59 @@ function buildIndex() {
   }
 }
 const tradesOf = b => { const s = new Set(); [b.v, ...(b.tags || [])].forEach(t => { if (!t) return; s.add(t); (CHILD[t] || []).forEach(c => s.add(c)); }); return [...s].filter(t => TRADES.has(t)); };
-function scorePro(p, near, est) {
-  const m = (p.s || "").match(/([0-9.]+)★(?: \((\d+) reviews\))?/); const rate = m ? (parseFloat(m[1]) >= 4.5 ? 6 : parseFloat(m[1]) >= 4 ? 3 : 0) + Math.min(6, Math.log10(1 + (+(m[2] || 0))) * 2.5) : 0;
-  return (p.src === "maps" ? 0 : 30) + (near ? 30 : 0) + (p.ph ? 14 : 0) + (p.em ? 8 : 0) + (p.w ? 4 : 0) + ((Date.now() - (Date.parse(p.d) || 0)) / 864e5 < 30 ? 8 : 0) + (p.sc || 0) / 20 + rate;
+// ---- AI matching: every job is scored against every candidate pro on the details of THAT job (not just trade + city) ----
+const STOP = new Set("the and for with that this from have has are was were will would could should your you our their they them his her its not but all any can one two new get need needs needed looking look want wants please anyone someone thanks thank any some more most very much just also than then into out about over under only other such these those been being what when where which who whom how why".split(" "));
+const tokens = s => String(s || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(w => w.length > 2 && !STOP.has(w));
+let DF = new Map(), NPRO = 1;
+function buildIdf() {                       // how rare each word is among all pros: rare shared words (e.g. "flat", "solar", "heritage") say far more than "roofing"
+  DF = new Map(); NPRO = Math.max(1, PRO.length);
+  for (const p of PRO) { p._t = new Set(tokens(p.n + " " + (p.s || "").replace(/·.*$/, ""))); p._t.forEach(w => DF.set(w, (DF.get(w) || 0) + 1)); }
 }
+const idf = w => Math.log(1 + NPRO / (1 + (DF.get(w) || 0)));
+const hash = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+const RX_COMM = /commercial|industrial|warehouse|office|retail|tenant|restaurant|institutional|high density|multi|hotel|school/i;
+const RX_RES = /house|dwelling|residential|basement|single family|duplex|townhouse|home|laneway|suite|detached/i;
+const RX_BIGCO = /construction|builders?|developments?|contracting|contractors|group|holdings|projects|ltd|inc|corp|restoration|mechanical/i;
+const RX_SMALL = /handyman|repair|emergency|24 ?\/? ?7|free estimate|affordable|same day|small|service|local/i;
+const RX_EMERG = /leak|emergency|urgent|asap|burst|flood|no heat|today|tomorrow|this week/i;
+const distKm = (a, b, c, d) => { const r = x => x * Math.PI / 180, h = Math.sin(r(c - a) / 2) ** 2 + Math.cos(r(a)) * Math.cos(r(c)) * Math.sin(r(d - b) / 2) ** 2; return 12742 * Math.asin(Math.sqrt(h)); };
+function scoreMatch(b, p, near) {
+  let sc = 0; const rs = [];                // rs = reasons, strongest first
+  const jt = b._t || (b._t = new Set(tokens(b.t + " " + (b.s || "")))), text = `${b.t} ${b.s || ""}`;
+  // 1) what the job actually says vs what the pro actually does (rare shared words count most)
+  let ov = 0; const hits = [];
+  jt.forEach(w => { if (p._t && p._t.has(w)) { const v = idf(w); ov += v; if (v > 3.2) hits.push(w); } });
+  const txt = Math.min(22, ov * 2.2); sc += txt;
+  if (hits.length) rs.push(`Their listing mentions “${hits.slice(0, 2).join(", ")}” like this job`);
+  // 2) size of the project vs size of the pro
+  const m = (p.s || "").match(/([0-9.]+)★(?: \((\d+) reviews\))?/), rating = m ? parseFloat(m[1]) : 0, reviews = m && m[2] ? +m[2] : 0;
+  const val = b.val || 0, big = val >= 250000 || /storey|new building|construct|development|addition/i.test(b.t), small = (val > 0 && val < 25000) || b.src === "reddit";
+  if (big) { if (RX_BIGCO.test(p.n) || reviews >= 40) { sc += 12; rs.push(val ? `Established firm suited to a $${Math.round(val / 1000).toLocaleString()}k project` : "Established firm suited to a larger project"); } else sc -= 3; }
+  else if (small) { if (RX_SMALL.test(p.n + " " + (p.s || "")) || p.src !== "maps") { sc += 9; if (p.src !== "maps") rs.push("Takes on jobs this size"); } }
+  // 3) commercial vs residential
+  if (RX_COMM.test(text)) { if (/commercial|industrial/i.test(p.n + " " + (p.s || ""))) { sc += 9; rs.push("Does commercial work"); } else if (/residential|home|house/i.test(p.n)) sc -= 4; }
+  else if (RX_RES.test(text) && /residential|home|house/i.test(p.n)) { sc += 5; rs.push("Residential specialist"); }
+  // 4) urgent jobs want someone available now
+  if (RX_EMERG.test(text) && (p.src !== "maps" || /24|emergency/i.test(p.n))) { sc += 8; rs.push("Available for urgent work"); }
+  // 5) who needs the work most: businesses advertising now or just licensed are hungry; established firms are busy
+  if (p.src === "newbiz") { sc += 8; rs.push("Just licensed and building a customer base"); }
+  else if (p.src !== "maps") { sc += 9; rs.push("Advertising for work right now"); }
+  // 6) proof
+  if (rating) { sc += (rating >= 4.8 ? 8 : rating >= 4.5 ? 6 : rating >= 4 ? 3 : 0) + Math.min(6, Math.log10(1 + reviews) * 2.4); if (rating >= 4.5) rs.push(reviews ? `★ ${rating} across ${reviews} reviews` : `★ ${rating} rated`); }
+  // 7) reachable, close, fresh
+  const km = (b.la != null && b.ln != null && p.la != null && p.ln != null) ? distKm(b.la, b.ln, p.la, p.ln) : null;
+  if (km != null) {                                   // real distance: the closer the pro is to THIS job, the higher the match
+    sc += near ? 14 : 4; sc += km <= 3 ? 16 : km <= 10 ? 12 : km <= 25 ? 8 : km <= 60 ? 3 : 0;
+    rs.push(km < 1 ? "Under 1 km from the job" : `${Math.round(km)} km from the job`);
+  } else if (near) { sc += 24; rs.push("Same city"); } else rs.push("Same province, not same city");
+  if (p.ph) sc += 8; if (p.em) sc += 5; if (p.w) sc += 3;
+  if (p.ph && p.em) rs.push("Phone and email on file"); else if (p.ph) rs.push("Phone on file");
+  if ((Date.now() - (Date.parse(p.d) || 0)) / 864e5 < 30) sc += 5;
+  // 8) fair rotation: pros with similar scores take turns across jobs instead of the same firms winning every lead
+  sc += (hash(b.id + "|" + p.id) % 1000) / 1000 * 9;
+  return {sc, rs: rs.slice(0, 3)};
+}
+
 function candTrades(b, only) {
   if (only) { const s = new Set([only, ...(CHILD[only] || [])]); const mine = new Set(tradesOf(b)); return [...s].filter(t => TRADES.has(t) && (mine.has(t) || mine.has(only))); }
   return tradesOf(b);
@@ -433,7 +483,7 @@ function hasPro(b, only, est) {         // cheap existence check (used for the c
 function prosFor(b, est, only) {
   const ts = candTrades(b, only); if (!ts.length) return [];
   const seen = new Set(), out = [];
-  const add = (arr, near) => arr.forEach(p => { if (seen.has(p.id) || (!est && p.src === "maps")) return; seen.add(p.id); out.push({p, near, sc: scorePro(p, near, est)}); });
+  const add = (arr, near) => arr.forEach(p => { if (seen.has(p.id) || (!est && p.src === "maps")) return; seen.add(p.id); const m = scoreMatch(b, p, near); out.push({p, near, sc: m.sc, rs: m.rs}); });
   if (b.c) ts.forEach(t => add(IDX_C.get(t + "|" + b.c.toLowerCase()) || [], true));
   if (out.length < 3 && b.p) ts.forEach(t => add(IDX_P.get(t + "|" + b.p) || [], false));
   return out.sort((x, y) => y.sc - x.sc);
@@ -496,17 +546,10 @@ const ICONS = {roofer:"🏠", electrician:"⚡", framer:"🪚", flooring:"🪵",
 const AVC = ["#0b5a44", "#0e7a5c", "#12a05f", "#2e7d6b", "#1d6f8c", "#6a4fb3", "#b45309", "#c2185b"];
 const hueOf = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return AVC[h % AVC.length]; };
 const initials = n => String(n || "?").replace(/[^A-Za-z0-9 ]/g, " ").split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join("") || "?";
-const pctOf = sc => Math.max(52, Math.min(98, Math.round(45 + (sc - 40) * 1.1)));
+const pctOf = sc => Math.max(50, Math.min(98, Math.round(36 + sc * 0.62)));
 const digits = s => String(s || "").replace(/\D/g, "");
 const webUrl = w => /^https?:/.test(w) ? w : "https://" + w;
-function why(x) {
-  const p = x.p, r = [];
-  r.push(x.near ? "Same city" : "Same province, not same city");
-  r.push(p.src === "maps" ? "Established business" : p.src === "newbiz" ? "Just licensed, building a customer base" : "Advertising for work right now");
-  if (p.ph) r.push("Phone on file");
-  if (p.em) r.push("Email on file");
-  return r.join(" · ");
-}
+function why(x) { return (x.rs || []).join(" · "); }
 function proCard(x, k, i, liked) {
   const p = x.p, m = (p.s || "").match(/([0-9.]+)★(?: \((\d+) reviews\))?/), on = liked.has(p.id);
   const tags = [`<span class="tg">${esc(VLABEL[p.t] || p.t)}</span>`, p.src === "maps" ? `<span class="tg g">established</span>` : `<span class="tg">${p.src === "newbiz" ? "just licensed" : "advertising now"}</span>`,
