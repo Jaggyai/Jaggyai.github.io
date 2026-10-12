@@ -245,7 +245,7 @@ details.tpl .row input{font:inherit;font-size:12.5px;padding:6px 9px;border-radi
       <select id="m-sort"><option value="best">Most pros ready first</option><option value="new">Newest first</option></select>
       <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-ready" checked> only jobs with a pro available (same city first, else same province)</label>
       <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-est" checked> include established businesses as pros</label>
-      <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-more"> also big projects (permits) &amp; tenders</label>
+      <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-more" checked> include big projects (building permits) &amp; government tenders</label>
       <button class="btn" id="m-csv">Export tracked jobs</button>
     </div>
     <div id="mlist"></div>
@@ -385,9 +385,9 @@ function render() {
   const slice = JOBS.slice(page * PER, (page + 1) * PER);
   $("mlist").innerHTML = slice.length ? slice.map((j, i) => {
     const b = j.b, s = ST[b.id] || {}, stv = s.s || "new";
-    const link = b.u || "";
+    const link = b.src === "permit" ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${b.addr || ""}, ${b.c || ""}, ${b.p || ""}`) : (b.u || "");
     const bc = [b.cph ? `<a href="tel:${esc(String(b.cph).replace(/\D/g, ""))}">📞 ${esc(b.cph)}</a>` : "", b.ce ? `<a href="mailto:${esc(b.ce)}">✉ ${esc(b.ce)}</a>` : "",
-      link ? `<a href="${esc(link)}" target="_blank" rel="noopener">Open post ↗</a>` : ""].join("");
+      link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${b.src === "permit" ? "View on map ↗" : b.src === "tender" ? "Open tender ↗" : "Open post ↗"}</a>` : ""].join("");
     const pros = j.pros.slice(0, 4).map((x, k) => {
       const p = x.p;
       const tag = p.src === "maps" ? `<span class="tag est">established</span>` : `<span class="tag ad">${p.src === "newbiz" ? "just licensed" : "advertising"}</span>`;
@@ -399,10 +399,10 @@ function render() {
     }).join("");
     const more = j.pros.length > 4 ? `<div class="nopro" style="cursor:pointer;font-weight:700" data-more="${i}">+ ${j.pros.length - 4} more pros (see on Work-seekers)</div>` : "";
     return `<div class="mgrid st-${stv}">
-      <div class="mjob"><div class="sec">Needs the work</div><div class="mt">${esc(b.t)}</div>
+      <div class="mjob"><div class="sec">${b.src === "reddit" ? "Needs the work" : b.src === "permit" ? "Project starting (sell it to a pro)" : "Government tender"}</div><div class="mt">${esc(b.t)}</div>
         <div class="mm"><span class="bchip" style="background:#8b5cf622;color:#a78bfa">${esc(VLABEL[b.v] || b.v)}</span><span>📍 ${esc(b.c || PROVN[b.p] || "Canada")}${b.c && b.p ? ", " + esc(b.p) : ""}</span><span>🕒 ${esc(ago(b.d))}</span>
-          <span>${b.src === "reddit" ? "💬 " + esc(b.sub || "asked online") : b.src === "permit" ? "🏗️ project starting" : "🏛️ tender"}</span>${b.val ? `<span style="color:#34d399">$${Math.round(b.val).toLocaleString()}</span>` : ""}</div>
-        ${b.s && b.s !== b.t ? `<div class="ms">${esc(b.s)}</div>` : ""}
+          <span>${b.src === "reddit" ? "💬 " + esc(b.sub || "asked online") : b.src === "permit" ? "🏗️ project starting" + (b.permit ? " · permit " + esc(b.permit) : "") + (b.gc ? " · contractor already named" : " · no contractor named") : "🏛️ " + esc(b.ent || "tender") + (b.close ? " · closes " + esc(b.close) : "")}</span>${b.val ? `<span style="color:#34d399">$${Math.round(b.val).toLocaleString()}</span>` : ""}</div>
+        ${b.addr ? `<div class="ms">🏠 ${esc(b.addr)}${b.geo ? " · " + esc(b.geo) : ""}</div>` : ""}${b.s && b.s !== b.t ? `<div class="ms">${esc(b.s)}</div>` : ""}
         <div class="pw" style="margin:6px 0">${bc}<button data-copy="buyer" data-j="${i}">Copy msg to buyer</button></div>
         <div class="mtrack"><select data-st="${i}"><option value="new">To do</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
           <input class="fee" data-fee="${i}" type="number" min="0" placeholder="$ commission" value="${esc(s.f ?? "")}"><input class="note" data-note="${i}" placeholder="note" value="${esc(s.n ?? "")}"></div></div>
