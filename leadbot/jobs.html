@@ -174,6 +174,62 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
   td[data-l]::before{content:attr(data-l);display:inline-block;width:70px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
 }
 #tendbox:not([hidden]){display:contents}
+/*THEME-START*/
+/* ===== LeadBot "Green" theme (2026-10-12): modelled on the clean marketplace look of jacksvictoria.ca ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+:root,:root:not([data-theme=dark]){
+  --bg:#f3f7f5;--bg2:#ffffff;--card:#ffffff;--card-solid:#ffffff;--line:#e1eae5;
+  --text:#0b3a2d;--muted:#5d716a;--violet:#0aa458;--pink:#0aa458;--orange:#f59e0b;--cyan:#0891b2;--green:#0aa458;--amber:#b45309;--red:#dc2626;
+  --grad:linear-gradient(135deg,#12c46a 0%,#0aa458 100%);
+  --glow:0 8px 20px -10px rgba(5,110,65,.55);
+  --brand:#0b5a44;--brand2:#0e7a5c;--acc:#12c46a;
+}
+body{font-family:"Outfit","Plus Jakarta Sans",system-ui,sans-serif;font-size:15px;background:var(--bg)}
+body::before{display:none}
+.grad-text{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--acc)}
+#lock{background:linear-gradient(180deg,#0b5a44 0%,#0e7a5c 100%)}
+#lock::before{display:none}
+#lock form{background:#fff;border:0;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)}
+#lock h2 .grad-text{color:#0aa458}
+.logo{background:var(--grad);box-shadow:none}
+input:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(18,196,106,.22)}
+input,select{border-radius:14px;padding:11px 14px;border:1px solid #d3e0d9}
+.btn{background:var(--grad);border-radius:14px;box-shadow:none;font-weight:700}
+.btn:hover{filter:none;transform:translateY(-1px);box-shadow:var(--glow)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+/* header: deep green bar, white text */
+:root:not([data-theme=dark]) header,header{background:var(--brand)!important;border-bottom:0;backdrop-filter:none;padding:14px 24px}
+header h1{color:#fff;font-weight:800}
+header h1 .grad-text{color:var(--acc)}
+header .logo{background:var(--acc)}
+.tabs{gap:4px}
+.tab{color:#d4efe2;background:transparent;border:0;font-weight:700;border-radius:12px;padding:9px 16px}
+.tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab.on{background:rgba(255,255,255,.16);color:#fff;box-shadow:none}
+header .pill{background:rgba(255,255,255,.14)!important;border:0;color:#e4f7ee!important}
+header .live{background:var(--acc)}
+main{padding:28px 24px 60px}
+/* cards, panels, kpis */
+.panel{background:#fff;border:1px solid var(--line);border-radius:22px;backdrop-filter:none;box-shadow:0 8px 26px -18px rgba(11,58,45,.35)}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 26px -20px rgba(11,58,45,.4)}
+.kpi b{color:var(--brand);font-weight:800}
+.kpi:hover{transform:none;border-color:var(--acc)}
+.lead-def{background:#e6f6ee;border:1px solid #cdeedd;border-radius:18px;padding:14px 18px;color:#0b3a2d}
+.toolbar{background:#fff}
+.bcard:hover{background:#f6fbf8}
+.bchip{background:#e6f6ee!important;color:#0b6b46!important}
+.bmeta,.bsnip,.n{color:var(--muted)}
+.btitle{color:var(--brand);font-weight:700}
+.bscore{box-shadow:none}
+.pill{background:#fff;color:var(--muted)}
+.chip{background:#fff;border:1.5px solid #cfe0d7;color:var(--brand)}
+.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.chip:hover{border-color:var(--acc)}
+a{color:inherit}
+
+.kpi::after{background:var(--acc)!important;opacity:.10!important}
+
+/*THEME-END*/
 
 .jhead{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;padding:18px 20px;margin-bottom:14px;border-radius:18px;background:var(--card);border:1px solid var(--line)}
 .jhead h2{margin:0 0 4px;font-size:20px}
@@ -266,7 +322,7 @@ async function unlock(pw, remember) {
   try { sessionStorage.setItem("lb_pw", pw); remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
   BUY = d.leads || [];
   $("upd").textContent = "Updated " + d.updated;
-  $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
+  const lk = $("lock"); if (lk) { lk.style.transition = "opacity .4s"; lk.style.opacity = 0; setTimeout(() => lk.remove(), 400); }
   init();
 }
 $("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
