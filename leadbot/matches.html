@@ -201,6 +201,7 @@ details.tpl textarea{width:100%;min-height:62px;margin-top:8px;font:inherit;font
 details.tpl .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 details.tpl .row input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
 @media (max-width:900px){.mgrid{grid-template-columns:1fr}.mpros{border-left:0;border-top:1px solid var(--line)}}
+.chip{font:inherit;font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}.chip:hover{border-color:var(--violet)}.chip.on{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;border-color:transparent}.chip small{opacity:.75;margin-left:4px;font-weight:600}
 </style>
 </head>
 <body>
@@ -235,6 +236,7 @@ details.tpl .row input{font:inherit;font-size:12.5px;padding:6px 9px;border-radi
     <div style="color:var(--muted);font-size:11.5px;margin-top:6px">Fill-ins: {name} {trade} {city} {title} {pro} {pro_phone} {fee}</div>
   </details>
 
+  <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px"></div>
   <section class="panel">
     <div class="toolbar">
       <select id="m-trade"><option value="">All trades</option></select>
@@ -267,10 +269,10 @@ const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", h
   events:"Events / photo / catering", locksmith:"Locksmith", junk:"Junk removal", appliance:"Appliance repair", vet_pet:"Vet / pet services",
   fitness:"Fitness / coach", childcare:"Childcare / tutoring", mkt:"Social media & digital marketing", website:"Website services", lifeins:"Life insurance", mortrenew:"Mortgage renewal / shopping around", newcomer:"Newcomer to Canada", debt:"Debt / CRA / back-tax trouble", elder:"Aging parent / estate planning", divorce:"Separation / divorce", selftax:"Self-employed / gig-worker taxes", bizcra:"Small-business CRA trouble (GST/HST, payroll)", landlord:"Landlord / tenant dispute", homeins:"Home / auto insurance shopping", lifeevent:"Life insurance - life event (not asked yet)", affiliate:"Affiliate marketing", ai:"AI & automation", menopause:"Menopause products & advice", b2b:"Other business services", beauty:"Hair / beauty / tattoo", therapy:"Therapist / counsellor", repair:"Repair / refinishing", tech:"IT / smart home"};
 Object.assign(VLABEL, {framer: "Framer / framing", drywaller: "Drywall / taping", mason: "Masonry / concrete", flooring: "Flooring / tile", siding: "Siding / windows / insulation",
-  excavation: "Excavation / demolition / paving", welder: "Welder / metal fabrication"});
+  excavation: "Excavation / demolition / paving", welder: "Welder / metal fabrication", carpenter: "Carpenter / finish carpentry"});
 const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
   ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon"};
-const CHILD = {renovator: ["framer", "drywaller", "mason", "flooring", "siding", "excavation", "welder"]};
+const CHILD = {renovator: ["framer", "drywaller", "mason", "flooring", "siding", "excavation", "welder", "carpenter"]};
 const PER = 20;
 let BUY = [], PRO = [], JOBS = [], VIEW = [], page = 0;
 let IDX_C = new Map(), IDX_P = new Map(), TRADES = new Set();
@@ -320,8 +322,17 @@ const tradesOf = b => { const s = new Set(); [b.v, ...(b.tags || [])].forEach(t 
 function scorePro(p, near, est) {
   return (p.src === "maps" ? 0 : 30) + (near ? 30 : 0) + (p.ph ? 14 : 0) + (p.em ? 8 : 0) + (p.w ? 4 : 0) + ((Date.now() - (Date.parse(p.d) || 0)) / 864e5 < 30 ? 8 : 0) + (p.sc || 0) / 20;
 }
-function prosFor(b, est) {
-  const ts = tradesOf(b); if (!ts.length) return [];
+function candTrades(b, only) {
+  if (only) { const s = new Set([only, ...(CHILD[only] || [])]); const mine = new Set(tradesOf(b)); return [...s].filter(t => TRADES.has(t) && (mine.has(t) || mine.has(only))); }
+  return tradesOf(b);
+}
+function hasPro(b, only, est) {         // cheap existence check (used for the counts)
+  const ts = candTrades(b, only); if (!ts.length) return false;
+  const ok = arr => arr && arr.some(p => est || p.src !== "maps");
+  return ts.some(t => (b.c && ok(IDX_C.get(t + "|" + b.c.toLowerCase()))) || (b.p && ok(IDX_P.get(t + "|" + b.p))));
+}
+function prosFor(b, est, only) {
+  const ts = candTrades(b, only); if (!ts.length) return [];
   const seen = new Set(), out = [];
   const add = (arr, near) => arr.forEach(p => { if (seen.has(p.id) || (!est && p.src === "maps")) return; seen.add(p.id); out.push({p, near, sc: scorePro(p, near, est)}); });
   if (b.c) ts.forEach(t => add(IDX_C.get(t + "|" + b.c.toLowerCase()) || [], true));
@@ -339,26 +350,27 @@ function baseJobs() {
   const age = +$("m-age").value, more = $("m-more").checked;
   return BUY.filter(b => (b.src === "reddit" || (more && (b.src === "permit" || b.src === "tender"))) && (Date.now() - (Date.parse(b.d) || Date.now())) / 864e5 <= age && tradesOf(b).length);
 }
-let TRADES_ALL = new Set(), ALLJ = [], HIDDEN = 0, PRESET = "";
-function refreshLists(pool) {          // dropdown counts = what will actually be shown with the other filters applied
-  const cnt = (rows, f) => { const m = new Map(); rows.forEach(r => { const k = f(r); if (k) m.set(k, (m.get(k) || 0) + 1); }); return m; };
-  const tm = new Map(); pool.forEach(j => new Set([j.b.v, ...(j.b.tags || [])]).forEach(t => t && TRADES_ALL.has(t) && tm.set(t, (tm.get(t) || 0) + 1)));
-  fillOpts($("m-trade"), [...tm].sort((a, b) => (VLABEL[a[0]] || a[0]).localeCompare(VLABEL[b[0]] || b[0])).map(([v, n]) => [v, n, VLABEL[v] || v]), "All trades");
-  const tr = $("m-trade").value, byT = pool.filter(j => !tr || j.b.v === tr || (j.b.tags || []).includes(tr));
-  fillOpts($("m-prov"), [...cnt(byT, j => j.b.p)].sort((a, b) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[b[0]] || b[0])).map(([v, n]) => [v, n, PROVN[v] || v]), "All provinces");
-  const pv = $("m-prov").value, byP = byT.filter(j => !pv || j.b.p === pv);
-  fillOpts($("m-city"), [...cnt(byP, j => j.b.c)].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"})).map(([v, n]) => [v, n]), "All cities");
-}
+let TRADES_ALL = new Set(), HIDDEN = 0, PRESET = "";
+const CHIPS = [["roofer", "Roofers"], ["electrician", "Electricians"], ["framer", "Framers"], ["flooring", "Floorers"], ["carpenter", "Carpenters"], ["painter", "Painters"], ["drywaller", "Drywallers"], ["mason", "Concrete / masonry"], ["plumber", "Plumbers"], ["hvac", "HVAC"], ["excavation", "Excavation"]];
 function apply(keepPage) {
   const est = $("m-est").checked, ready = $("m-ready").checked, stf = $("m-status").value, sort = $("m-sort").value;
-  ALLJ = baseJobs().map(b => { const pros = prosFor(b, est); return {b, pros, near: pros.filter(x => x.near).length}; });
-  const pool = ALLJ.filter(j => (!ready || j.pros.length) && (!stf || ((ST[j.b.id] || {}).s || "new") === stf));
-  refreshLists(pool);
-  if (PRESET) { if ([...$("m-trade").options].some(o => o.value === PRESET)) { $("m-trade").value = PRESET; refreshLists(pool); } PRESET = ""; }     // ?t=<trade> from a link
-  const tr = $("m-trade").value, pv = $("m-prov").value, ct = $("m-city").value;
-  const m = j => (!tr || j.b.v === tr || (j.b.tags || []).includes(tr)) && (!pv || j.b.p === pv) && (!ct || j.b.c === ct);
-  JOBS = pool.filter(m);
-  HIDDEN = ready ? ALLJ.filter(m).length - JOBS.length : 0;       // requests that match but have no pro to offer
+  const jobs = baseJobs();
+  const stOk = b => !stf || ((ST[b.id] || {}).s || "new") === stf;
+  // trade counts (dropdown + buttons): jobs that need that trade AND (when "only jobs with a pro" is on) really have a pro of that trade
+  const tm = new Map();
+  jobs.forEach(b => { if (!stOk(b)) return; tradesOf(b).forEach(t => { if (TRADES_ALL.has(t) && (!ready || hasPro(b, t, est))) tm.set(t, (tm.get(t) || 0) + 1); }); });
+  fillOpts($("m-trade"), [...tm].sort((a, c) => (VLABEL[a[0]] || a[0]).localeCompare(VLABEL[c[0]] || c[0])).map(([v, n]) => [v, n, VLABEL[v] || v]), "All trades");
+  if (PRESET) { if ([...$("m-trade").options].some(o => o.value === PRESET)) $("m-trade").value = PRESET; PRESET = ""; }
+  const tr = $("m-trade").value;
+  const tradeJobs = jobs.filter(b => stOk(b) && (!tr || tradesOf(b).includes(tr) || b.v === tr) && (!ready || hasPro(b, tr, est)));
+  const cnt = (rows, fn) => { const m = new Map(); rows.forEach(r => { const k = fn(r); if (k) m.set(k, (m.get(k) || 0) + 1); }); return m; };
+  fillOpts($("m-prov"), [...cnt(tradeJobs, b => b.p)].sort((a, c) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[c[0]] || c[0])).map(([v, n]) => [v, n, PROVN[v] || v]), "All provinces");
+  const pv = $("m-prov").value, byP = tradeJobs.filter(b => !pv || b.p === pv);
+  fillOpts($("m-city"), [...cnt(byP, b => b.c)].sort((a, c) => a[0].localeCompare(c[0], "en", {sensitivity: "base"})).map(([v, n]) => [v, n]), "All cities");
+  const ct = $("m-city").value;
+  $("chips").innerHTML = `<button class="chip ${tr ? "" : "on"}" data-chip="">All trades</button>` + CHIPS.filter(([k]) => tm.has(k)).map(([k, l]) => `<button class="chip ${tr === k ? "on" : ""}" data-chip="${k}">${l}<small>${tm.get(k).toLocaleString()}</small></button>`).join("");
+  JOBS = byP.filter(b => !ct || b.c === ct).map(b => { const pros = prosFor(b, est, tr); return {b, pros, near: pros.filter(x => x.near).length}; });
+  HIDDEN = ready ? jobs.filter(b => stOk(b) && (!tr || tradesOf(b).includes(tr) || b.v === tr) && (!pv || b.p === pv) && (!ct || b.c === ct)).length - JOBS.length : 0;
   JOBS.sort((x, y) => sort === "new" ? (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0) : (Math.min(y.near, 5) - Math.min(x.near, 5)) || (Math.min(y.pros.length, 5) - Math.min(x.pros.length, 5)) || (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0));
   if (!keepPage) page = 0;
   kpis(); render();
@@ -432,6 +444,7 @@ function init() {
   $("mprev").onclick = () => { if (page > 0) { page--; render(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("mnext").onclick = () => { if ((page + 1) * PER < JOBS.length) { page++; render(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("m-csv").onclick = exportTracked;
+  $("chips").addEventListener("click", e => { const b = e.target.closest("[data-chip]"); if (!b) return; $("m-trade").value = b.dataset.chip; apply(); });
   $("mlist").addEventListener("change", e => {
     const t = e.target;
     if (t.dataset.st !== undefined) { setState(+t.dataset.st, {s: t.value}); apply(true); }
