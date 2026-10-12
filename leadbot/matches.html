@@ -243,7 +243,7 @@ details.tpl .row input{font:inherit;font-size:12.5px;padding:6px 9px;border-radi
       <select id="m-age"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select>
       <select id="m-status"><option value="">Any status</option><option value="new">To do (new)</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
       <select id="m-sort"><option value="best">Most pros ready first</option><option value="new">Newest first</option></select>
-      <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-ready" checked> only jobs with a pro in their city</label>
+      <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-ready" checked> only jobs with a pro available (same city first, else same province)</label>
       <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-est" checked> include established businesses as pros</label>
       <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-more"> also big projects (permits) &amp; tenders</label>
       <button class="btn" id="m-csv">Export tracked jobs</button>
@@ -339,22 +339,27 @@ function baseJobs() {
   const age = +$("m-age").value, more = $("m-more").checked;
   return BUY.filter(b => (b.src === "reddit" || (more && (b.src === "permit" || b.src === "tender"))) && (Date.now() - (Date.parse(b.d) || Date.now())) / 864e5 <= age && tradesOf(b).length);
 }
-function refreshLists() {
-  const jobs = baseJobs(), cnt = (rows, f) => { const m = new Map(); rows.forEach(r => { const k = f(r); if (k) m.set(k, (m.get(k) || 0) + 1); }); return m; };
-  const tm = new Map(); jobs.forEach(b => new Set([b.v, ...(b.tags || [])]).forEach(t => t && TRADES_ALL.has(t) && tm.set(t, (tm.get(t) || 0) + 1)));
+let TRADES_ALL = new Set(), ALLJ = [], HIDDEN = 0, PRESET = "";
+function refreshLists(pool) {          // dropdown counts = what will actually be shown with the other filters applied
+  const cnt = (rows, f) => { const m = new Map(); rows.forEach(r => { const k = f(r); if (k) m.set(k, (m.get(k) || 0) + 1); }); return m; };
+  const tm = new Map(); pool.forEach(j => new Set([j.b.v, ...(j.b.tags || [])]).forEach(t => t && TRADES_ALL.has(t) && tm.set(t, (tm.get(t) || 0) + 1)));
   fillOpts($("m-trade"), [...tm].sort((a, b) => (VLABEL[a[0]] || a[0]).localeCompare(VLABEL[b[0]] || b[0])).map(([v, n]) => [v, n, VLABEL[v] || v]), "All trades");
-  const tr = $("m-trade").value, byT = jobs.filter(b => !tr || b.v === tr || (b.tags || []).includes(tr));
-  fillOpts($("m-prov"), [...cnt(byT, b => b.p)].sort((a, b) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[b[0]] || b[0])).map(([v, n]) => [v, n, PROVN[v] || v]), "All provinces");
-  const pv = $("m-prov").value, byP = byT.filter(b => !pv || b.p === pv);
-  fillOpts($("m-city"), [...cnt(byP, b => b.c)].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"})).map(([v, n]) => [v, n]), "All cities");
+  const tr = $("m-trade").value, byT = pool.filter(j => !tr || j.b.v === tr || (j.b.tags || []).includes(tr));
+  fillOpts($("m-prov"), [...cnt(byT, j => j.b.p)].sort((a, b) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[b[0]] || b[0])).map(([v, n]) => [v, n, PROVN[v] || v]), "All provinces");
+  const pv = $("m-prov").value, byP = byT.filter(j => !pv || j.b.p === pv);
+  fillOpts($("m-city"), [...cnt(byP, j => j.b.c)].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"})).map(([v, n]) => [v, n]), "All cities");
 }
-let TRADES_ALL = new Set();
 function apply(keepPage) {
-  refreshLists();
-  const tr = $("m-trade").value, pv = $("m-prov").value, ct = $("m-city").value, stf = $("m-status").value, est = $("m-est").checked, ready = $("m-ready").checked, sort = $("m-sort").value;
-  JOBS = baseJobs().filter(b => (!tr || b.v === tr || (b.tags || []).includes(tr)) && (!pv || b.p === pv) && (!ct || b.c === ct));
-  JOBS = JOBS.map(b => { const pros = prosFor(b, est); return {b, pros, near: pros.filter(x => x.near).length}; }).filter(j => (!ready || j.near) && (!stf || ((ST[j.b.id] || {}).s || "new") === stf));
-  JOBS.sort((x, y) => sort === "new" ? (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0) : (Math.min(y.near, 5) - Math.min(x.near, 5)) || (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0));
+  const est = $("m-est").checked, ready = $("m-ready").checked, stf = $("m-status").value, sort = $("m-sort").value;
+  ALLJ = baseJobs().map(b => { const pros = prosFor(b, est); return {b, pros, near: pros.filter(x => x.near).length}; });
+  const pool = ALLJ.filter(j => (!ready || j.pros.length) && (!stf || ((ST[j.b.id] || {}).s || "new") === stf));
+  refreshLists(pool);
+  if (PRESET) { if ([...$("m-trade").options].some(o => o.value === PRESET)) { $("m-trade").value = PRESET; refreshLists(pool); } PRESET = ""; }     // ?t=<trade> from a link
+  const tr = $("m-trade").value, pv = $("m-prov").value, ct = $("m-city").value;
+  const m = j => (!tr || j.b.v === tr || (j.b.tags || []).includes(tr)) && (!pv || j.b.p === pv) && (!ct || j.b.c === ct);
+  JOBS = pool.filter(m);
+  HIDDEN = ready ? ALLJ.filter(m).length - JOBS.length : 0;       // requests that match but have no pro to offer
+  JOBS.sort((x, y) => sort === "new" ? (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0) : (Math.min(y.near, 5) - Math.min(x.near, 5)) || (Math.min(y.pros.length, 5) - Math.min(x.pros.length, 5)) || (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0));
   if (!keepPage) page = 0;
   kpis(); render();
 }
@@ -402,7 +407,7 @@ function render() {
         <div class="mtrack"><select data-st="${i}"><option value="new">To do</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
           <input class="fee" data-fee="${i}" type="number" min="0" placeholder="$ commission" value="${esc(s.f ?? "")}"><input class="note" data-note="${i}" placeholder="note" value="${esc(s.n ?? "")}"></div></div>
       <div class="mpros"><div class="sec">${j.near ? "Pros in " + esc(b.c) + " (" + j.near + ")" : j.pros.length ? "None in " + esc(b.c || "their city") + " · " + j.pros.length + " elsewhere in " + esc(PROVN[b.p] || b.p) : "Pros"}</div>${pros || '<div class="nopro">No pro for this trade and area yet.</div>'}${more}</div></div>`;
-  }).join("") : '<div style="padding:40px;text-align:center;color:var(--muted)">No jobs match these filters. Try “Last 90 days”, or untick “only jobs with a pro in their city”.</div>';
+  }).join("") : `<div style="padding:40px;text-align:center;color:var(--muted)">No jobs match these filters.${HIDDEN ? ` <b>${HIDDEN} request${HIDDEN > 1 ? "s" : ""} match, but there is no pro to offer for ${HIDDEN > 1 ? "them" : "it"} yet.</b> <button class="btn ghost" id="showall">Show ${HIDDEN > 1 ? "them" : "it"} anyway</button>` : " Try “Last 90 days”."}</div>`;
   slice.forEach((j, i) => { const sel = document.querySelector(`[data-st="${i}"]`); if (sel) sel.value = (ST[j.b.id] || {}).s || "new"; });
   const pages = Math.max(1, Math.ceil(JOBS.length / PER));
   $("mcount").textContent = `${JOBS.length.toLocaleString()} jobs`; $("mpage").textContent = `${page + 1}/${pages}`;
@@ -434,12 +439,13 @@ function init() {
     else if (t.dataset.note !== undefined) setState(+t.dataset.note, {n: t.value});
   });
   $("mlist").addEventListener("click", e => {
+    if (e.target.id === "showall") { $("m-ready").checked = false; apply(); return; }
     const t = e.target.closest("[data-copy],[data-more]"); if (!t) return;
     if (t.dataset.more !== undefined) { const j = JOBS[page * PER + +t.dataset.more]; location.href = "providers.html?t=" + encodeURIComponent((j.pros[0] || {p: {t: ""}}).p.t); return; }
     const j = JOBS[page * PER + +t.dataset.j]; const k = t.dataset.p !== undefined ? j.pros[+t.dataset.p].p : (j.pros[0] || {}).p;
     copy(msg(t.dataset.copy, j, k)); if (!(ST[j.b.id] || {}).s) { setState(+t.dataset.j, {s: "contacted"}); apply(true); }
   });
-  const qs = new URLSearchParams(location.search); if (qs.get("t")) { refreshLists(); $("m-trade").value = qs.get("t"); }
+  const qs = new URLSearchParams(location.search); if (qs.get("t")) PRESET = qs.get("t");
   apply();
 }
 </script>
