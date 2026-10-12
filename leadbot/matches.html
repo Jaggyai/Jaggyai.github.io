@@ -232,8 +232,9 @@ details.tpl .row input{font:inherit;font-size:12.5px;padding:6px 9px;border-radi
   <details class="tpl" id="tplbox"><summary>✍️ Your messages &amp; commission (edit once, used by every copy button)</summary>
     <div class="row"><label>Your name <input id="t-name" size="12"></label><label>Commission % <input id="t-fee" size="4" type="number" min="0" max="100"></label></div>
     <div class="sec" style="margin-top:10px">Message to the person who needs the work</div><textarea id="t-buyer"></textarea>
+    <div class="sec" style="margin-top:10px">Message to a contractor on a permit</div><textarea id="t-permit"></textarea>
     <div class="sec" style="margin-top:10px">Message to the pro</div><textarea id="t-pro"></textarea>
-    <div style="color:var(--muted);font-size:11.5px;margin-top:6px">Fill-ins: {name} {trade} {city} {title} {pro} {pro_phone} {fee}</div>
+    <div style="color:var(--muted);font-size:11.5px;margin-top:6px">Fill-ins: {name} {trade} {city} {title} {pro} {pro_phone} {fee} {permit} {addr}</div>
   </details>
 
   <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px"></div>
@@ -281,6 +282,7 @@ const SV = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch
 let ST = LS("lb_match", {});                       // buyerId -> {s: status, f: fee, n: note, t: time}
 let TPL = Object.assign({name: "Jag", fee: 10,
   buyer: "Hi! I saw your post about {trade} in {city}. I can connect you with a local pro who's available now: {pro} ({pro_phone}). Want me to have them call you? - {name}",
+  permit: "Hi, I saw your permit {permit} for {addr} in {city}. I have vetted {trade} pros available right now and can introduce you, no obligation. - {name}",
   pro: "Hi {pro}, I have a customer in {city} looking for {trade}: \"{title}\". Interested? I take {fee}% if the job goes ahead. - {name}"}, LS("lb_tpl", {}));
 
 async function decrypt(pw, file) {
@@ -386,8 +388,8 @@ function kpis() {
 }
 const fill = (tpl, o) => tpl.replace(/\{(\w+)\}/g, (_, k) => o[k] ?? "");
 function msg(kind, j, p) {
-  const b = j.b, o = {name: TPL.name, fee: TPL.fee, trade: (VLABEL[b.v] || b.v || "").toLowerCase(), city: b.c || PROVN[b.p] || "your area", title: b.t, pro: p ? p.n : "[pro]", pro_phone: p ? (p.ph || p.em || p.w || "") : ""};
-  return fill(kind === "buyer" ? TPL.buyer : TPL.pro, o);
+  const b = j.b, o = {name: TPL.name, fee: TPL.fee, trade: (VLABEL[b.v] || b.v || "").toLowerCase(), city: b.c || PROVN[b.p] || "your area", title: b.t, pro: p ? p.n : "[pro]", pro_phone: p ? (p.ph || p.em || p.w || "") : "", permit: b.permit || "", addr: b.addr || ""};
+  return fill(kind === "buyer" ? (b.src === "permit" ? TPL.permit : TPL.buyer) : TPL.pro, o);
 }
 function copy(text) {
   const done = () => { $("toast").textContent = "Copied"; $("toast").classList.add("show"); setTimeout(() => $("toast").classList.remove("show"), 1500); };
@@ -414,8 +416,12 @@ function render() {
       <div class="mjob"><div class="sec">${b.src === "reddit" ? "Needs the work" : b.src === "permit" ? "Project starting (sell it to a pro)" : "Government tender"}</div><div class="mt">${esc(b.t)}</div>
         <div class="mm"><span class="bchip" style="background:#8b5cf622;color:#a78bfa">${esc(VLABEL[b.v] || b.v)}</span><span>📍 ${esc(b.c || PROVN[b.p] || "Canada")}${b.c && b.p ? ", " + esc(b.p) : ""}</span><span>🕒 ${esc(ago(b.d))}</span>
           <span>${b.src === "reddit" ? "💬 " + esc(b.sub || "asked online") : b.src === "permit" ? "🏗️ project starting" + (b.permit ? " · permit " + esc(b.permit) : "") + (b.gc ? " · contractor already named" : " · no contractor named") : "🏛️ " + esc(b.ent || "tender") + (b.close ? " · closes " + esc(b.close) : "")}</span>${b.val ? `<span style="color:#34d399">$${Math.round(b.val).toLocaleString()}</span>` : ""}</div>
-        ${b.addr ? `<div class="ms">🏠 ${esc(b.addr)}${b.geo ? " · " + esc(b.geo) : ""}</div>` : ""}${b.s && b.s !== b.t ? `<div class="ms">${esc(b.s)}</div>` : ""}
-        <div class="pw" style="margin:6px 0">${bc}<button data-copy="buyer" data-j="${i}">Copy msg to buyer</button></div>
+        ${b.addr ? `<div class="ms">🏠 ${esc(b.addr)}${b.geo ? " · " + esc(b.geo) : ""}</div>` : ""}
+        ${b.src === "permit" ? (b.gn ? `<div class="pw" style="margin:4px 0 8px;align-items:center"><span style="font-size:12px;font-weight:800">${b.gk === "contractor" ? "Contractor of record" : "Applicant"}:</span> <b style="font-size:13px">${esc(b.gn)}</b>
+          ${b.gp ? `<a href="tel:${esc(b.gp.replace(/\D/g, ""))}">📞 ${esc(b.gp)}</a>` : ""}${b.ge ? `<a href="mailto:${esc(b.ge)}">✉ ${esc(b.ge)}</a>` : ""}${b.gw ? `<a href="${esc(/^https?:/.test(b.gw) ? b.gw : "https://" + b.gw)}" target="_blank" rel="noopener">🌐 site</a>` : ""}
+          ${b.gp || b.ge ? "" : `<a href="https://www.google.com/search?q=${encodeURIComponent('"' + b.gn + '" ' + (b.c || "") + " phone")}" target="_blank" rel="noopener">🔎 find their phone ↗</a>`}</div>`
+          : `<div class="ms" style="font-style:italic">No contractor is named on this permit and owners aren't published. Reach them with a flyer or door-knock at the address, or the contractor named on the site sign.</div>`) : ""}${b.s && b.s !== b.t ? `<div class="ms">${esc(b.s)}</div>` : ""}
+        <div class="pw" style="margin:6px 0">${bc}<button data-copy="buyer" data-j="${i}">${b.src === "permit" ? "Copy msg to contractor" : "Copy msg to buyer"}</button></div>
         <div class="mtrack"><select data-st="${i}"><option value="new">To do</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
           <input class="fee" data-fee="${i}" type="number" min="0" placeholder="$ commission" value="${esc(s.f ?? "")}"><input class="note" data-note="${i}" placeholder="note" value="${esc(s.n ?? "")}"></div></div>
       <div class="mpros"><div class="sec">${j.near ? "Pros in " + esc(b.c) + " (" + j.near + ")" : j.pros.length ? "None in " + esc(b.c || "their city") + " · " + j.pros.length + " elsewhere in " + esc(PROVN[b.p] || b.p) : "Pros"}</div>${pros || '<div class="nopro">No pro for this trade and area yet.</div>'}${more}</div></div>`;
@@ -437,9 +443,9 @@ function exportTracked() {
 function init() {
   buildIndex();
   TRADES_ALL = new Set(); BUY.forEach(b => tradesOf(b).forEach(t => TRADES_ALL.add(t))); [...TRADES_ALL].forEach(t => { if (CHILD[t]) CHILD[t].forEach(c => TRADES.has(c) && TRADES_ALL.add(c)); });
-  $("t-name").value = TPL.name; $("t-fee").value = TPL.fee; $("t-buyer").value = TPL.buyer; $("t-pro").value = TPL.pro;
-  const saveTpl = () => { TPL = {name: $("t-name").value, fee: $("t-fee").value, buyer: $("t-buyer").value, pro: $("t-pro").value}; SV("lb_tpl", TPL); };
-  ["t-name", "t-fee", "t-buyer", "t-pro"].forEach(id => $(id).addEventListener("input", saveTpl));
+  $("t-name").value = TPL.name; $("t-fee").value = TPL.fee; $("t-buyer").value = TPL.buyer; $("t-permit").value = TPL.permit; $("t-pro").value = TPL.pro;
+  const saveTpl = () => { TPL = {name: $("t-name").value, fee: $("t-fee").value, buyer: $("t-buyer").value, permit: $("t-permit").value, pro: $("t-pro").value}; SV("lb_tpl", TPL); };
+  ["t-name", "t-fee", "t-buyer", "t-permit", "t-pro"].forEach(id => $(id).addEventListener("input", saveTpl));
   ["m-trade", "m-prov", "m-city", "m-age", "m-status", "m-sort", "m-ready", "m-est", "m-more"].forEach(id => $(id).addEventListener("change", () => apply()));
   $("mprev").onclick = () => { if (page > 0) { page--; render(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("mnext").onclick = () => { if ((page + 1) * PER < JOBS.length) { page++; render(); scrollTo({top: 0, behavior: "smooth"}); } };
