@@ -174,6 +174,62 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
   td[data-l]::before{content:attr(data-l);display:inline-block;width:70px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
 }
 #tendbox:not([hidden]){display:contents}
+/*THEME-START*/
+/* ===== LeadBot "Green" theme (2026-10-12): modelled on the clean marketplace look of jacksvictoria.ca ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+:root,:root:not([data-theme=dark]){
+  --bg:#f3f7f5;--bg2:#ffffff;--card:#ffffff;--card-solid:#ffffff;--line:#e1eae5;
+  --text:#0b3a2d;--muted:#5d716a;--violet:#0aa458;--pink:#0aa458;--orange:#f59e0b;--cyan:#0891b2;--green:#0aa458;--amber:#b45309;--red:#dc2626;
+  --grad:linear-gradient(135deg,#12c46a 0%,#0aa458 100%);
+  --glow:0 8px 20px -10px rgba(5,110,65,.55);
+  --brand:#0b5a44;--brand2:#0e7a5c;--acc:#12c46a;
+}
+body{font-family:"Outfit","Plus Jakarta Sans",system-ui,sans-serif;font-size:15px;background:var(--bg)}
+body::before{display:none}
+.grad-text{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--acc)}
+#lock{background:linear-gradient(180deg,#0b5a44 0%,#0e7a5c 100%)}
+#lock::before{display:none}
+#lock form{background:#fff;border:0;box-shadow:0 30px 60px -20px rgba(0,0,0,.45)}
+#lock h2 .grad-text{color:#0aa458}
+.logo{background:var(--grad);box-shadow:none}
+input:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(18,196,106,.22)}
+input,select{border-radius:14px;padding:11px 14px;border:1px solid #d3e0d9}
+.btn{background:var(--grad);border-radius:14px;box-shadow:none;font-weight:700}
+.btn:hover{filter:none;transform:translateY(-1px);box-shadow:var(--glow)}
+.btn.ghost{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
+/* header: deep green bar, white text */
+:root:not([data-theme=dark]) header,header{background:var(--brand)!important;border-bottom:0;backdrop-filter:none;padding:14px 24px}
+header h1{color:#fff;font-weight:800}
+header h1 .grad-text{color:var(--acc)}
+header .logo{background:var(--acc)}
+.tabs{gap:4px}
+.tab{color:#d4efe2;background:transparent;border:0;font-weight:700;border-radius:12px;padding:9px 16px}
+.tab:hover{background:rgba(255,255,255,.1);color:#fff}
+.tab.on{background:rgba(255,255,255,.16);color:#fff;box-shadow:none}
+header .pill{background:rgba(255,255,255,.14)!important;border:0;color:#e4f7ee!important}
+header .live{background:var(--acc)}
+main{padding:28px 24px 60px}
+/* cards, panels, kpis */
+.panel{background:#fff;border:1px solid var(--line);border-radius:22px;backdrop-filter:none;box-shadow:0 8px 26px -18px rgba(11,58,45,.35)}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 8px 26px -20px rgba(11,58,45,.4)}
+.kpi b{color:var(--brand);font-weight:800}
+.kpi:hover{transform:none;border-color:var(--acc)}
+.lead-def{background:#e6f6ee;border:1px solid #cdeedd;border-radius:18px;padding:14px 18px;color:#0b3a2d}
+.toolbar{background:#fff}
+.bcard:hover{background:#f6fbf8}
+.bchip{background:#e6f6ee!important;color:#0b6b46!important}
+.bmeta,.bsnip,.n{color:var(--muted)}
+.btitle{color:var(--brand);font-weight:700}
+.bscore{box-shadow:none}
+.pill{background:#fff;color:var(--muted)}
+.chip{background:#fff;border:1.5px solid #cfe0d7;color:var(--brand)}
+.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.chip:hover{border-color:var(--acc)}
+a{color:inherit}
+
+.kpi::after{background:var(--acc)!important;opacity:.10!important}
+
+/*THEME-END*/
 
 .mgrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;border-bottom:1px solid var(--line)}
 .mjob{padding:16px 18px}
@@ -201,7 +257,47 @@ details.tpl textarea{width:100%;min-height:62px;margin-top:8px;font:inherit;font
 details.tpl .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 details.tpl .row input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
 @media (max-width:900px){.mgrid{grid-template-columns:1fr}.mpros{border-left:0;border-top:1px solid var(--line)}}
-.chip{font:inherit;font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}.chip:hover{border-color:var(--violet)}.chip.on{background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;border-color:transparent}.chip small{opacity:.75;margin-left:4px;font-weight:600}
+.chip{font:inherit;font-size:12.5px;font-weight:700;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}.chip:hover{border-color:var(--violet)}.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}.chip small{opacity:.75;margin-left:4px;font-weight:600}
+
+/* ---- redesigned match cards ---- */
+#mlist{padding:6px 18px 18px;display:flex;flex-direction:column;gap:18px}
+.mc{background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 28px -20px rgba(11,58,45,.45);overflow:hidden}
+.mc.st-contacted{border-left:5px solid #f59e0b}.mc.st-matched{border-left:5px solid #0aa458}.mc.st-closed{border-left:5px solid #0b5a44;background:#f4fbf7}.mc.st-dead{opacity:.55}
+.mc-top{display:grid;grid-template-columns:54px 1fr auto;gap:16px;padding:20px 22px 12px}
+.mc-ico{width:54px;height:54px;border-radius:16px;background:#e6f6ee;display:grid;place-items:center;font-size:26px}
+.mc-title{font-weight:800;font-size:18px;line-height:1.3;color:var(--brand)}
+.mc-sub{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 8px;font-size:13px;font-weight:500;color:var(--muted)}
+.mc-text{margin:0 0 8px;color:#35524a;font-size:14.5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mc-side{display:flex;flex-direction:column;gap:8px;align-items:flex-end;text-align:right}
+.mc-badge{padding:5px 12px;border-radius:99px;background:#e6f6ee;color:#0b6b46;font-size:12px;font-weight:800;white-space:nowrap}
+.mc-val{font-weight:800;color:#0aa458;font-size:17px}
+.mc-co{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:9px 12px;border-radius:14px;background:#f3f8f5;font-size:13px;margin-top:4px}
+.mc-note{font-size:12.5px;color:var(--muted);font-style:italic;margin-top:4px}
+.lnk{font:inherit;font-size:12.5px;font-weight:700;text-decoration:none;padding:6px 12px;border-radius:99px;background:#fff;color:var(--brand);border:1.5px solid #cfe0d7;cursor:pointer;display:inline-block}
+.lnk:hover{border-color:var(--acc);background:#f1fbf6}
+.lnk.solid{background:var(--brand);color:#fff;border-color:var(--brand)}
+.mc-matches{padding:14px 22px 6px;background:#f7faf8;border-top:1px solid var(--line)}
+.mc-mh{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin-bottom:10px;font-size:13px;color:var(--muted)}
+.mc-mh b{color:var(--brand);font-size:15px}
+.mc-row{display:flex;gap:14px;overflow-x:auto;padding:2px 2px 16px;scroll-snap-type:x proximity}
+.pc{flex:0 0 288px;scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:9px;box-shadow:0 8px 20px -16px rgba(11,58,45,.5)}
+.pc.liked{border-color:var(--acc);box-shadow:0 0 0 2px rgba(18,196,106,.35)}
+.pc-h{display:flex;gap:12px;align-items:center}
+.pc-av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:16px;flex:0 0 46px}
+.pc-n{font-weight:800;font-size:15px;color:var(--brand);line-height:1.25;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.pc-l{font-size:12.5px;color:var(--muted)}
+.pc-pct{margin-left:auto;font-weight:800;font-size:13px;padding:4px 10px;border-radius:99px;background:#dcf5e8;color:#0a7a45;white-space:nowrap}
+.pc-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tg{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;background:#e6f6ee;color:#0b6b46}
+.tg.g{background:#eef2f0;color:#5d716a}.tg.o{background:#fff3dd;color:#a15c07}
+.pc-why{font-size:12.5px;color:#456058;line-height:1.45}
+.pc-act{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto}
+.pc-act .lnk{padding:5px 11px}
+.pc-like{border-color:#f3b4c4;color:#c2185b}.pc-like.on{background:#c2185b;color:#fff;border-color:#c2185b}
+.mc-track{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 22px 18px;border-top:1px solid var(--line)}
+.mc-track select,.mc-track input{font:inherit;font-size:13px;padding:8px 11px;border-radius:12px;border:1px solid #d3e0d9;background:#fff;color:var(--text);min-width:0}
+.mc-track input.fee{width:110px}.mc-track input.note{flex:1 1 200px}
+@media (max-width:760px){.mc-top{grid-template-columns:44px 1fr}.mc-ico{width:44px;height:44px;font-size:21px}.mc-side{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;align-items:center;text-align:left}.pc{flex-basis:260px}}
 </style>
 </head>
 <body>
@@ -304,7 +400,7 @@ async function unlock(pw, remember) {
   try { sessionStorage.setItem("lb_pw", pw); remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
   BUY = a.leads || []; PRO = b.providers || [];
   $("upd").textContent = "Updated " + a.updated;
-  $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
+  const lk = $("lock"); if (lk) { lk.style.transition = "opacity .4s"; lk.style.opacity = 0; setTimeout(() => lk.remove(), 400); }
   init();
 }
 $("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
@@ -322,7 +418,8 @@ function buildIndex() {
 }
 const tradesOf = b => { const s = new Set(); [b.v, ...(b.tags || [])].forEach(t => { if (!t) return; s.add(t); (CHILD[t] || []).forEach(c => s.add(c)); }); return [...s].filter(t => TRADES.has(t)); };
 function scorePro(p, near, est) {
-  return (p.src === "maps" ? 0 : 30) + (near ? 30 : 0) + (p.ph ? 14 : 0) + (p.em ? 8 : 0) + (p.w ? 4 : 0) + ((Date.now() - (Date.parse(p.d) || 0)) / 864e5 < 30 ? 8 : 0) + (p.sc || 0) / 20;
+  const m = (p.s || "").match(/([0-9.]+)★(?: \((\d+) reviews\))?/); const rate = m ? (parseFloat(m[1]) >= 4.5 ? 6 : parseFloat(m[1]) >= 4 ? 3 : 0) + Math.min(6, Math.log10(1 + (+(m[2] || 0))) * 2.5) : 0;
+  return (p.src === "maps" ? 0 : 30) + (near ? 30 : 0) + (p.ph ? 14 : 0) + (p.em ? 8 : 0) + (p.w ? 4 : 0) + ((Date.now() - (Date.parse(p.d) || 0)) / 864e5 < 30 ? 8 : 0) + (p.sc || 0) / 20 + rate;
 }
 function candTrades(b, only) {
   if (only) { const s = new Set([only, ...(CHILD[only] || [])]); const mine = new Set(tradesOf(b)); return [...s].filter(t => TRADES.has(t) && (mine.has(t) || mine.has(only))); }
@@ -395,36 +492,67 @@ function copy(text) {
   const done = () => { $("toast").textContent = "Copied"; $("toast").classList.add("show"); setTimeout(() => $("toast").classList.remove("show"), 1500); };
   (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(done, () => { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e) {} t.remove(); });
 }
+const ICONS = {roofer:"🏠", electrician:"⚡", framer:"🪚", flooring:"🪵", carpenter:"🔨", painter:"🎨", drywaller:"🧱", mason:"🧱", plumber:"🔧", hvac:"❄️", excavation:"🚜", siding:"🏘️", renovator:"🏗️", landscaper:"🌿", cleaner:"🧽", mover:"🚚", junk:"🗑️", locksmith:"🔑", auto:"🚗", events:"📸", childcare:"👶", beauty:"💇", fitness:"💪", accountant:"📊", welder:"🔥"};
+const AVC = ["#0b5a44", "#0e7a5c", "#12a05f", "#2e7d6b", "#1d6f8c", "#6a4fb3", "#b45309", "#c2185b"];
+const hueOf = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return AVC[h % AVC.length]; };
+const initials = n => String(n || "?").replace(/[^A-Za-z0-9 ]/g, " ").split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join("") || "?";
+const pctOf = sc => Math.max(52, Math.min(98, Math.round(45 + (sc - 40) * 1.1)));
+const digits = s => String(s || "").replace(/\D/g, "");
+const webUrl = w => /^https?:/.test(w) ? w : "https://" + w;
+function why(x) {
+  const p = x.p, r = [];
+  r.push(x.near ? "Same city" : "Same province, not same city");
+  r.push(p.src === "maps" ? "Established business" : p.src === "newbiz" ? "Just licensed, building a customer base" : "Advertising for work right now");
+  if (p.ph) r.push("Phone on file");
+  if (p.em) r.push("Email on file");
+  return r.join(" · ");
+}
+function proCard(x, k, i, liked) {
+  const p = x.p, m = (p.s || "").match(/([0-9.]+)★(?: \((\d+) reviews\))?/), on = liked.has(p.id);
+  const tags = [`<span class="tg">${esc(VLABEL[p.t] || p.t)}</span>`, p.src === "maps" ? `<span class="tg g">established</span>` : `<span class="tg">${p.src === "newbiz" ? "just licensed" : "advertising now"}</span>`,
+    x.near ? "" : `<span class="tg o">not same city</span>`, m ? `<span class="tg">★ ${m[1]}${m[2] ? " · " + m[2] + " reviews" : ""}</span>` : ""].join("");
+  const acts = [p.ph ? `<a class="lnk" href="tel:${esc(digits(p.ph))}">📞 Call</a>` : "", p.em ? `<a class="lnk" href="mailto:${esc(p.em)}">✉ Email</a>` : "",
+    p.w ? `<a class="lnk" href="${esc(webUrl(p.w))}" target="_blank" rel="noopener">🌐</a>` : "", p.u ? `<a class="lnk" href="${esc(p.u)}" target="_blank" rel="noopener">ad ↗</a>` : "",
+    `<button class="lnk pc-like ${on ? "on" : ""}" data-like="${i}" data-pid="${esc(p.id)}">${on ? "❤ Interested" : "♡ Interested"}</button>`,
+    `<button class="lnk solid" data-copy="pro" data-j="${i}" data-p="${k}">Copy intro</button>`,
+    `<button class="lnk" data-pass="${i}" data-pid="${esc(p.id)}" title="Hide this pro for this job">✕</button>`].join("");
+  return `<div class="pc ${on ? "liked" : ""}"><div class="pc-h"><div class="pc-av" style="background:${hueOf(p.n)}">${esc(initials(p.n))}</div>
+    <div style="min-width:0"><div class="pc-n">${esc(p.n)}</div><div class="pc-l">📍 ${esc(p.c || PROVN[p.p] || "")}${p.c && p.p ? ", " + esc(p.p) : ""}</div></div><span class="pc-pct" title="AI match score">${pctOf(x.sc)}% match</span></div>
+    <div class="pc-tags">${tags}</div><div class="pc-why">${esc(why(x))}</div><div class="pc-act">${acts}</div></div>`;
+}
+function contractorBlock(b) {
+  if (b.src !== "permit") return "";
+  if (!b.gn) return `<div class="mc-note">No contractor is named on this permit and owners aren't published. Reach them with a flyer or door-knock at the address, or the contractor named on the site sign.</div>`;
+  const find = `<a class="lnk" href="https://www.google.com/search?q=${encodeURIComponent('"' + b.gn + '" ' + (b.c || "") + " phone")}" target="_blank" rel="noopener">🔎 find their phone ↗</a>`;
+  return `<div class="mc-co"><b style="color:var(--brand)">${b.gk === "contractor" ? "Contractor of record" : "Applicant"}:</b> <b>${esc(b.gn)}</b>` +
+    (b.gp ? `<a class="lnk" href="tel:${esc(digits(b.gp))}">📞 ${esc(b.gp)}</a>` : "") + (b.ge ? `<a class="lnk" href="mailto:${esc(b.ge)}">✉ ${esc(b.ge)}</a>` : "") +
+    (b.gw ? `<a class="lnk" href="${esc(webUrl(b.gw))}" target="_blank" rel="noopener">🌐 site</a>` : "") + (b.gp || b.ge ? "" : find) + `</div>`;
+}
 function render() {
   const slice = JOBS.slice(page * PER, (page + 1) * PER);
   $("mlist").innerHTML = slice.length ? slice.map((j, i) => {
-    const b = j.b, s = ST[b.id] || {}, stv = s.s || "new";
+    const b = j.b, s = ST[b.id] || {}, stv = s.s || "new", liked = new Set(s.likes || []), passed = new Set(s.pass || []);
     const link = b.src === "permit" ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${b.addr || ""}, ${b.c || ""}, ${b.p || ""}`) : (b.u || "");
-    const bc = [b.cph ? `<a href="tel:${esc(String(b.cph).replace(/\D/g, ""))}">📞 ${esc(b.cph)}</a>` : "", b.ce ? `<a href="mailto:${esc(b.ce)}">✉ ${esc(b.ce)}</a>` : "",
-      link ? `<a href="${esc(link)}" target="_blank" rel="noopener">${b.src === "permit" ? "View on map ↗" : b.src === "tender" ? "Open tender ↗" : "Open post ↗"}</a>` : ""].join("");
-    const pros = j.pros.slice(0, 4).map((x, k) => {
-      const p = x.p;
-      const tag = p.src === "maps" ? `<span class="tag est">established</span>` : `<span class="tag ad">${p.src === "newbiz" ? "just licensed" : "advertising"}</span>`;
-      const far = x.near ? "" : `<span class="tag far">${esc(PROVN[p.p] || p.p)}, not same city</span>`;
-      const links = [p.ph ? `<a href="tel:${esc(p.ph.replace(/\D/g, ""))}">📞 ${esc(p.ph)}</a>` : "", p.em ? `<a href="mailto:${esc(p.em)}">✉ email</a>` : "",
-        p.w ? `<a href="${esc(/^https?:/.test(p.w) ? p.w : "https://" + p.w)}" target="_blank" rel="noopener">🌐 site</a>` : "", p.u ? `<a href="${esc(p.u)}" target="_blank" rel="noopener">ad ↗</a>` : "",
-        `<button data-copy="pro" data-j="${i}" data-p="${k}">Copy msg to pro</button>`].join("");
-      return `<div class="pro"><div><div class="pn">${esc(p.n)}</div><div class="pm" style="font-size:11px;color:var(--muted);font-weight:600">${esc(VLABEL[p.t] || p.t)} · ${esc(p.c || "")} ${tag} ${far}</div><div class="pw">${links}</div></div></div>`;
-    }).join("");
-    const more = j.pros.length > 4 ? `<div class="nopro" style="cursor:pointer;font-weight:700" data-more="${i}">+ ${j.pros.length - 4} more pros (see on Work-seekers)</div>` : "";
-    return `<div class="mgrid st-${stv}">
-      <div class="mjob"><div class="sec">${b.src === "reddit" ? "Needs the work" : b.src === "permit" ? "Project starting (sell it to a pro)" : "Government tender"}</div><div class="mt">${esc(b.t)}</div>
-        <div class="mm"><span class="bchip" style="background:#8b5cf622;color:#a78bfa">${esc(VLABEL[b.v] || b.v)}</span><span>📍 ${esc(b.c || PROVN[b.p] || "Canada")}${b.c && b.p ? ", " + esc(b.p) : ""}</span><span>🕒 ${esc(ago(b.d))}</span>
-          <span>${b.src === "reddit" ? "💬 " + esc(b.sub || "asked online") : b.src === "permit" ? "🏗️ project starting" + (b.permit ? " · permit " + esc(b.permit) : "") + (b.gc ? " · contractor already named" : " · no contractor named") : "🏛️ " + esc(b.ent || "tender") + (b.close ? " · closes " + esc(b.close) : "")}</span>${b.val ? `<span style="color:#34d399">$${Math.round(b.val).toLocaleString()}</span>` : ""}</div>
-        ${b.addr ? `<div class="ms">🏠 ${esc(b.addr)}${b.geo ? " · " + esc(b.geo) : ""}</div>` : ""}
-        ${b.src === "permit" ? (b.gn ? `<div class="pw" style="margin:4px 0 8px;align-items:center"><span style="font-size:12px;font-weight:800">${b.gk === "contractor" ? "Contractor of record" : "Applicant"}:</span> <b style="font-size:13px">${esc(b.gn)}</b>
-          ${b.gp ? `<a href="tel:${esc(b.gp.replace(/\D/g, ""))}">📞 ${esc(b.gp)}</a>` : ""}${b.ge ? `<a href="mailto:${esc(b.ge)}">✉ ${esc(b.ge)}</a>` : ""}${b.gw ? `<a href="${esc(/^https?:/.test(b.gw) ? b.gw : "https://" + b.gw)}" target="_blank" rel="noopener">🌐 site</a>` : ""}
-          ${b.gp || b.ge ? "" : `<a href="https://www.google.com/search?q=${encodeURIComponent('"' + b.gn + '" ' + (b.c || "") + " phone")}" target="_blank" rel="noopener">🔎 find their phone ↗</a>`}</div>`
-          : `<div class="ms" style="font-style:italic">No contractor is named on this permit and owners aren't published. Reach them with a flyer or door-knock at the address, or the contractor named on the site sign.</div>`) : ""}${b.s && b.s !== b.t ? `<div class="ms">${esc(b.s)}</div>` : ""}
-        <div class="pw" style="margin:6px 0">${bc}<button data-copy="buyer" data-j="${i}">${b.src === "permit" ? "Copy msg to contractor" : "Copy msg to buyer"}</button></div>
-        <div class="mtrack"><select data-st="${i}"><option value="new">To do</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
-          <input class="fee" data-fee="${i}" type="number" min="0" placeholder="$ commission" value="${esc(s.f ?? "")}"><input class="note" data-note="${i}" placeholder="note" value="${esc(s.n ?? "")}"></div></div>
-      <div class="mpros"><div class="sec">${j.near ? "Pros in " + esc(b.c) + " (" + j.near + ")" : j.pros.length ? "None in " + esc(b.c || "their city") + " · " + j.pros.length + " elsewhere in " + esc(PROVN[b.p] || b.p) : "Pros"}</div>${pros || '<div class="nopro">No pro for this trade and area yet.</div>'}${more}</div></div>`;
+    const bc = [b.cph ? `<a class="lnk" href="tel:${esc(digits(b.cph))}">📞 ${esc(b.cph)}</a>` : "", b.ce ? `<a class="lnk" href="mailto:${esc(b.ce)}">✉ ${esc(b.ce)}</a>` : ""].join("");
+    const kind = b.src === "reddit" ? "Asked for help" : b.src === "permit" ? "Project starting" : "Government tender";
+    const shown = j.pros.map((x, k) => ({x, k})).filter(o => !passed.has(o.x.p.id)).slice(0, 6);
+    const best = shown.length ? pctOf(shown[0].x.sc) : 0;
+    const matches = j.pros.length
+      ? `<div class="mc-matches"><div class="mc-mh"><b>✨ AI matches</b><span>${j.near ? j.near + " in " + esc(b.c) : "none in " + esc(b.c || "their city")} · ${j.pros.length} total · best match ${best}%${liked.size ? " · ❤ " + liked.size + " interested" : ""}</span></div><div class="mc-row">${shown.map(o => proCard(o.x, o.k, i, liked)).join("")}</div></div>`
+      : `<div class="mc-matches"><div class="mc-mh"><b>✨ AI matches</b><span>No pro for this trade and area yet.</span></div></div>`;
+    const src = b.src === "reddit" ? "💬 " + esc(b.sub || "asked online") : b.src === "permit" ? "🏗️ permit " + esc(b.permit || "") + (b.gc ? " · contractor named" : " · no contractor named") : "🏛️ " + esc(b.ent || "tender") + (b.close ? " · closes " + esc(b.close) : "");
+    return `<div class="mc st-${stv}">
+      <div class="mc-top"><div class="mc-ico">${ICONS[b.v] || "🛠️"}</div>
+        <div><div class="mc-title">${esc(b.t)}</div>
+          <div class="mc-sub"><span>📍 ${esc(b.c || PROVN[b.p] || "Canada")}${b.c && b.p ? ", " + esc(b.p) : ""}</span><span>🕒 ${esc(ago(b.d))}</span><span>${esc(VLABEL[b.v] || b.v)}</span><span>${src}</span></div>
+          ${b.addr ? `<div class="mc-sub" style="margin-top:-4px">🏠 ${esc(b.addr)}${b.geo ? " · " + esc(b.geo) : ""}</div>` : ""}
+          ${b.s && b.s !== b.t ? `<p class="mc-text">${esc(b.s)}</p>` : ""}${contractorBlock(b)}${bc ? `<div class="mc-sub" style="margin-top:8px">${bc}</div>` : ""}</div>
+        <div class="mc-side"><span class="mc-badge">${esc(kind)}</span>${b.val ? `<span class="mc-val">$${Math.round(b.val).toLocaleString()}</span>` : ""}
+          ${link ? `<a class="lnk solid" href="${esc(link)}" target="_blank" rel="noopener">${b.src === "permit" ? "View on map ↗" : b.src === "tender" ? "Open tender ↗" : "Open post ↗"}</a>` : ""}
+          <button class="lnk" data-copy="buyer" data-j="${i}">${b.src === "permit" ? "Copy msg to contractor" : "Copy msg to buyer"}</button></div></div>
+      ${matches}
+      <div class="mc-track"><select data-st="${i}"><option value="new">To do</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
+        <input class="fee" data-fee="${i}" type="number" min="0" placeholder="$ commission" value="${esc(s.f ?? "")}"><input class="note" data-note="${i}" placeholder="note" value="${esc(s.n ?? "")}"></div></div>`;
   }).join("") : `<div style="padding:40px;text-align:center;color:var(--muted)">No jobs match these filters.${HIDDEN ? ` <b>${HIDDEN} request${HIDDEN > 1 ? "s" : ""} match, but there is no pro to offer for ${HIDDEN > 1 ? "them" : "it"} yet.</b> <button class="btn ghost" id="showall">Show ${HIDDEN > 1 ? "them" : "it"} anyway</button>` : " Try “Last 90 days”."}</div>`;
   slice.forEach((j, i) => { const sel = document.querySelector(`[data-st="${i}"]`); if (sel) sel.value = (ST[j.b.id] || {}).s || "new"; });
   const pages = Math.max(1, Math.ceil(JOBS.length / PER));
@@ -459,6 +587,13 @@ function init() {
   });
   $("mlist").addEventListener("click", e => {
     if (e.target.id === "showall") { $("m-ready").checked = false; apply(); return; }
+    const lk = e.target.closest("[data-like],[data-pass]");
+    if (lk) {
+      const isLike = lk.dataset.like !== undefined, idx = +(isLike ? lk.dataset.like : lk.dataset.pass), pid = lk.dataset.pid, jb = JOBS[page * PER + idx];
+      const cur = ST[jb.b.id] || {}, key = isLike ? "likes" : "pass", arr = new Set(cur[key] || []);
+      arr.has(pid) ? arr.delete(pid) : arr.add(pid);
+      setState(idx, {[key]: [...arr]}); const y = scrollY; render(); scrollTo(0, y); return;
+    }
     const t = e.target.closest("[data-copy],[data-more]"); if (!t) return;
     if (t.dataset.more !== undefined) { const j = JOBS[page * PER + +t.dataset.more]; location.href = "providers.html?t=" + encodeURIComponent((j.pros[0] || {p: {t: ""}}).p.t); return; }
     const j = JOBS[page * PER + +t.dataset.j]; const k = t.dataset.p !== undefined ? j.pros[+t.dataset.p].p : (j.pros[0] || {}).p;
