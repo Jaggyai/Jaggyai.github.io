@@ -210,7 +210,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
 </header>
 
 <main>
-  <p class="lead-def"><b>Work-seekers</b> = tradespeople and businesses that are advertising for customers right now (Kijiji and Craigslist service ads) or were just licensed and have none yet.
+  <p class="lead-def"><b>Work-seekers</b> = tradespeople and businesses that are advertising for customers right now (Kijiji and Craigslist service ads) or were just licensed and have none yet. <i>Established businesses</i> (Google Maps) are not advertising for work: they are a contact list, shown only when you pick that source.
     Connect them to a buyer who needs that trade: the <span style="color:#34d399;font-weight:800">green badge</span> shows how many people are asking for that trade in the same city.
     <span style="margin-left:6px;color:var(--muted);font-size:12px" id="pupd"></span></p>
   <section class="kpis kpis4" id="pkpis"></section>
@@ -220,7 +220,7 @@ tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
     <select id="p-trade"><option value="">All trades</option></select>
     <select id="p-prov"><option value="">All provinces</option></select>
     <select id="p-city"><option value="">All cities</option></select>
-    <select id="p-src"><option value="">All sources</option><option value="kijiji">Kijiji ads</option><option value="craigslist">Craigslist ads</option><option value="newbiz">Newly licensed</option><option value="maps">Established (Google Maps)</option></select>
+    <select id="p-src"><option value="active" selected>Actively looking for work</option><option value="kijiji">Kijiji ads only</option><option value="craigslist">Craigslist ads only</option><option value="newbiz">Newly licensed only</option><option value="maps">Established businesses (Google Maps)</option><option value="">Everything</option></select>
     <select id="p-age"><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="180" selected>Last 6 months</option></select>
     <select id="p-sort"><option value="score">Best match first</option><option value="new">Newest first</option><option value="buyers">Most buyers waiting first</option></select>
     <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="p-ct"> has phone or email</label>
@@ -281,6 +281,7 @@ async function unlock(pw, remember) {
 $("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
 try { const ls = localStorage.getItem("lb_pw"), s = ls || sessionStorage.getItem("lb_pw"); if (s) unlock(s, !!ls); } catch (e) {}
 
+const srcOk = (r, src) => !src || (src === "active" ? r.src !== "maps" : r.src === src);
 const within = (r, age) => (Date.now() - (Date.parse(r.d) || Date.now())) / 864e5 <= age;
 function fillOpts(sel, pairs, label) {
   const keep = sel.value;
@@ -290,7 +291,7 @@ function fillOpts(sel, pairs, label) {
 }
 function refreshLists() {
   const age = +$("p-age").value, src = $("p-src").value, tr = $("p-trade").value, pv = $("p-prov").value;
-  const base = ALL.filter(r => within(r, age) && (!src || r.src === src));
+  const base = ALL.filter(r => within(r, age) && srcOk(r, src));
   const cnt = (rows, f) => { const m = new Map(); rows.forEach(r => { const k = f(r); if (k) m.set(k, (m.get(k) || 0) + 1); }); return m; };
   fillOpts($("p-trade"), [...cnt(base, r => r.t)].sort((a, b) => (VLABEL[a[0]] || a[0]).localeCompare(VLABEL[b[0]] || b[0])).map(([v, n]) => [v, n, VLABEL[v] || v]), "All trades");
   const byTrade = base.filter(r => !$("p-trade").value || r.t === $("p-trade").value);
@@ -302,14 +303,15 @@ function apply() {
   refreshLists();
   const q = $("p-q").value.trim().toLowerCase(), tr = $("p-trade").value, pv = $("p-prov").value, ct = $("p-city").value, src = $("p-src").value, age = +$("p-age").value,
         sort = $("p-sort").value, hasct = $("p-ct").checked, hasbw = $("p-bw").checked;
-  VIEW = ALL.filter(r => within(r, age) && (!tr || r.t === tr) && (!pv || r.p === pv) && (!ct || r.c === ct) && (!src || r.src === src)
+  VIEW = ALL.filter(r => within(r, age) && (!tr || r.t === tr) && (!pv || r.p === pv) && (!ct || r.c === ct) && srcOk(r, src)
       && (!hasct || r.ph || r.em) && (!hasbw || r.bw > 0) && (!q || `${r.n} ${r.s} ${VLABEL[r.t] || r.t} ${r.c} ${r.ph} ${r.em} ${r.w}`.toLowerCase().includes(q)));
   VIEW.sort((a, b) => sort === "new" ? (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0) : sort === "buyers" ? (b.bw - a.bw) || (b.sc - a.sc) : (b.sc - a.sc) || (Date.parse(b.d) || 0) - (Date.parse(a.d) || 0));
   page = 0;
-  const k = [["Work-seekers shown", VIEW.length, "#8b5cf6"], ["With a phone number", VIEW.filter(r => r.ph).length, "#ec4899"],
+  const k = [[src === "maps" ? "Established businesses shown" : src === "" ? "Businesses shown (incl. established)" : "Looking for work", VIEW.length, "#8b5cf6"], ["With a phone number", VIEW.filter(r => r.ph).length, "#ec4899"],
              ["With an email", VIEW.filter(r => r.em).length, "#fb923c"], ["With buyers waiting in their city", VIEW.filter(r => r.bw > 0).length, "#34d399"]];
   $("pkpis").innerHTML = k.map(([l, n, c], i) => `<div class="kpi" style="--c:${c};cursor:default"><b>${n.toLocaleString()}</b><span>${l}</span></div>`).join("");
-  $("totalpill").textContent = `${ALL.length.toLocaleString()} work-seekers`;
+  const nAct = ALL.filter(r => r.src !== "maps").length;
+  $("totalpill").textContent = `${nAct.toLocaleString()} looking for work · ${(ALL.length - nAct).toLocaleString()} established`;
   render();
 }
 function render() {
