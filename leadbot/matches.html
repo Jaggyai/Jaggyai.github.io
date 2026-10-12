@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LeadBot - Matches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#0b0b1a;--bg2:#12122a;--card:rgba(255,255,255,.045);--card-solid:#16163a;--line:rgba(255,255,255,.09);
+  --text:#f1f1fb;--muted:#9a9cc0;--violet:#8b5cf6;--pink:#ec4899;--orange:#fb923c;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24;--red:#f87171;
+  --grad:linear-gradient(135deg,#8b5cf6 0%,#ec4899 55%,#fb923c 100%);
+  --glow:0 10px 40px -10px rgba(139,92,246,.55);
+}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){
+  --bg:#f5f3ff;--bg2:#fdf2f8;--card:rgba(255,255,255,.8);--card-solid:#fff;--line:rgba(76,29,149,.1);
+  --text:#1e1b3a;--muted:#6b6890;--glow:0 10px 30px -12px rgba(139,92,246,.45);--green:#059669;--amber:#b45309;--red:#dc2626;--cyan:#0891b2}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:14px/1.5 "Plus Jakarta Sans",system-ui,sans-serif;color:var(--text);background:var(--bg);min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 35% at 15% 10%,rgba(139,92,246,.28),transparent 70%),
+             radial-gradient(35% 30% at 90% 20%,rgba(236,72,153,.22),transparent 70%),
+             radial-gradient(40% 35% at 70% 95%,rgba(251,146,60,.16),transparent 70%);
+  animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(4%,-3%) rotate(6deg)}}
+a{color:inherit}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* lock */
+#lock{position:fixed;inset:0;display:grid;place-items:center;z-index:50;padding:16px;background:var(--bg)}
+#lock::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:var(--grad);filter:blur(120px);opacity:.35;animation:pulse 6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.5}}
+#lock form{position:relative;width:100%;max-width:360px;padding:32px 28px;border-radius:24px;background:var(--card-solid);border:1px solid var(--line);box-shadow:var(--glow);display:flex;flex-direction:column;gap:14px;text-align:center}
+.logo{width:56px;height:56px;margin:0 auto;border-radius:16px;background:var(--grad);display:grid;place-items:center;box-shadow:var(--glow)}
+.logo svg{width:30px;height:30px}
+#lock h2{margin:0;font-size:26px;font-weight:800}
+#err{color:var(--red);font-size:13px;min-height:18px}
+input,select{font:inherit;color:var(--text);background:var(--card-solid);border:1px solid var(--line);border-radius:12px;padding:10px 12px;outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(139,92,246,.25)}
+.btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:10px 16px;cursor:pointer;color:#fff;background:var(--grad);box-shadow:var(--glow);transition:transform .15s,filter .15s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.btn.ghost{background:var(--card-solid);color:var(--text);border:1px solid var(--line);box-shadow:none}
+label.chk{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+
+/* layout */
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(11,11,26,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]) header{background:rgba(245,243,255,.78)}}
+header .logo{width:36px;height:36px;border-radius:11px;margin:0}header .logo svg{width:20px;height:20px}
+header h1{font-size:20px;font-weight:800;margin:0}
+.pill{font-size:12px;padding:4px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 0 0 rgba(52,211,153,.7);animation:ping 2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+header .sp{flex:1}
+main{max-width:1440px;margin:0 auto;padding:20px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(8px)}
+
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:18px}
+.kpi{position:relative;overflow:hidden;padding:16px;border-radius:18px;background:var(--card);border:1px solid var(--line);cursor:pointer;transition:transform .2s,border-color .2s;animation:rise .6s both}
+.kpi:hover{transform:translateY(-3px);border-color:var(--c)}
+.kpi.on{border-color:var(--c);box-shadow:0 0 0 1px var(--c) inset}
+.kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:100px;height:100px;border-radius:50%;background:var(--c);opacity:.14;filter:blur(8px)}
+.kpi .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 20%,transparent);color:var(--c);margin-bottom:10px}
+.kpi .ic svg{width:18px;height:18px}
+.kpi b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em}
+.kpi span{color:var(--muted);font-size:12px;font-weight:600}
+.kpi small{position:absolute;right:14px;bottom:14px;font-size:11px;font-weight:700;color:var(--c)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+
+.charts{display:grid;grid-template-columns:1fr 1fr 300px;gap:14px;margin-bottom:18px}
+.chart{padding:18px}
+.chart h3{margin:0 0 12px;font-size:14px;font-weight:700;display:flex;justify-content:space-between}
+.chart h3 span{color:var(--muted);font-weight:600;font-size:12px}
+.bar{display:grid;grid-template-columns:120px 1fr 52px;align-items:center;gap:10px;margin:7px 0;cursor:pointer;font-size:12.5px}
+.bar .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-weight:600}
+.bar:hover .lbl,.bar.on .lbl{color:var(--text)}
+.bar .trk{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar .fill{height:100%;border-radius:99px;background:var(--grad);width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.bar.on .fill{background:linear-gradient(90deg,var(--cyan),var(--green))}
+.bar .v{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.donut{width:170px;height:170px;margin:4px auto 14px;border-radius:50%;position:relative;transition:background .6s}
+.donut::after{content:"";position:absolute;inset:22px;border-radius:50%;background:var(--card-solid)}
+.donut div{position:absolute;inset:0;display:grid;place-items:center;z-index:1;text-align:center}
+.donut b{font-size:28px;font-weight:800;display:block;line-height:1}.donut span{font-size:11px;color:var(--muted)}
+.legend{display:grid;gap:6px;font-size:12px}
+.legend div{display:flex;align-items:center;gap:8px}.legend i{width:10px;height:10px;border-radius:3px}.legend em{margin-left:auto;font-style:normal;font-weight:700}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;padding:14px;margin-bottom:10px;align-items:center}
+.search{position:relative;flex:1 1 260px}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.search input{width:100%;padding-left:36px}
+.toolbar select{flex:0 1 170px;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 2px 12px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--violet) 18%,transparent);border:1px solid color-mix(in srgb,var(--violet) 40%,transparent);cursor:pointer}
+.chip:hover{border-color:var(--pink)}
+.chip.clear{background:transparent;border-color:var(--line);color:var(--muted)}
+
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:separate;border-spacing:0}
+th{position:sticky;top:0;text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;user-select:none}
+th:hover{color:var(--text)}th.s::after{content:" ↓"}th.s.up::after{content:" ↑"}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr{animation:fade .35s both;transition:background .15s}
+tbody tr:hover{background:color-mix(in srgb,var(--violet) 8%,transparent)}
+@keyframes fade{from{opacity:0;transform:translateX(-6px)}}
+.biz{display:flex;gap:12px;align-items:center;min-width:240px}
+.av{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;font-size:14px}
+.biz b{display:block;font-weight:700}.biz b a{text-decoration:none}.biz b a:hover{color:var(--pink)}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;margin-top:3px}
+.site{font-size:11.5px;color:var(--muted);margin-left:6px;text-decoration:none}.site:hover{color:var(--cyan)}
+.ph{white-space:nowrap;text-decoration:none;font-weight:600;font-variant-numeric:tabular-nums}.ph:hover{color:var(--cyan)}
+.em{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:600;max-width:260px}
+.em span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st{flex:none;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;letter-spacing:.03em}
+.st.ok{background:color-mix(in srgb,var(--green) 18%,transparent);color:var(--green)}
+.st.pers{background:color-mix(in srgb,var(--cyan) 18%,transparent);color:var(--cyan)}
+.st.warn{background:color-mix(in srgb,var(--amber) 18%,transparent);color:var(--amber)}
+.st.bad{background:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}
+.none{color:var(--muted);font-size:12px}
+.socs{display:flex;gap:6px}
+.so{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:800;text-decoration:none;transition:transform .15s}
+.so:hover{transform:scale(1.15) rotate(-4deg)}
+.stars{color:var(--amber);font-weight:700;white-space:nowrap}.stars small{color:var(--muted);font-weight:600;margin-left:4px}
+.src{font-size:10.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+
+.tabs{display:flex;gap:6px;margin-left:10px}
+.tab{font:inherit;font-weight:700;font-size:13px;color:var(--muted);background:transparent;border:1px solid transparent;border-radius:10px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.on{color:var(--text);background:var(--card);border-color:var(--line);box-shadow:var(--glow)}
+.lead-def{margin:0 0 14px;padding:12px 16px;border-radius:14px;background:color-mix(in srgb,var(--violet) 12%,transparent);border:1px solid color-mix(in srgb,var(--violet) 30%,transparent);color:var(--text);font-size:13px}
+.kpis4{grid-template-columns:repeat(4,1fr)}
+.bcard{display:grid;grid-template-columns:64px 1fr auto;gap:14px;padding:16px;border-bottom:1px solid var(--line);align-items:start;animation:fade .35s both;transition:background .15s}
+.bcard:hover{background:color-mix(in srgb,var(--violet) 7%,transparent)}
+.bscore{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff}
+.bscore small{display:block;font-size:9px;font-weight:700;letter-spacing:.06em;opacity:.85;margin-top:-2px}
+.btitle{font-weight:700;font-size:15px;line-height:1.35}
+.bmeta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;font-size:11.5px;font-weight:600;color:var(--muted);align-items:center}
+.bchip{padding:2px 8px;border-radius:99px;font-weight:700;font-size:11px}
+.bsnip{color:var(--muted);font-size:13px;line-height:1.45;max-width:780px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.bright{display:flex;flex-direction:column;gap:6px;align-items:flex-end;text-align:right;white-space:nowrap}
+.bval{font-weight:800;font-size:16px;color:var(--green)}
+.bgo{text-decoration:none}
+.fit{min-width:118px}
+.tier{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:11px;letter-spacing:.05em;padding:3px 9px 3px 7px;border-radius:99px}
+.tier i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.tier.HOT{background:color-mix(in srgb,#fb923c 22%,transparent);color:#fb923c}
+.tier.HOT i{box-shadow:0 0 0 0 rgba(251,146,60,.7);animation:ping 2s infinite}
+.tier.WARM{background:color-mix(in srgb,var(--amber) 20%,transparent);color:var(--amber)}
+.tier.COLD{background:color-mix(in srgb,var(--cyan) 16%,transparent);color:var(--cyan)}
+.tier em{font-style:normal;font-variant-numeric:tabular-nums;opacity:.85}
+.why{margin-top:4px;font-size:11px;color:var(--muted);line-height:1.35;max-width:210px}
+.offerlbl{display:flex;align-items:center;gap:8px;font-weight:700;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.offerlbl select{border-color:color-mix(in srgb,var(--pink) 55%,var(--line));font-weight:700}
+.pager{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:14px}
+.pager .n{color:var(--muted);font-weight:600}
+.pager .btns{display:flex;gap:8px;align-items:center}
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,120px);background:var(--card-solid);border:1px solid var(--line);box-shadow:var(--glow);padding:12px 18px;border-radius:14px;font-weight:700;transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:60}
+.toast.show{transform:translate(-50%,0)}
+
+@media (max-width:720px){.bcard{grid-template-columns:48px 1fr;gap:10px}.bscore{width:46px;height:46px;font-size:17px}.bright{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;text-align:left}.kpis4{grid-template-columns:repeat(2,1fr)}.tabs{margin-left:0}header{flex-wrap:wrap}}
+@media (max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:1fr 1fr}.charts .donutc{grid-column:1/-1}}
+@media (max-width:720px){
+  main{padding:14px 16px}header{padding:10px 16px}header .pill.hide-sm{display:none}
+  .kpis{grid-template-columns:repeat(2,1fr);gap:10px}.kpi b{font-size:22px}
+  .charts{grid-template-columns:1fr}.bar{grid-template-columns:96px 1fr 44px}
+  .toolbar select{flex:1 1 45%}
+  thead{display:none}table,tbody,tr,td{display:block}
+  tbody tr{border-bottom:1px solid var(--line);padding:12px 4px}
+  td{border:0;padding:4px 10px}
+  td[data-l]::before{content:attr(data-l);display:inline-block;width:70px;font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase}
+}
+#tendbox:not([hidden]){display:contents}
+
+.mgrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;border-bottom:1px solid var(--line)}
+.mjob{padding:16px 18px}
+.mpros{padding:16px 18px;border-left:1px solid var(--line);background:color-mix(in srgb,var(--violet) 4%,transparent)}
+.mt{font-weight:700;font-size:15px;line-height:1.35}
+.mm{display:flex;flex-wrap:wrap;gap:6px 10px;margin:6px 0;font-size:11.5px;font-weight:600;color:var(--muted);align-items:center}
+.ms{color:var(--muted);font-size:13px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:4px 0 8px}
+.mtrack{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.mtrack select,.mtrack input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);min-width:0}
+.mtrack input.fee{width:84px}.mtrack input.note{flex:1 1 150px}
+.pro{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.pro:last-child{border-bottom:0}
+.pn{font-weight:700;font-size:13.5px}
+.pw{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.pw a,.pw button{font:inherit;font-size:12px;font-weight:700;text-decoration:none;padding:4px 10px;border-radius:99px;background:color-mix(in srgb,var(--violet) 14%,transparent);color:var(--text);border:0;cursor:pointer}
+.pw a:hover,.pw button:hover{background:color-mix(in srgb,var(--violet) 30%,transparent)}
+.tag{padding:2px 8px;border-radius:99px;font-size:10.5px;font-weight:800}
+.tag.ad{background:#34d39933;color:#34d399}.tag.est{background:#8b5cf633;color:#a78bfa}.tag.far{background:#fb923c33;color:#fb923c}
+.nopro{color:var(--muted);font-size:13px;padding:6px 0}
+.sec{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.st-new{border-left:4px solid transparent}.st-contacted{border-left:4px solid #fb923c}.st-matched{border-left:4px solid #8b5cf6}.st-closed{border-left:4px solid #34d399}.st-dead{border-left:4px solid #888;opacity:.55}
+details.tpl{margin:0 0 12px;padding:10px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+details.tpl summary{cursor:pointer;font-weight:700;font-size:13px}
+details.tpl textarea{width:100%;min-height:62px;margin-top:8px;font:inherit;font-size:12.5px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+details.tpl .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+details.tpl .row input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+@media (max-width:900px){.mgrid{grid-template-columns:1fr}.mpros{border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<div id="lock"><form id="lockform">
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></svg></div>
+  <h2><span class="grad-text">LeadBot</span></h2>
+  <span style="color:var(--muted)">Enter your password to unlock.</span>
+  <input id="pw" type="password" autocomplete="current-password" placeholder="Password" autofocus>
+  <label class="chk"><input type="checkbox" id="remember"> Remember on this device</label>
+  <button class="btn" type="submit">Unlock</button>
+  <div id="err"></div>
+</form></div>
+
+<header>
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6M11 8v6"/></svg></div>
+  <h1>Lead<span class="grad-text">Bot</span></h1>
+  <nav class="tabs"><button class="tab on" type="button">🤝 Matches</button><a class="tab" href="index.html" style="text-decoration:none">🎯 Buyers</a><a class="tab" href="providers.html" style="text-decoration:none">🛠️ Work-seekers</a></nav>
+  <span class="sp"></span>
+  <span class="pill hide-sm"><span class="live"></span><span id="upd"></span></span>
+  <span class="pill" id="totalpill"></span>
+</header>
+
+<main>
+  <p class="lead-def"><b>Matches</b> = every request from someone who needs a trade, with the pros who can do it, side by side. Call or message the buyer, send the pro, then track it.
+    <span style="color:var(--muted);font-size:12px">Your tracking and messages are saved in this browser only (not shared across devices).</span></p>
+  <section class="kpis kpis4" id="mkpis"></section>
+
+  <details class="tpl" id="tplbox"><summary>✍️ Your messages &amp; commission (edit once, used by every copy button)</summary>
+    <div class="row"><label>Your name <input id="t-name" size="12"></label><label>Commission % <input id="t-fee" size="4" type="number" min="0" max="100"></label></div>
+    <div class="sec" style="margin-top:10px">Message to the person who needs the work</div><textarea id="t-buyer"></textarea>
+    <div class="sec" style="margin-top:10px">Message to the pro</div><textarea id="t-pro"></textarea>
+    <div style="color:var(--muted);font-size:11.5px;margin-top:6px">Fill-ins: {name} {trade} {city} {title} {pro} {pro_phone} {fee}</div>
+  </details>
+
+  <section class="panel">
+    <div class="toolbar">
+      <select id="m-trade"><option value="">All trades</option></select>
+      <select id="m-prov"><option value="">All provinces</option></select>
+      <select id="m-city"><option value="">All cities</option></select>
+      <select id="m-age"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select>
+      <select id="m-status"><option value="">Any status</option><option value="new">To do (new)</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
+      <select id="m-sort"><option value="best">Most pros ready first</option><option value="new">Newest first</option></select>
+      <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-ready" checked> only jobs with a pro in their city</label>
+      <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-est" checked> include established businesses as pros</label>
+      <label class="offerlbl" style="font-weight:500"><input type="checkbox" id="m-more"> also big projects (permits) &amp; tenders</label>
+      <button class="btn" id="m-csv">Export tracked jobs</button>
+    </div>
+    <div id="mlist"></div>
+    <div class="pager"><span class="n" id="mcount"></span>
+      <div class="btns"><button class="btn ghost" id="mprev">‹</button><span id="mpage" class="n"></span><button class="btn ghost" id="mnext">›</button></div></div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.max(0, (Date.now() - t) / 60000);
+  return m < 60 ? Math.round(m) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
+const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", hvac:"HVAC / furnace", painter:"Painter", landscaper:"Landscaping / yard",
+  cleaner:"Cleaning service", mover:"Movers", renovator:"Renovation / contractor", realtor:"Realtor", mortgage:"Mortgage broker", dentist:"Dentist",
+  lawyer:"Lawyer", accountant:"Accountant / tax", insurance:"Insurance broker", web:"Web / marketing", auto:"Auto repair", pest:"Pest control",
+  events:"Events / photo / catering", locksmith:"Locksmith", junk:"Junk removal", appliance:"Appliance repair", vet_pet:"Vet / pet services",
+  fitness:"Fitness / coach", childcare:"Childcare / tutoring", mkt:"Social media & digital marketing", website:"Website services", lifeins:"Life insurance", mortrenew:"Mortgage renewal / shopping around", newcomer:"Newcomer to Canada", debt:"Debt / CRA / back-tax trouble", elder:"Aging parent / estate planning", divorce:"Separation / divorce", selftax:"Self-employed / gig-worker taxes", bizcra:"Small-business CRA trouble (GST/HST, payroll)", landlord:"Landlord / tenant dispute", homeins:"Home / auto insurance shopping", lifeevent:"Life insurance - life event (not asked yet)", affiliate:"Affiliate marketing", ai:"AI & automation", menopause:"Menopause products & advice", b2b:"Other business services", beauty:"Hair / beauty / tattoo", therapy:"Therapist / counsellor", repair:"Repair / refinishing", tech:"IT / smart home"};
+Object.assign(VLABEL, {framer: "Framer / framing", drywaller: "Drywall / taping", mason: "Masonry / concrete", flooring: "Flooring / tile", siding: "Siding / windows / insulation",
+  excavation: "Excavation / demolition / paving", welder: "Welder / metal fabrication"});
+const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
+  ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon"};
+const CHILD = {renovator: ["framer", "drywaller", "mason", "flooring", "siding", "excavation", "welder"]};
+const PER = 20;
+let BUY = [], PRO = [], JOBS = [], VIEW = [], page = 0;
+let IDX_C = new Map(), IDX_P = new Map(), TRADES = new Set();
+const LS = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
+const SV = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+let ST = LS("lb_match", {});                       // buyerId -> {s: status, f: fee, n: note, t: time}
+let TPL = Object.assign({name: "Jag", fee: 10,
+  buyer: "Hi! I saw your post about {trade} in {city}. I can connect you with a local pro who's available now: {pro} ({pro_phone}). Want me to have them call you? - {name}",
+  pro: "Hi {pro}, I have a customer in {city} looking for {trade}: \"{title}\". Interested? I take {fee}% if the job goes ahead. - {name}"}, LS("lb_tpl", {}));
+
+async function decrypt(pw, file) {
+  const blob = await (await fetch(file + "?v=" + Date.now())).json();
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(blob.salt), iterations:blob.iter, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+  const plain = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64(blob.iv)}, key, b64(blob.ct));
+  return JSON.parse(await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream("gzip"))).text());
+}
+async function unlock(pw, remember) {
+  $("err").textContent = "Unlocking…";
+  let a, b;
+  try { [a, b] = await Promise.all([decrypt(pw, "intent.enc.json"), decrypt(pw, "providers.enc.json")]); }
+  catch (e) {
+    $("err").textContent = (e && e.name === "OperationError") ? "Wrong password." : "Could not load. Check your connection and try again.";
+    if (e && e.name === "OperationError") { try { localStorage.removeItem("lb_pw"); sessionStorage.removeItem("lb_pw"); } catch (e2) {} }
+    return;
+  }
+  try { sessionStorage.setItem("lb_pw", pw); remember ? localStorage.setItem("lb_pw", pw) : localStorage.removeItem("lb_pw"); } catch (e) {}
+  BUY = a.leads || []; PRO = b.providers || [];
+  $("upd").textContent = "Updated " + a.updated;
+  $("lock").style.transition = "opacity .4s"; $("lock").style.opacity = 0; setTimeout(() => $("lock").remove(), 400);
+  init();
+}
+$("lockform").onsubmit = e => { e.preventDefault(); unlock($("pw").value, $("remember").checked); };
+try { const ls = localStorage.getItem("lb_pw"), s = ls || sessionStorage.getItem("lb_pw"); if (s) unlock(s, !!ls); } catch (e) {}
+
+// ---- matching: a pro matches a request when they do that trade (or a child trade of it) in the same city; province-wide fallback when the city has too few
+function buildIndex() {
+  IDX_C = new Map(); IDX_P = new Map(); TRADES = new Set();
+  for (const p of PRO) {
+    TRADES.add(p.t);
+    const kc = p.t + "|" + (p.c || "").toLowerCase(), kp = p.t + "|" + (p.p || "");
+    if (p.c) (IDX_C.get(kc) || IDX_C.set(kc, []).get(kc)).push(p);
+    if (p.p) (IDX_P.get(kp) || IDX_P.set(kp, []).get(kp)).push(p);
+  }
+}
+const tradesOf = b => { const s = new Set(); [b.v, ...(b.tags || [])].forEach(t => { if (!t) return; s.add(t); (CHILD[t] || []).forEach(c => s.add(c)); }); return [...s].filter(t => TRADES.has(t)); };
+function scorePro(p, near, est) {
+  return (p.src === "maps" ? 0 : 30) + (near ? 30 : 0) + (p.ph ? 14 : 0) + (p.em ? 8 : 0) + (p.w ? 4 : 0) + ((Date.now() - (Date.parse(p.d) || 0)) / 864e5 < 30 ? 8 : 0) + (p.sc || 0) / 20;
+}
+function prosFor(b, est) {
+  const ts = tradesOf(b); if (!ts.length) return [];
+  const seen = new Set(), out = [];
+  const add = (arr, near) => arr.forEach(p => { if (seen.has(p.id) || (!est && p.src === "maps")) return; seen.add(p.id); out.push({p, near, sc: scorePro(p, near, est)}); });
+  if (b.c) ts.forEach(t => add(IDX_C.get(t + "|" + b.c.toLowerCase()) || [], true));
+  if (out.length < 3 && b.p) ts.forEach(t => add(IDX_P.get(t + "|" + b.p) || [], false));
+  return out.sort((x, y) => y.sc - x.sc);
+}
+
+function fillOpts(sel, pairs, label) {
+  const keep = sel.value;
+  sel.innerHTML = `<option value="">${label}</option>`;
+  pairs.forEach(([v, n, t]) => sel.add(new Option(`${t || v} (${n.toLocaleString()})`, v)));
+  sel.value = pairs.some(p => p[0] === keep) ? keep : "";
+}
+function baseJobs() {
+  const age = +$("m-age").value, more = $("m-more").checked;
+  return BUY.filter(b => (b.src === "reddit" || (more && (b.src === "permit" || b.src === "tender"))) && (Date.now() - (Date.parse(b.d) || Date.now())) / 864e5 <= age && tradesOf(b).length);
+}
+function refreshLists() {
+  const jobs = baseJobs(), cnt = (rows, f) => { const m = new Map(); rows.forEach(r => { const k = f(r); if (k) m.set(k, (m.get(k) || 0) + 1); }); return m; };
+  const tm = new Map(); jobs.forEach(b => new Set([b.v, ...(b.tags || [])]).forEach(t => t && TRADES_ALL.has(t) && tm.set(t, (tm.get(t) || 0) + 1)));
+  fillOpts($("m-trade"), [...tm].sort((a, b) => (VLABEL[a[0]] || a[0]).localeCompare(VLABEL[b[0]] || b[0])).map(([v, n]) => [v, n, VLABEL[v] || v]), "All trades");
+  const tr = $("m-trade").value, byT = jobs.filter(b => !tr || b.v === tr || (b.tags || []).includes(tr));
+  fillOpts($("m-prov"), [...cnt(byT, b => b.p)].sort((a, b) => (PROVN[a[0]] || a[0]).localeCompare(PROVN[b[0]] || b[0])).map(([v, n]) => [v, n, PROVN[v] || v]), "All provinces");
+  const pv = $("m-prov").value, byP = byT.filter(b => !pv || b.p === pv);
+  fillOpts($("m-city"), [...cnt(byP, b => b.c)].sort((a, b) => a[0].localeCompare(b[0], "en", {sensitivity: "base"})).map(([v, n]) => [v, n]), "All cities");
+}
+let TRADES_ALL = new Set();
+function apply(keepPage) {
+  refreshLists();
+  const tr = $("m-trade").value, pv = $("m-prov").value, ct = $("m-city").value, stf = $("m-status").value, est = $("m-est").checked, ready = $("m-ready").checked, sort = $("m-sort").value;
+  JOBS = baseJobs().filter(b => (!tr || b.v === tr || (b.tags || []).includes(tr)) && (!pv || b.p === pv) && (!ct || b.c === ct));
+  JOBS = JOBS.map(b => { const pros = prosFor(b, est); return {b, pros, near: pros.filter(x => x.near).length}; }).filter(j => (!ready || j.near) && (!stf || ((ST[j.b.id] || {}).s || "new") === stf));
+  JOBS.sort((x, y) => sort === "new" ? (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0) : (Math.min(y.near, 5) - Math.min(x.near, 5)) || (Date.parse(y.b.d) || 0) - (Date.parse(x.b.d) || 0));
+  if (!keepPage) page = 0;
+  kpis(); render();
+}
+function kpis() {
+  const st = j => (ST[j.b.id] || {}).s || "new";
+  const prog = JOBS.filter(j => ["contacted", "matched"].includes(st(j))).length, closed = Object.values(ST).filter(v => v.s === "closed");
+  const earn = closed.reduce((a, v) => a + (+v.f || 0), 0);
+  const k = [["Jobs shown", JOBS.length, "#8b5cf6"], ["With a pro in their city", JOBS.filter(j => j.near).length, "#34d399"], ["In progress", prog, "#fb923c"],
+             ["Commission closed", "$" + earn.toLocaleString(), "#ec4899"]];
+  $("mkpis").innerHTML = k.map(([l, n, c]) => `<div class="kpi" style="--c:${c};cursor:default"><b>${typeof n === "number" ? n.toLocaleString() : n}</b><span>${l}</span></div>`).join("");
+  $("totalpill").textContent = `${PRO.filter(p => p.src !== "maps").length.toLocaleString()} pros looking · ${PRO.length.toLocaleString()} total`;
+}
+const fill = (tpl, o) => tpl.replace(/\{(\w+)\}/g, (_, k) => o[k] ?? "");
+function msg(kind, j, p) {
+  const b = j.b, o = {name: TPL.name, fee: TPL.fee, trade: (VLABEL[b.v] || b.v || "").toLowerCase(), city: b.c || PROVN[b.p] || "your area", title: b.t, pro: p ? p.n : "[pro]", pro_phone: p ? (p.ph || p.em || p.w || "") : ""};
+  return fill(kind === "buyer" ? TPL.buyer : TPL.pro, o);
+}
+function copy(text) {
+  const done = () => { $("toast").textContent = "Copied"; $("toast").classList.add("show"); setTimeout(() => $("toast").classList.remove("show"), 1500); };
+  (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(done, () => { const t = document.createElement("textarea"); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e) {} t.remove(); });
+}
+function render() {
+  const slice = JOBS.slice(page * PER, (page + 1) * PER);
+  $("mlist").innerHTML = slice.length ? slice.map((j, i) => {
+    const b = j.b, s = ST[b.id] || {}, stv = s.s || "new";
+    const link = b.u || "";
+    const bc = [b.cph ? `<a href="tel:${esc(String(b.cph).replace(/\D/g, ""))}">📞 ${esc(b.cph)}</a>` : "", b.ce ? `<a href="mailto:${esc(b.ce)}">✉ ${esc(b.ce)}</a>` : "",
+      link ? `<a href="${esc(link)}" target="_blank" rel="noopener">Open post ↗</a>` : ""].join("");
+    const pros = j.pros.slice(0, 4).map((x, k) => {
+      const p = x.p;
+      const tag = p.src === "maps" ? `<span class="tag est">established</span>` : `<span class="tag ad">${p.src === "newbiz" ? "just licensed" : "advertising"}</span>`;
+      const far = x.near ? "" : `<span class="tag far">${esc(PROVN[p.p] || p.p)}, not same city</span>`;
+      const links = [p.ph ? `<a href="tel:${esc(p.ph.replace(/\D/g, ""))}">📞 ${esc(p.ph)}</a>` : "", p.em ? `<a href="mailto:${esc(p.em)}">✉ email</a>` : "",
+        p.w ? `<a href="${esc(/^https?:/.test(p.w) ? p.w : "https://" + p.w)}" target="_blank" rel="noopener">🌐 site</a>` : "", p.u ? `<a href="${esc(p.u)}" target="_blank" rel="noopener">ad ↗</a>` : "",
+        `<button data-copy="pro" data-j="${i}" data-p="${k}">Copy msg to pro</button>`].join("");
+      return `<div class="pro"><div><div class="pn">${esc(p.n)}</div><div class="pm" style="font-size:11px;color:var(--muted);font-weight:600">${esc(VLABEL[p.t] || p.t)} · ${esc(p.c || "")} ${tag} ${far}</div><div class="pw">${links}</div></div></div>`;
+    }).join("");
+    const more = j.pros.length > 4 ? `<div class="nopro" style="cursor:pointer;font-weight:700" data-more="${i}">+ ${j.pros.length - 4} more pros (see on Work-seekers)</div>` : "";
+    return `<div class="mgrid st-${stv}">
+      <div class="mjob"><div class="sec">Needs the work</div><div class="mt">${esc(b.t)}</div>
+        <div class="mm"><span class="bchip" style="background:#8b5cf622;color:#a78bfa">${esc(VLABEL[b.v] || b.v)}</span><span>📍 ${esc(b.c || PROVN[b.p] || "Canada")}${b.c && b.p ? ", " + esc(b.p) : ""}</span><span>🕒 ${esc(ago(b.d))}</span>
+          <span>${b.src === "reddit" ? "💬 " + esc(b.sub || "asked online") : b.src === "permit" ? "🏗️ project starting" : "🏛️ tender"}</span>${b.val ? `<span style="color:#34d399">$${Math.round(b.val).toLocaleString()}</span>` : ""}</div>
+        ${b.s && b.s !== b.t ? `<div class="ms">${esc(b.s)}</div>` : ""}
+        <div class="pw" style="margin:6px 0">${bc}<button data-copy="buyer" data-j="${i}">Copy msg to buyer</button></div>
+        <div class="mtrack"><select data-st="${i}"><option value="new">To do</option><option value="contacted">Contacted</option><option value="matched">Pro sent</option><option value="closed">Closed (paid)</option><option value="dead">Dead / skip</option></select>
+          <input class="fee" data-fee="${i}" type="number" min="0" placeholder="$ commission" value="${esc(s.f ?? "")}"><input class="note" data-note="${i}" placeholder="note" value="${esc(s.n ?? "")}"></div></div>
+      <div class="mpros"><div class="sec">${j.near ? "Pros in " + esc(b.c) + " (" + j.near + ")" : j.pros.length ? "None in " + esc(b.c || "their city") + " · " + j.pros.length + " elsewhere in " + esc(PROVN[b.p] || b.p) : "Pros"}</div>${pros || '<div class="nopro">No pro for this trade and area yet.</div>'}${more}</div></div>`;
+  }).join("") : '<div style="padding:40px;text-align:center;color:var(--muted)">No jobs match these filters. Try “Last 90 days”, or untick “only jobs with a pro in their city”.</div>';
+  slice.forEach((j, i) => { const sel = document.querySelector(`[data-st="${i}"]`); if (sel) sel.value = (ST[j.b.id] || {}).s || "new"; });
+  const pages = Math.max(1, Math.ceil(JOBS.length / PER));
+  $("mcount").textContent = `${JOBS.length.toLocaleString()} jobs`; $("mpage").textContent = `${page + 1}/${pages}`;
+}
+function setState(i, patch) {
+  const j = JOBS[page * PER + i]; if (!j) return;
+  ST[j.b.id] = Object.assign({}, ST[j.b.id], patch, {t: Date.now(), ti: j.b.t, c: j.b.c, v: j.b.v}); SV("lb_match", ST);
+}
+function exportTracked() {
+  const rows = Object.entries(ST).filter(([, v]) => v.s && v.s !== "new" || v.f || v.n);
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const csv = ["status,trade,city,request,commission,note,updated", ...rows.map(([id, v]) => [v.s || "", VLABEL[v.v] || v.v || "", v.c || "", v.ti || "", v.f || "", v.n || "", new Date(v.t || 0).toISOString().slice(0, 10)].map(q).join(","))].join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿" + csv], {type: "text/csv"})); a.download = `tracked_jobs_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+}
+function init() {
+  buildIndex();
+  TRADES_ALL = new Set(); BUY.forEach(b => tradesOf(b).forEach(t => TRADES_ALL.add(t))); [...TRADES_ALL].forEach(t => { if (CHILD[t]) CHILD[t].forEach(c => TRADES.has(c) && TRADES_ALL.add(c)); });
+  $("t-name").value = TPL.name; $("t-fee").value = TPL.fee; $("t-buyer").value = TPL.buyer; $("t-pro").value = TPL.pro;
+  const saveTpl = () => { TPL = {name: $("t-name").value, fee: $("t-fee").value, buyer: $("t-buyer").value, pro: $("t-pro").value}; SV("lb_tpl", TPL); };
+  ["t-name", "t-fee", "t-buyer", "t-pro"].forEach(id => $(id).addEventListener("input", saveTpl));
+  ["m-trade", "m-prov", "m-city", "m-age", "m-status", "m-sort", "m-ready", "m-est", "m-more"].forEach(id => $(id).addEventListener("change", () => apply()));
+  $("mprev").onclick = () => { if (page > 0) { page--; render(); scrollTo({top: 0, behavior: "smooth"}); } };
+  $("mnext").onclick = () => { if ((page + 1) * PER < JOBS.length) { page++; render(); scrollTo({top: 0, behavior: "smooth"}); } };
+  $("m-csv").onclick = exportTracked;
+  $("mlist").addEventListener("change", e => {
+    const t = e.target;
+    if (t.dataset.st !== undefined) { setState(+t.dataset.st, {s: t.value}); apply(true); }
+    else if (t.dataset.fee !== undefined) { setState(+t.dataset.fee, {f: t.value}); kpis(); }
+    else if (t.dataset.note !== undefined) setState(+t.dataset.note, {n: t.value});
+  });
+  $("mlist").addEventListener("click", e => {
+    const t = e.target.closest("[data-copy],[data-more]"); if (!t) return;
+    if (t.dataset.more !== undefined) { const j = JOBS[page * PER + +t.dataset.more]; location.href = "providers.html?t=" + encodeURIComponent((j.pros[0] || {p: {t: ""}}).p.t); return; }
+    const j = JOBS[page * PER + +t.dataset.j]; const k = t.dataset.p !== undefined ? j.pros[+t.dataset.p].p : (j.pros[0] || {}).p;
+    copy(msg(t.dataset.copy, j, k)); if (!(ST[j.b.id] || {}).s) { setState(+t.dataset.j, {s: "contacted"}); apply(true); }
+  });
+  const qs = new URLSearchParams(location.search); if (qs.get("t")) { refreshLists(); $("m-trade").value = qs.get("t"); }
+  apply();
+}
+</script>
+</body>
+</html>
