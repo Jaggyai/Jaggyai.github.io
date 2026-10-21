@@ -563,6 +563,20 @@ const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", h
 const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.max(0, (Date.now() - t) / 60000);
   return m < 60 ? Math.round(m) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
 const FINSET = new Set(["mortrenew", "mortgage", "lifeins", "insurance", "homeins", "selftax", "bizcra", "accountant", "debt", "lifeevent", "newcomer", "divorce", "elder"]);   // Fica lane: mortgages, insurance, taxes, accounting
+const BANKS = /\b(RBC|TD|BMO|Scotia(?:bank)?|CIBC|National Bank|NBC|Desjardins|HSBC|Tangerine|MCAP|First National|Equitable|Home Trust)\b/i;
+function ficaAngle(r) {          // a ready-to-film idea for Fica (Andrea): the real question this person asked, turned into a 20-second explainer
+  if (!FINSET.has(r.v)) return "";
+  const t = `${r.t} ${r.s || ""}`, bank = (t.match(BANKS) || [])[1], rate = (t.match(/(\d\.\d{1,2})\s?%/) || [])[1];
+  const h = [...String(r.id)].reduce((x, c) => (x * 31 + c.charCodeAt(0)) >>> 0, 7), pick = arr => arr[h % arr.length];
+  let a;
+  if (r.v === "mortrenew") a = bank && rate ? `"${bank} offered me ${rate}% on my renewal. Should I sign?" What a broker checks before you do.` : bank ? `"Your ${bank} renewal letter isn't their best offer." What to ask for instead.` :
+    pick([`"Do these 3 things 120 days before your mortgage renews."`, `Fixed or variable at renewal? The one number that decides it.`, `"Your bank just mailed your renewal. Don't sign yet." Why, in 20 seconds.`, `Renewing without shopping around: what it can cost you over 5 years.`, `Early renewal offer from your bank: trap or good deal?`]);
+  else if (r.v === "mortgage") a = pick([`The mortgage question people keep asking, answered in 20 seconds.`, `How much house your income really qualifies for.`, `First-time buyer: 3 costs nobody mentions until closing.`, `Broker or bank? What's actually different.`]);
+  else if (r.v === "accountant" || r.v === "selftax" || r.v === "bizcra") a = pick([`"The tax mistake behind this question": the CRA rule in plain words.`, `Self-employed? The deduction most people miss.`, `Do you need an accountant, or just a bookkeeper? 20-second test.`, `CRA letter in the mail: what to do first.`]);
+  else if (r.v === "lifeins" || r.v === "insurance" || r.v === "homeins") a = pick([`"What this insurance question really costs you": term vs whole life in 20 seconds.`, `Life insurance through work: why it usually isn't enough.`, `Shopping home or auto insurance: the one question to ask.`, `Who actually needs life insurance, and who doesn't.`]);
+  else a = `Turn this real question into a 20-second Fica explainer.`;
+  return `<div class="bmeta"><span style="color:#0b6b46;font-weight:700">🎬 Fica idea:</span><span>${esc(a)}</span></div>`;
+}
 const bmatch = (r, sel) => !sel || (sel === "FIN" ? FINSET.has(r.v) : (r.v === sel || (r.tags || []).includes(sel)));
 
 function initBuyers() {
@@ -643,6 +657,7 @@ function renderBuyers() {
           <span>📍 ${esc(r.c || r.p || "Canada")}</span><span>🕒 ${isT ? "posted " : ""}${esc(ago(r.d))}</span>
           <span>${isR ? "💬 asked on " + ((r.sub || "").includes(" ") ? esc(r.sub) : "r/" + esc(r.sub || "reddit")) : isT ? "🏛️ " + esc(r.ent || "Government of Canada") : isB ? "🆕 just licensed" + (r.home ? " (home-based)" : "") : "🏗️ permit " + esc(r.permit || "") + (r.rel ? ` (+${r.rel} related)` : "")}</span>${isT && r.close ? `<span style="color:var(--amber)">closes ${esc(r.close)}</span>` : ""}${r.gc ? '<span style="color:var(--amber)">contractor already named</span>' : ""}${also}</div>
         ${r.s && r.s !== r.t ? `<div class="bsnip">${esc(r.s)}</div>` : ""}
+        ${ficaAngle(r)}
         ${r.ce || r.cph || r.cn || r.w ? `<div class="bmeta"><span>📇 ${esc(r.cn || "")}</span>${r.ce ? `<a href="mailto:${esc(r.ce)}">✉ ${esc(r.ce)}</a>` : ""}${r.cph ? `<span>📞 ${esc(r.cph)}</span>` : ""}${r.w ? `<a href="${esc(r.w)}" target="_blank" rel="noopener">🌐 website</a>` : ""}</div>` : ""}
         ${!isR && !isT && r.addr ? `<div class="bmeta"><span>🏠 ${esc(r.addr)}${r.geo ? " · " + esc(r.geo) : ""}</span></div>` : ""}</div>
       <div class="bright">${r.val ? `<div class="bval">$${Math.round(r.val).toLocaleString()}</div>` : ""}
