@@ -288,7 +288,7 @@ const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const ago = d => { const t = Date.parse(d); if (!t) return ""; const m = Math.max(0, (Date.now() - t) / 60000);
   return m < 60 ? Math.round(m) + " min ago" : m < 1440 ? Math.round(m / 60) + " h ago" : Math.round(m / 1440) + " d ago"; };
-const VLABEL = {plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", hvac:"HVAC / furnace", painter:"Painter", landscaper:"Landscaping / yard",
+const VLABEL = {homesale:"Home seller (by owner)", str_host:"Airbnb / short-term rental host", plumber:"Plumber", electrician:"Electrician", roofer:"Roofer", hvac:"HVAC / furnace", painter:"Painter", landscaper:"Landscaping / yard",
   cleaner:"Cleaning service", mover:"Movers", renovator:"Renovation / contractor", realtor:"Realtor", mortgage:"Mortgage broker", dentist:"Dentist",
   lawyer:"Lawyer", accountant:"Accountant / tax", insurance:"Insurance broker", web:"Web / marketing", auto:"Auto repair", pest:"Pest control",
   events:"Events / photo / catering", locksmith:"Locksmith", junk:"Junk removal", appliance:"Appliance repair", vet_pet:"Vet / pet services",
