@@ -604,7 +604,7 @@ function initBuyers() {
     if (qs.get("v")) { $("b-vert").value = qs.get("v"); applyBuyers(); if (qs.get("c")) { $("b-city").value = qs.get("c"); applyBuyers(); } } }
   try { setTimeout(() => localStorage.setItem("lb_last_visit", String(Date.now())), 4000); } catch (e) {}
 }
-const PROVN = {AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
+const PROVN = {WA: "Washington (US)", CA: "California (US)", AB: "Alberta", BC: "British Columbia", MB: "Manitoba", NB: "New Brunswick", NL: "Newfoundland & Labrador", NS: "Nova Scotia", NT: "Northwest Territories", NU: "Nunavut",
   ON: "Ontario", PE: "Prince Edward Island", QC: "Quebec", SK: "Saskatchewan", YT: "Yukon"};
 function refreshCities() {     // province list + city list: only places with buyers for the CURRENT service / source / age filters, A-Z, with matching counts
   const v = $("b-vert").value, s = $("b-src").value, age = +$("b-age").value, now = Date.now(), sel = $("b-city"), keep = sel.value, psel = $("b-prov"), pkeep = psel.value;
