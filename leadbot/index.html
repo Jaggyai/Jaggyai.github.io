@@ -278,7 +278,7 @@ a{color:inherit}
         <select id="b-age">
           <option value="3">Last 3 days</option><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option>
         </select>
-        <label style="display:inline-flex;align-items:center;gap:4px;margin-right:8px"><input type="checkbox" id="b-urg"> 🔥 urgent only</label><select id="b-sort"><option value="score">Best match first</option><option value="new">Newest first</option><option value="value">Biggest project first</option></select>
+        <label style="display:inline-flex;align-items:center;gap:4px;margin-right:8px"><input type="checkbox" id="b-em"> 📧 email only</label><label style="display:inline-flex;align-items:center;gap:4px;margin-right:8px"><input type="checkbox" id="b-urg"> 🔥 urgent only</label><select id="b-sort"><option value="score">Best match first</option><option value="new">Newest first</option><option value="value">Biggest project first</option></select>
         <button class="btn" id="b-csv">Export CSV</button>
       </div>
       <div id="blist"></div>
@@ -593,7 +593,7 @@ function initBuyers() {
   PRIORITY.forEach(v => { if (vc[v]) g1.appendChild(mk(v, vc[v])); });
   Object.entries(vc).filter(([v]) => !PRIORITY.includes(v)).sort((a, b) => b[1] - a[1]).forEach(([v, n]) => g2.appendChild(mk(v, n)));
   fill($("b-city"), counts(BUY.map(r => ({city: r.c})), "city"));
-  ["b-vert", "b-prov", "b-city", "b-src", "b-age", "b-sort", "b-tg", "b-tc", "b-te", "b-ca", "b-urg"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
+  ["b-vert", "b-prov", "b-city", "b-src", "b-age", "b-sort", "b-tg", "b-tc", "b-te", "b-ca", "b-urg", "b-em"].forEach(id => $(id).addEventListener("change", () => { bpage = 0; applyBuyers(); }));
   $("bprev").onclick = () => { if (bpage > 0) { bpage--; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("bnext").onclick = () => { if ((bpage + 1) * BPAGE < BVIEW.length) { bpage++; renderBuyers(); scrollTo({top: 0, behavior: "smooth"}); } };
   $("b-csv").onclick = exportBuyers;
@@ -629,8 +629,8 @@ function applyBuyers() {
   $("tendbox").hidden = s !== "tender";
   $("b-tbtn").classList.toggle("on", s === "tender"); $("b-tbtn").style.outline = s === "tender" ? "2px solid #8b5cf6" : "";
   const ca = $("b-ca").checked;
-  const urgOnly = $("b-urg") && $("b-urg").checked;
-  BVIEW = BUY.filter(r => bmatch(r, v) && (!urgOnly || r.urg) && (!c || r.c === c) && (!$("b-prov").value || r.p === $("b-prov").value) && (!s || r.src === s) && (!ca || r.ca)
+  const urgOnly = $("b-urg") && $("b-urg").checked, emOnly = $("b-em") && $("b-em").checked;
+  BVIEW = BUY.filter(r => bmatch(r, v) && (!urgOnly || r.urg) && (!emOnly || r.ce || (r.ge && r.gk === "applicant")) && (!c || r.c === c) && (!$("b-prov").value || r.p === $("b-prov").value) && (!s || r.src === s) && (!ca || r.ca)
       && (r.src === "tender" || (now - (Date.parse(r.d) || now)) / 864e5 <= age)          // a tender stays open until its closing date, however long ago it was posted
       && (s !== "tender" || ((!tg || tgroup(r.v) === tg) && (!tcl || (r.close && (Date.parse(r.close) - now) / 864e5 <= tcl)) && (!te || r.ce))))
     .map(r => ({...r, adj: Math.max(5, Math.min(100, r.sc + (SRC_BONUS[r.src] || 0) + (PRIORITY.includes(r.v) ? 6 : 0) - (v && r.v !== v ? 5 : 0))), fresh: (Date.parse(r.d) || 0) > LAST_VISIT}));
