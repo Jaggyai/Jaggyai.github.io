@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>BC Deal Analyzer</title>
+<style>
+  :root{--bg:#0b1220;--card:#121a2b;--line:#22304a;--txt:#e8eefc;--mut:#8fa0c0;--red:#ef4444;--grn:#22c55e;--blu:#3b82f6;--amb:#f59e0b}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--txt)}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+  h1{margin:0 0 4px;font-size:28px} h1 span{color:var(--red)}
+  .sub{color:var(--mut);margin-bottom:20px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card h2{margin:0 0 12px;font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut)}
+  label{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+  input,select{width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--line);background:#0e1626;color:var(--txt);font-size:15px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .big{font-size:34px;font-weight:700}
+  .k{color:var(--mut);font-size:13px}
+  .res{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#0e1626}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  td{padding:6px 0;border-bottom:1px solid var(--line)} td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+  tr.tot td{font-weight:700;border-bottom:none;padding-top:10px}
+  .pos{color:var(--grn)} .neg{color:var(--red)} .warn{color:var(--amb)}
+  .note{font-size:12.5px;color:var(--mut);line-height:1.5}
+  .flag{border-left:3px solid var(--amb);padding:8px 10px;background:#1a1810;border-radius:6px;font-size:13px;margin-top:10px}
+  ul.chk{margin:0;padding-left:18px;font-size:13.5px;line-height:1.7;color:#cbd6ee}
+  .full{grid-column:1/-1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span>BC</span> Deal Analyzer</h1>
+  <div class="sub">Distressed / court-ordered sale math for BC. Fix-and-flip view: what can I pay, and what do I make?</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>The deal</h2>
+      <div class="row">
+        <div><label>Fixed-up value (ARV) $</label><input id="arv" type="number" value="1200000"></div>
+        <div><label>List / asking price $</label><input id="ask" type="number" value="1000000"></div>
+      </div>
+      <div class="row">
+        <div><label>Repair budget $</label><input id="rep" type="number" value="80000"></div>
+        <div><label>Contingency on repairs %</label><input id="cont" type="number" value="15"></div>
+      </div>
+      <div class="row">
+        <div><label>Months to buy-fix-sell</label><input id="mon" type="number" value="6"></div>
+        <div><label>Carrying cost per month $ <span class="k">(interest, tax, insurance, utilities)</span></label><input id="carry" type="number" value="4500"></div>
+      </div>
+      <div class="row">
+        <div><label>Selling costs % of ARV <span class="k">(realtor + GST, staging)</span></label><input id="sell" type="number" step="0.1" value="4.5"></div>
+        <div><label>Legal &amp; closing, buy + sell $</label><input id="legal" type="number" value="3500"></div>
+      </div>
+      <label>Profit target</label>
+      <div class="row">
+        <select id="ptype"><option value="amt">Dollar amount</option><option value="pct">% of ARV</option></select>
+        <input id="ptarget" type="number" value="60000">
+      </div>
+      <label>Your offer $ <span class="k">(leave blank to test the asking price)</span></label>
+      <input id="offer" type="number" placeholder="e.g. 925000">
+      <div class="note" style="margin-top:12px">Defaults are placeholders. Replace them with your own numbers and quotes.</div>
+    </div>
+
+    <div class="card">
+      <h2>Results</h2>
+      <div class="res">
+        <div class="box"><div class="k">Max offer for your profit target</div><div class="big" id="maxoffer">-</div></div>
+        <div class="box"><div class="k">Profit at the offer above</div><div class="big" id="profit">-</div><div class="k" id="roi"></div></div>
+      </div>
+      <table id="tbl"></table>
+      <div class="flag" id="flags"></div>
+    </div>
+
+    <div class="card full">
+      <h2>Before you offer: BC due diligence</h2>
+      <ul class="chk">
+        <li><b>Court-ordered sale?</b> Offers need <b>court approval</b>, usually with no financing or inspection conditions, and another bidder can show up at the hearing. Ask the listing realtor for the order and the hearing date.</li>
+        <li><b>Title search (LTSA / myLTSA):</b> check charges, liens, builders' liens, covenants, a Certificate of Pending Litigation, and who actually holds the mortgage.</li>
+        <li><b>BC Assessment:</b> compare the assessed value, but do not use it as ARV. Use sold comps within 6 months and about 1 km.</li>
+        <li><b>Condition risks:</b> oil tank, asbestos or knob-and-tube in older homes, drainage, unpermitted work, leaky-condo / envelope history, and strata minutes and depreciation report for strata units.</li>
+        <li><b>You are a flipper here:</b> do not assign the contract for a fee without checking BC licensing rules (BCFSA) or a BC real estate lawyer. Buying and renovating yourself is the clean route.</li>
+        <li><b>Taxes beyond this tool:</b> flip profit is generally business income, and the federal residential flipping rule can apply. Talk to an accountant. GST can apply to substantially renovated or new homes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:18px">Estimate only. Not legal, tax or financial advice. PTT uses the standard BC schedule; exemptions (first-time buyer, newly built home) and the additional tax on foreign entities are not included.</p>
+</div>
+
+<script>
+/* ===== CORE (tested) ===== */
+function bcPTT(fmv){
+  if(!(fmv>0)) return 0;
+  var t = Math.min(fmv,200000)*0.01;
+  if(fmv>200000)  t += (Math.min(fmv,2000000)-200000)*0.02;
+  if(fmv>2000000) t += (fmv-2000000)*0.03;
+  if(fmv>3000000) t += (fmv-3000000)*0.02;   // extra 2% on residential value over $3M
+  return t;
+}
+function dealCosts(p, price){
+  return {
+    repairs: p.rep*(1+p.cont/100),
+    ptt: bcPTT(price),
+    legal: p.legal,
+    carry: p.carry*p.mon,
+    sell: p.arv*p.sell/100
+  };
+}
+function profitAt(p, price){
+  var c = dealCosts(p, price);
+  return p.arv - price - c.repairs - c.ptt - c.legal - c.carry - c.sell;
+}
+function maxOffer(p, target){
+  var lo=0, hi=p.arv;           // profit falls as price rises
+  if(profitAt(p,0) < target) return null;  // deal cannot hit target even at $0
+  for(var i=0;i<80;i++){
+    var mid=(lo+hi)/2;
+    if(profitAt(p,mid) >= target) lo=mid; else hi=mid;
+  }
+  return lo;
+}
+/* ===== END CORE ===== */
+
+if (typeof document !== 'undefined') {
+  var $ = function(id){return document.getElementById(id)};
+  var money = function(n){ if(n===null||isNaN(n)) return '-'; var s=Math.round(Math.abs(n)).toLocaleString('en-CA'); return (n<0?'-':'')+'$'+s; };
+  var read = function(){ return {
+    arv:+$('arv').value||0, ask:+$('ask').value||0, rep:+$('rep').value||0, cont:+$('cont').value||0,
+    mon:+$('mon').value||0, carry:+$('carry').value||0, sell:+$('sell').value||0, legal:+$('legal').value||0 }; };
+  var render = function(){
+    var p = read();
+    var target = $('ptype').value==='pct' ? p.arv*(+$('ptarget').value||0)/100 : (+$('ptarget').value||0);
+    var mo = maxOffer(p, target);
+    $('maxoffer').textContent = mo===null ? 'No deal' : money(mo);
+    $('maxoffer').className = 'big ' + (mo===null?'neg':'');
+    var offer = +$('offer').value || p.ask;
+    var pr = profitAt(p, offer), c = dealCosts(p, offer);
+    var invested = offer + c.repairs + c.ptt + c.legal + c.carry;
+    $('profit').textContent = money(pr);
+    $('profit').className = 'big ' + (pr>=target?'pos':(pr>=0?'warn':'neg'));
+    $('roi').textContent = invested>0 ? 'Return on cost: ' + (pr/invested*100).toFixed(1) + '%' : '';
+    var rows = [
+      ['Fixed-up value (ARV)', money(p.arv)],
+      ['Purchase price', '-'+money(offer)],
+      ['BC property transfer tax', '-'+money(c.ptt)],
+      ['Repairs + contingency', '-'+money(c.repairs)],
+      ['Carrying costs ('+p.mon+' mo)', '-'+money(c.carry)],
+      ['Legal & closing', '-'+money(c.legal)],
+      ['Selling costs', '-'+money(c.sell)]
+    ];
+    var h=''; rows.forEach(function(r){h+='<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'});
+    h+='<tr class="tot"><td>Profit</td><td class="'+(pr>=0?'pos':'neg')+'">'+money(pr)+'</td></tr>';
+    $('tbl').innerHTML=h;
+    var f=[];
+    if(mo===null) f.push('Even a $0 purchase would not hit your profit target. Lower the target or recheck ARV and costs.');
+    else if(p.ask>mo) f.push('Asking price is '+money(p.ask-mo)+' above your max offer. You need a '+((1-mo/p.ask)*100).toFixed(1)+'% discount to hit your target.');
+    else f.push('Asking price is within your max offer. Still check comps and condition before you commit.');
+    var rule70 = p.arv*0.7 - p.rep*(1+p.cont/100);
+    f.push('For comparison, the US "70% rule" would say '+money(rule70)+'. It ignores BC transfer tax, carrying time and selling costs, so trust the number above.');
+    f.push('Court-ordered sales need court approval, so your price may be topped at the hearing. Decide your walk-away number first.');
+    $('flags').innerHTML = f.map(function(x){return '<div style="margin:4px 0">'+x+'</div>'}).join('');
+  };
+  document.querySelectorAll('input,select').forEach(function(el){el.addEventListener('input',render)});
+  var qa = +(new URLSearchParams(location.search).get('ask')||0);
+  if (qa>0) { $('ask').value = qa; $('offer').value = ''; }
+  render();
+}
+</script>
+</body>
+</html>
